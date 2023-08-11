@@ -1,1 +1,1 @@
-deploy: 
+deploy: https://simple-shop-commercetools-next.vercel.app/

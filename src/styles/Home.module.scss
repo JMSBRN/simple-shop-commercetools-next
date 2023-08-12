@@ -1,8 +1,6 @@
+@import 'mixins';
+
 .main {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6rem;
+ @include flex(center, space-between, column);
   min-height: 100vh;
 }

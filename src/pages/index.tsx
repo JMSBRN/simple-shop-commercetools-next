@@ -1,19 +1,11 @@
+import Categories from '@/components/categories/Categories';
+import Footer from '@/components/footer/Footer';
 import Head from 'next/head';
-import { apiRoot } from '@/commercetools/BuildClient';
+import Header from '@/components/header/Header';
 import styles from '@/styles/Home.module.scss';
-import { useEffect } from 'react';
 
 export default function Home() {
 
-  async function fethApi() {
-    const res = await apiRoot.get().execute();
-
-    console.log(res);
-  }
-  useEffect(() => {
-    fethApi();
-  }, []);
-  
   return (
     <>
       <Head>
@@ -23,7 +15,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        start
+        <Header />
+        <Categories />
+        <Footer />
       </main>
     </>
   );

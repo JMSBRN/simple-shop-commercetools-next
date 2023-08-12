@@ -14,6 +14,10 @@ const nextConfig = {
     API_URL: process.env.API_URL,
     SCOPES: process.env.SCOPES,
   },
+  i18n: {
+    locales: ['en', 'de'],
+    defaultLocale: 'en',
+  }
 };
 
 module.exports = nextConfig;

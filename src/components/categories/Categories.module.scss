@@ -1,0 +1,12 @@
+@import 'mixins';
+
+.categoriesContainer {
+  @include flex ();
+   p {
+    margin: 0 10px;
+    cursor: pointer;
+    &:hover {
+        color: red;
+    }
+   }
+}

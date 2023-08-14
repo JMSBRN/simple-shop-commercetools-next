@@ -1,0 +1,21 @@
+@import 'mixins';
+
+.subCategoriesContainer {
+    margin: 0 auto;
+    min-height: 100vh;
+    text-align: center;
+    h2 {
+        margin-top: 10px;
+    }
+}
+.subCategoriesNames {
+    margin-top: 50px;
+    @include flex ();
+    div {
+        margin: 0 10px;
+        cursor: pointer;
+        &:hover {
+            color: red;
+        }
+    }
+}

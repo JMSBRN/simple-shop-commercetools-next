@@ -14,7 +14,7 @@ function Categories() {
   async function fetchCategories() {
     const res = await apiRoot.categories().get().execute();
     const { results } = res.body;
-
+    
     if (results) setCategories(results);
   }
 

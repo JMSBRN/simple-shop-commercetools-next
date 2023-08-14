@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Category } from '@commercetools/platform-sdk';
 import { apiRoot } from '@/commercetools/BuildClient';
 import styles from './Categories.module.scss';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
 function Categories() {
@@ -21,10 +22,12 @@ function Categories() {
     fetchCategories();
   }, []);
 
+  const { push } = useRouter();
+
   return (
     <div className={categoriesContainer}>
-      {categories.map((el) => (
-        <div key={el.id}>
+      {categories.filter((el) => el.parent === undefined).map((el) => (
+        <div key={el.id} onClick={() => push(`/sub-cat/${el.id}`)}>
           <p>{t(Object.values(el.name)[0])}</p>
         </div>
       ))}

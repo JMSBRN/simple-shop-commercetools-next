@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Category } from '@commercetools/platform-sdk';
-import { apiRoot } from '@/commercetools/BuildClient';
+import { getCategories } from '@/commercetools/utilsCommercTools';
 import styles from './Categories.module.scss';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
@@ -12,10 +12,9 @@ function Categories() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   async function fetchCategories() {
-    const res = await apiRoot.categories().get().execute();
-    const { results } = res.body;
+    const categories = await getCategories();
 
-    if (results) setCategories(results);
+    if (categories) setCategories(categories);
   }
 
   useEffect(() => {

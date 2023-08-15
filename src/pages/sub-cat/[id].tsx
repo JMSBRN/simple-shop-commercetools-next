@@ -1,16 +1,24 @@
 import { GetStaticPaths, type GetStaticProps } from 'next';
+import { getCategories, getProducts } from '@/commercetools/utilsCommercTools';
 import { Category } from '@commercetools/platform-sdk';
 import React from 'react';
-import { apiRoot } from '@/commercetools/BuildClient';
 import styles from '../../styles/SubCategories.module.scss';
 import { useRouter } from 'next/router';
 
 function Subcategories({ subCategories }: { subCategories: Category[] }) {
   const { push } = useRouter();
   const { subCategoriesContainer, subCategoriesNames } = styles;
-  const handleClick = (el: Category) => {
-    push(`/products/${el.id}`);
-    // push(`/sub-cat/third-level/${el.id}`);
+  const handleClick = async (el: Category) => {
+    const products  = await getProducts();
+
+     const isProductExisted = 
+     !!products.filter((pr) => pr.masterData.current.categories[0].id === el.id)[0];
+
+     if (isProductExisted) {
+       push(`/products/${el.id}`);
+     } else {
+       push(`/third-level/${el.id}`);
+     };
   };
 
   return (
@@ -30,9 +38,9 @@ function Subcategories({ subCategories }: { subCategories: Category[] }) {
 export default Subcategories;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await apiRoot.categories().get().execute();
-  const { results } = res.body;
-  const paths = results
+ 
+  const categories  = await getCategories();
+  const paths = categories
     .filter((el) => el.parent !== undefined)
     .map((el) => ({
       params: {
@@ -47,9 +55,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const res = await apiRoot.categories().get().execute();
-  const { results } = res.body;
-  const subCategories: Category[] = results.filter(
+  const categories  = await getCategories();
+  const subCategories: Category[] = categories.filter(
     (el) => el.parent?.id === params?.id
   );
 

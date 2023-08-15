@@ -1,7 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { Product } from '@commercetools/platform-sdk';
 import React from 'react';
-import { apiRoot } from '@/commercetools/BuildClient';
+import { getProducts } from '@/commercetools/utilsCommercTools';
 import { useRouter } from 'next/router';
 
 function Products({ products }: { products: Product[] }) {
@@ -20,9 +20,9 @@ function Products({ products }: { products: Product[] }) {
 export default Products;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await apiRoot.products().get().execute();
-  const { results } = res.body;
-  const paths = results.map((el) => (
+  const products = await getProducts();
+
+  const paths = products.map((el) => (
       {
         params: {
           id: el.masterData.current.categories[0].id
@@ -37,12 +37,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await apiRoot.products().get().execute();
-  const { results } = res.body;
+  const products = await getProducts();
 
     return {
       props: {
-        products: results
+        products
       }
     };
 };

@@ -31,10 +31,9 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 
 // Export the ClientBuilder
 export const ctpClient = new ClientBuilder()
-  .withProjectKey('e-commerce-jmsbrn') 
+  .withProjectKey(projectKey) 
   .withHttpMiddleware(httpMiddlewareOptions)
   .withClientCredentialsFlow(authMiddlewareOptions)
-  .withLoggerMiddleware() // Include middleware for logging
   .build();
 export const apiRoot = 
 createApiBuilderFromCtpClient(ctpClient).withProjectKey({ projectKey });

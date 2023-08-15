@@ -10,9 +10,8 @@ function Products({ products }: { products: Product[] }) {
 
   return <div>{
      products.filter((el) => el.masterData.current.categories[0].id === id ).map((el) => (
-      <div key={el.id} onClick={() => console.log(el)}>
+      <div key={el.id}>
         <div>{el.key}</div>
-        <div>{JSON.stringify(el.key)}</div>
       </div>
      ))
     }</div>;

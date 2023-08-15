@@ -9,9 +9,8 @@ function Subcategories({ subCategories }: { subCategories: Category[] }) {
   const { push } = useRouter();
   const { subCategoriesContainer, subCategoriesNames } = styles;
   const handleClick = (el: Category) => {
-      push(`/sub-cat/products/${el.id}`);
-
-    console.log(el.parent);
+    push(`/products/${el.id}`);
+    // push(`/sub-cat/third-level/${el.id}`);
   };
 
   return (
@@ -21,7 +20,6 @@ function Subcategories({ subCategories }: { subCategories: Category[] }) {
         {subCategories.map((el) => (
           <div key={el.id} onClick={() => handleClick(el)}>
             <div className="">{Object.values(el.name)[0]}</div>
-            <div className="">{''}</div>
           </div>
         ))}
       </div>

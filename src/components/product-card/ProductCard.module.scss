@@ -1,0 +1,9 @@
+@import 'mixins';
+
+.productCardContainer {
+    width: 100px;
+    height: auto;
+    min-height: 200px;
+    border: 1px solid grey;
+    @include flex(center, space-between, column);
+}

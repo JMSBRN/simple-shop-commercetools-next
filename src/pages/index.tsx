@@ -2,7 +2,7 @@ import Categories from '@/components/categories/Categories';
 import Footer from '@/components/footer/Footer';
 import Head from 'next/head';
 import Header from '@/components/header/Header';
-import styles from '@/styles/Home.module.scss';
+import styles from '../styles/Home.module.scss';
 
 export default function Home() {
 

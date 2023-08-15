@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { Category } from '@commercetools/platform-sdk';
 import React from 'react';
 import { getCategories } from '@/commercetools/utilsCommercTools';
-import styles from '../styles/ThirdLevel.module.scss';
+import styles from '../../styles/ThirdLevel.module.scss';
 import { useRouter } from 'next/router';
 
 function ThirdLevel({ categories }: { categories: Category[] }) {

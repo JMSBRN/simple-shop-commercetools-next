@@ -9,17 +9,15 @@ function ProductCard({ product }: { product: Product }) {
   const { name } = staged;
   const productName = Object.values(name)[0];
 
-  console.log(product);
-
   return (
     <div className={styles.productCardContainer}>
       <div>{productName}</div>
       {current.variants?.map((el) => (
-        <>
-          <div key={el.id} className="images">
-            {el.images?.map((image, index) => (
+        <div key={el.id}>
+          <div className="images">
+            {el.images?.map((image, idx) => (
               <Image
-                key={index}
+                key={idx}
                 src={image.url}
                 width={50}
                 height={70}
@@ -37,7 +35,7 @@ function ProductCard({ product }: { product: Product }) {
               </div>
             ))}
           </div>
-        </>
+        </div>
       ))}
     </div>
   );

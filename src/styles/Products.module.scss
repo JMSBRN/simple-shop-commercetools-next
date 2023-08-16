@@ -1,11 +1,17 @@
 @import 'mixins';
 
 .productsContainer {
+   max-width: 900px;
    margin: 0 auto;
    min-height: 100vh;
-
+   @include flex();
 }
 
 .productsStyle {
-   @include flex();
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   div {
+      margin: 5px;
+   }
 }

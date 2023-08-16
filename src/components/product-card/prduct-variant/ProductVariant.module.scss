@@ -1,0 +1,29 @@
+@import 'mixins';
+
+.variantContainerStyle {
+    margin-top: 20px;
+    text-align: center;
+}
+.attributesStyle {
+    width: 100%;
+  @include flex();
+  div {
+    margin: 0 3px;
+    color: grey;
+    text-align: center;
+  }
+}
+.pricesStyle {
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.priceCurrencyStyle{
+  font-weight: 900;
+  font-size: 20px;
+  color: red;
+}
+.priceCurrencyCodeStyle{
+  color: grey;
+}

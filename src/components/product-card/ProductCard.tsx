@@ -10,6 +10,7 @@ function ProductCard({ product }: { product: Product }) {
     variantsContainer,
     variantStyle,
     activVariantStyle,
+    productNameStyle
   } = styles;
   const { staged, current } = product.masterData;
   const { name } = staged;
@@ -46,7 +47,7 @@ function ProductCard({ product }: { product: Product }) {
           </div>
         ))}
       </div>
-      <div>{productName}</div>
+      <div className={productNameStyle}>{productName}</div>
       {!selectedOption ? (
         <ProductVariant variant={masterVariant} />
       ) : (

@@ -1,10 +1,17 @@
 @import 'mixins';
 
 .productCardContainer {
-    width: 180px;
+    min-width: 180px;
     height: auto;
-    min-height: 200px;
-    border: 1px solid grey;
+    min-height: 270px;
+    text-align: center;
+    border: 1px solid rgb(212, 212, 212);
+}
+.productNameStyle {
+    text-transform: uppercase;
+    color: grey;
+    text-align: center;
+    padding: 0 3px;
 }
 
 .variantsContainer {

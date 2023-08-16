@@ -1,6 +1,6 @@
 import { PriceValue } from './interfacesProductCard';
 
-function formatValue(value: PriceValue): string {
+    function formatValue(value: PriceValue): string {
     const amountInDollars = value.centAmount / Math.pow(10, value.fractionDigits);
     const formattedAmount = amountInDollars.toFixed(value.fractionDigits);
   
@@ -12,4 +12,16 @@ function formatValue(value: PriceValue): string {
     return parts.join('.');
   }
 
-  export default formatValue;
+    function setDynamicArray (items: number) {
+    const arr = [];
+
+    for(var i=1; i<=items; i++) {
+       arr.push(i);
+    }
+    return arr;
+  };
+
+  export {
+    formatValue,
+    setDynamicArray
+  };

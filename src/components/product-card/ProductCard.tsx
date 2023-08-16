@@ -5,6 +5,12 @@ import { setDynamicArray } from './utilsProductCard';
 import styles from './ProductCard.module.scss';
 
 function ProductCard({ product }: { product: Product }) {
+  const {
+    productCardContainer,
+    variantsContainer,
+    variantStyle,
+    activVariantStyle,
+  } = styles;
   const { staged, current } = product.masterData;
   const { name } = staged;
   const productName = Object.values(name)[0];
@@ -15,33 +21,42 @@ function ProductCard({ product }: { product: Product }) {
     setSelectedOption(option === selectedOption ? 0 : option);
   };
 
+  function setActiveCalss(condition: boolean) {
+    if (condition) {
+      return activVariantStyle;
+    }
+    return variantStyle;
+  }
+
   return (
-    <div className={styles.productCardContainer}>
-      {selectedOption ? (
-        <div className="" onClick={() => setSelectedOption(0)}>
-          master variant
-        </div>
-      ) : null }
-      {setDynamicArray(variants.length).map((option, idx) => (
-        <label key={idx.toString()}>
-          <input
-            type="radio"
-            checked={selectedOption === option}
-            onChange={() => handleOptionChange(option)}
-          />
-          variant {option}
-        </label>
-      ))}
+    <div className={productCardContainer}>
+      <div className={variantsContainer}>
+        {selectedOption ? (
+          <div className={variantStyle} onClick={() => setSelectedOption(0)}>
+            origin
+          </div>
+        ) : null}
+        {setDynamicArray(variants.length).map((option, idx) => (
+          <div
+            className={setActiveCalss(selectedOption === option)}
+            key={idx.toString()}
+            onClick={() => handleOptionChange(option)}
+          >
+            variant {option}
+          </div>
+        ))}
+      </div>
       <div>{productName}</div>
-      {!selectedOption ? ( <ProductVariant variant={masterVariant} />) : (
-       <>
-        {
-          variants.filter((el) => el.id === selectedOption + 1).map((el) => (
-            <ProductVariant key={el.id}  variant={el}/>
-          ))
-        }
-       </>
-       
+      {!selectedOption ? (
+        <ProductVariant variant={masterVariant} />
+      ) : (
+        <>
+          {variants
+            .filter((el) => el.id === selectedOption + 1)
+            .map((el) => (
+              <ProductVariant key={el.id} variant={el} />
+            ))}
+        </>
       )}
     </div>
   );

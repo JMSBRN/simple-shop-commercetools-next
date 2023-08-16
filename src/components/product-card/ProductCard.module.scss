@@ -1,9 +1,24 @@
 @import 'mixins';
 
 .productCardContainer {
-    width: 100px;
+    width: 180px;
     height: auto;
     min-height: 200px;
     border: 1px solid grey;
-    @include flex(center, space-between, column);
 }
+
+.variantsContainer {
+    width: 100%;
+    @include flex();
+}
+
+.variantStyle {
+    margin: 0 3px;
+    cursor: pointer;
+    color: grey;
+}
+
+.activVariantStyle {
+    @extend .variantStyle;
+    color: red;
+} 

@@ -29,7 +29,7 @@ function ThirdLevel({ categories }: { categories: Category[] }) {
 export default ThirdLevel;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const categories = await getCategories();
+  const categories = await getCategories() as Category[];
   const paths = categories.map((el) => ({
     params: {
       id: el.id,
@@ -43,7 +43,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const categories = await getCategories();
+  const categories = await getCategories() as Category[];
 
   return {
     props: {

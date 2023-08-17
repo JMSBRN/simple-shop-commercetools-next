@@ -12,7 +12,7 @@ function Categories() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   async function fetchCategories() {
-    const categories = await getCategories();
+    const categories = await getCategories() as Category[];
 
     if (categories) setCategories(categories);
   }

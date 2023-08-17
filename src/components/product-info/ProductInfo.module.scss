@@ -1,0 +1,10 @@
+@import 'mixins';
+
+.productInfoContainer {
+    width: 100%;
+    min-height: 100vh;
+    @include flex(flex-start, space-around);
+}
+.originStyle {
+    @include flex(center, center, column);
+}

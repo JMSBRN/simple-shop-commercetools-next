@@ -7,19 +7,31 @@ import styles from '../../styles/Products.module.scss';
 import { useRouter } from 'next/router';
 
 function Products({ products }: { products: Product[] }) {
-  const { query } = useRouter();
+  const { push, query } = useRouter();
   const { id } = query;
-  const { productsContainer, productsStyle } = styles;
+  const { productsContainer, productsStyle, productInfoStyle } = styles;
+
+  const handleGetProductInfo = (id: string) => {
+    push(`/products/product-info/${id}`);
+  };
 
   return (
     <div className={productsContainer}>
-       <div className={productsStyle}>{
-     products.filter((el) => el.masterData.current.categories[0].id === id ).map((el) => (
-      <div key={el.id}>
-        <ProductCard product={el}/>
+      <div className={productsStyle}>
+        {products
+          .filter((el) => el.masterData.current.categories[0].id === id)
+          .map((el) => (
+            <div key={el.id}>
+              <div
+                className={productInfoStyle}
+                onClick={() => handleGetProductInfo(el.id)}
+              >
+                product info
+              </div>
+              <ProductCard product={el} />
+            </div>
+          ))}
       </div>
-     ))
-    }</div>
     </div>
   );
 }
@@ -27,15 +39,13 @@ function Products({ products }: { products: Product[] }) {
 export default Products;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const products = await getProducts();
+  const products = await getProducts() as Product[];
 
-  const paths = products.map((el) => (
-      {
-        params: {
-          id: el.masterData.current.categories[0].id
-        }
-      }
-  ));
+  const paths = products.map((el) => ({
+    params: {
+      id: el.masterData.current.categories[0].id,
+    },
+  }));
 
   return {
     paths,
@@ -46,9 +56,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async () => {
   const products = await getProducts();
 
-    return {
-      props: {
-        products
-      }
-    };
+  return {
+    props: {
+      products,
+    },
+  };
 };

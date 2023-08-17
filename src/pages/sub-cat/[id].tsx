@@ -1,6 +1,6 @@
+import { Category, Product } from '@commercetools/platform-sdk';
 import { GetStaticPaths, type GetStaticProps } from 'next';
 import { getCategories, getProducts } from '@/commercetools/utilsCommercTools';
-import { Category } from '@commercetools/platform-sdk';
 import React from 'react';
 import styles from '../../styles/SubCategories.module.scss';
 import { useRouter } from 'next/router';
@@ -9,7 +9,7 @@ function Subcategories({ subCategories }: { subCategories: Category[] }) {
   const { push } = useRouter();
   const { subCategoriesContainer, subCategoriesNames } = styles;
   const handleClick = async (el: Category) => {
-    const products  = await getProducts();
+    const products  = await getProducts() as Product[];
 
      const isProductExisted = 
      !!products.filter((pr) => pr.masterData.current.categories[0].id === el.id)[0];
@@ -39,7 +39,7 @@ export default Subcategories;
 
 export const getStaticPaths: GetStaticPaths = async () => {
  
-  const categories  = await getCategories();
+  const categories  = await getCategories() as Category[];
   const paths = categories
     .filter((el) => el.parent !== undefined)
     .map((el) => ({
@@ -55,7 +55,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const categories  = await getCategories();
+  const categories  = await getCategories() as Category[];
   const subCategories: Category[] = categories.filter(
     (el) => el.parent?.id === params?.id
   );

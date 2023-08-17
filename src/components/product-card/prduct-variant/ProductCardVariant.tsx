@@ -22,8 +22,8 @@ function ProductCardVariant({ variant }: { variant: ProductVariant }) {
           priority
           key={idx.toString()}
           src={image.url}
-          width={image.dimensions.w * 0.5}
-          height={image.dimensions.h * 0.5}
+          width={image.dimensions.w}
+          height={image.dimensions.h}
           alt={image.label || 'alt not exist sorry for that'}
         />
       ))}

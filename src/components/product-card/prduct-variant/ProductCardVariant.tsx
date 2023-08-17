@@ -11,20 +11,23 @@ function ProductCardVariant({ variant }: { variant: ProductVariant }) {
     pricesStyle,
     priceCurrencyStyle,
     priceCurrencyCodeStyle,
+    imageLayout
   } = styles;
 
   return (
     <div className={variantContainerStyle}>
+      <div className={imageLayout}>
       {variant.images?.map((image, idx) => (
         <Image
           priority
           key={idx.toString()}
           src={image.url}
-          width={50}
-          height={70}
+          width={image.dimensions.w * 0.5}
+          height={image.dimensions.h * 0.5}
           alt={image.label || 'alt not exist sorry for that'}
         />
       ))}
+      </div>
       <div className={attributesStyle}>
         {variant.attributes?.map((atr, idx) => (
           <div key={idx}>

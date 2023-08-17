@@ -30,7 +30,7 @@ function ProductInfo({ product }: { product: Product }) {
       { selectedIdVariant === 1 ?
        (<MasterVariant productName={productName} masterVariant={masterVariant} />)
       : (<>{ variants.filter((el) => el.id === selectedIdVariant).map((el) => (
-        <MasterVariant key={el.id}  masterVariant={el} productName='name' />
+        <MasterVariant key={el.id}  masterVariant={el} productName={productName} />
       ))}</>)}
       <div className={variantsStyle}>
         {currentVariants.filter((el) => el.id !== selectedIdVariant).map((el) => (

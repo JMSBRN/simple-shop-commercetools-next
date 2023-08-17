@@ -5,6 +5,7 @@
     height: auto;
     min-height: 270px;
     text-align: center;
+    @include flex(center, center, column);
     border: 1px solid rgb(212, 212, 212);
 }
 .productNameStyle {

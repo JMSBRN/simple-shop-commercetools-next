@@ -13,21 +13,25 @@ function MasterVariant({
   productName: string;
 }) {
   const {
-    originStyle,
+    masterVariantContainer,
     productTitle,
     attributesStyle,
     pricesStyle,
     priceCurrencyStyle,
     priceCurrencyCodeStyle,
+    ImageStyle,
+    imageLayoutStyle
   } = styles;
   const { images, attributes, prices } = masterVariant;
 
   return (
-    <div className={originStyle}>
+    <div className={masterVariantContainer}>
       <div className={productTitle}>{productName}</div>
+      <div className={imageLayoutStyle}>
       {images?.map((el) => (
         <Link key={el.url} href={el.url} target="blank">
           <Image
+           className={ImageStyle}
             priority
             src={el.url}
             alt={el.label || 'product image'}
@@ -36,6 +40,7 @@ function MasterVariant({
           />
         </Link>
       ))}
+      </div>
       <div className={attributesStyle}>
         {attributes?.map((atr, idx) => (
           <div key={idx}>
@@ -44,6 +49,7 @@ function MasterVariant({
           </div>
         ))}
       </div>
+      <div className="description">{}</div>
       <div className={pricesStyle}>
         {prices?.map((price) => (
           <div key={price.id}>

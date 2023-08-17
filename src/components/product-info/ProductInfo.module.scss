@@ -3,8 +3,10 @@
 .productInfoContainer {
     width: 100%;
     min-height: 100vh;
-    @include flex(flex-start, space-around);
+    @include flex(flex-start, center);
 }
 .variantStyle {
+    width: 200px;
+    height: auto;
     cursor: pointer;
 }

@@ -1,0 +1,7 @@
+@import 'mixins';
+
+.originStyle {
+    @include flex(center, center, column);
+    border: 1px solid lightgray;
+    cursor: pointer;
+}

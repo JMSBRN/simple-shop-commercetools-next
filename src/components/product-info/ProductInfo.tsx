@@ -1,69 +1,46 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { Product } from '@commercetools/platform-sdk';
-import ProductVariant from '../product-card/prduct-variant/ProductVariant';
-import React from 'react';
-import { formatValue } from '../product-card/utilsProductCard';
+import { Product, ProductVariant } from '@commercetools/platform-sdk';
+import React, { useState } from 'react';
+import MasterVariant from '../product-card/master-variant/MasterVariant';
+import ProductCardVariant from '../product-card/prduct-variant/ProductCardVariant';
 import styles from './ProductInfo.module.scss';
 
 function ProductInfo({ product }: { product: Product }) {
+  const [selectedIdVariant, setSelectedIdVariant] = useState<number>(1);
   const {
     productInfoContainer,
-    originStyle,
-    productTitle,
-    attributesStyle,
-    pricesStyle,
-    priceCurrencyStyle,
-    priceCurrencyCodeStyle,
     variantsStyle,
+    variantStyle
   } = styles;
   const { current, staged } = product.masterData;
   const { masterVariant, variants } = current;
-  const { images, attributes, prices } = masterVariant;
   const { name } = staged;
   const productName = Object.values(name)[0];
+  const [currentVariants, setCurrentVariants] = useState<ProductVariant[]>(variants);
+  const handleSelectVariant = (id: number) => {
+     setSelectedIdVariant(id);
+     if(id !== 1) {
+      setCurrentVariants([...variants, masterVariant ]);
+     } else { 
+      setCurrentVariants(variants);
+     } 
+  };
 
   return (
     <div className={productInfoContainer}>
-      <div className={originStyle}>
-        <div className={productTitle}>{productName}</div>
-        {images?.map((el) => (
-            <Link key={el.url}  href={el.url} target='blank'>
-                <Image
-                  priority
-                  src={el.url}
-                  alt={el.label || 'product image'}
-                  width={300}
-                  height={300 * 1.618}
-                />
-            </Link>
-        ))}
-        <div className={attributesStyle}>
-          {attributes?.map((atr, idx) => (
-            <div key={idx}>
-              <div className="name">{atr.name}</div>
-              <div className="label">{atr.value.label}</div>
-            </div>
-          ))}
-        </div>
-        <div className={pricesStyle}>
-          {prices
-            ?.filter((el) => el.country === 'US')
-            .map((price) => (
-              <div key={price.id}>
-                <div className={priceCurrencyStyle}>
-                  {formatValue(price.value)}
-                </div>
-                <div className={priceCurrencyCodeStyle}>
-                  {price.value.currencyCode}
-                </div>
-              </div>
-            ))}
-        </div>
-      </div>
+      { selectedIdVariant === 1 ?
+       (<MasterVariant productName={productName} masterVariant={masterVariant} />)
+      : (<>{ variants.filter((el) => el.id === selectedIdVariant).map((el) => (
+        <MasterVariant key={el.id}  masterVariant={el} productName='name' />
+      ))}</>)}
       <div className={variantsStyle}>
-        {variants.map((el) => (
-          <ProductVariant key={el.id} variant={el} />
+        {currentVariants.filter((el) => el.id !== selectedIdVariant).map((el) => (
+          <div 
+          className={variantStyle}
+          key={el.id}
+          onClick={() => handleSelectVariant(el.id)}
+          >
+            <ProductCardVariant  variant={el} />
+          </div>
         ))}
       </div>
     </div>

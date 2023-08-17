@@ -2,9 +2,9 @@ import Image from 'next/image';
 import { ProductVariant } from '@commercetools/platform-sdk';
 import React from 'react';
 import { formatValue } from '../utilsProductCard';
-import styles from './ProductVariant.module.scss';
+import styles from './ProductCardVariant.module.scss';
 
-function ProductVariant({ variant }: { variant: ProductVariant }) {
+function ProductCardVariant({ variant }: { variant: ProductVariant }) {
   const {
     variantContainerStyle,
     attributesStyle,
@@ -34,9 +34,7 @@ function ProductVariant({ variant }: { variant: ProductVariant }) {
         ))}
       </div>
       <div className={pricesStyle}>
-        {variant.prices
-          ?.filter((el) => el.country === 'US')
-          .map((price) => (
+        {variant.prices?.map((price) => (
             <div key={price.id}>
               <div className={priceCurrencyStyle}>
                 {formatValue(price.value)}
@@ -51,4 +49,4 @@ function ProductVariant({ variant }: { variant: ProductVariant }) {
   );
 }
 
-export default ProductVariant;
+export default ProductCardVariant;

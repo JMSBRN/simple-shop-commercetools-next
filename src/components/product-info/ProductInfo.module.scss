@@ -5,6 +5,6 @@
     min-height: 100vh;
     @include flex(flex-start, space-around);
 }
-.originStyle {
-    @include flex(center, center, column);
+.variantStyle {
+    cursor: pointer;
 }

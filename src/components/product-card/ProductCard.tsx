@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Product } from '@commercetools/platform-sdk';
-import ProductVariant from './prduct-variant/ProductVariant';
+import ProductCardVariant from './prduct-variant/ProductCardVariant';
 import { setDynamicArray } from './utilsProductCard';
 import styles from './ProductCard.module.scss';
 
@@ -49,13 +49,13 @@ function ProductCard({ product }: { product: Product }) {
       </div>
       <div className={productNameStyle}>{productName}</div>
       {!selectedOption ? (
-        <ProductVariant variant={masterVariant} />
+        <ProductCardVariant variant={masterVariant} />
       ) : (
         <>
           {variants
             .filter((el) => el.id === selectedOption + 1)
             .map((el) => (
-              <ProductVariant key={el.id} variant={el} />
+              <ProductCardVariant key={el.id} variant={el} />
             ))}
         </>
       )}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { filterObjectAndReturnValue, getCategories } from '@/commercetools/utilsCommercTools';
 import { Category } from '@commercetools/platform-sdk';
 import Loader from '../loader/Loader';
-import { getCategories } from '@/commercetools/utilsCommercTools';
 import styles from './Categories.module.scss';
 import { useRouter } from 'next/router';
 
@@ -30,7 +30,7 @@ function Categories() {
      { !loaded && <Loader />}
       {categories.filter((el) => el.parent === undefined).map((el) => (
         <div key={el.id} onClick={() => push(`/sub-cat/${el.id}`)}>
-          <p>{Object.values(el.name)[0]}</p>
+          <p>{filterObjectAndReturnValue(el.name, 'en-US')}</p>
         </div>
       ))}
     </div>

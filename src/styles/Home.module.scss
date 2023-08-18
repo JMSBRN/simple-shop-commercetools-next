@@ -3,7 +3,6 @@
 .main {
  @include flex(center, space-between, column);
   min-height: 100vh;
-  text-transform: uppercase;
   color: grey;
   footer {
     color: white;

@@ -2,6 +2,9 @@
 
 .categoriesContainer {
   @include flex ();
+  div {
+    text-transform: uppercase;
+  }
    p {
     margin: 0 10px;
     cursor: pointer;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Product } from '@commercetools/platform-sdk';
 import ProductCardVariant from './prduct-variant/ProductCardVariant';
+import { filterObjectAndReturnValue } from '@/commercetools/utilsCommercTools';
 import { setDynamicArray } from './utilsProductCard';
 import styles from './ProductCard.module.scss';
 
@@ -14,7 +15,7 @@ function ProductCard({ product }: { product: Product }) {
   } = styles;
   const { staged, current } = product.masterData;
   const { name } = staged;
-  const productName = Object.values(name)[0];
+  const productName = filterObjectAndReturnValue(name, 'en-US');
   const { masterVariant, variants } = current;
   const [selectedOption, setSelectedOption] = useState<number>(0);
 

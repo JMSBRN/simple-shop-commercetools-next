@@ -2,6 +2,7 @@ import { Product, ProductVariant } from '@commercetools/platform-sdk';
 import React, { useState } from 'react';
 import MasterVariant from '../product-card/master-variant/MasterVariant';
 import ProductCardVariant from '../product-card/prduct-variant/ProductCardVariant';
+import { filterObjectAndReturnValue } from '@/commercetools/utilsCommercTools';
 import styles from './ProductInfo.module.scss';
 
 function ProductInfo({ product }: { product: Product }) {
@@ -14,7 +15,7 @@ function ProductInfo({ product }: { product: Product }) {
   const { current, staged } = product.masterData;
   const { masterVariant, variants } = current;
   const { name } = staged;
-  const productName = Object.values(name)[0];
+  const productName = filterObjectAndReturnValue(name, 'en-US');
   const [currentVariants, setCurrentVariants] = useState<ProductVariant[]>(variants);
   const handleSelectVariant = (id: number) => {
      setSelectedIdVariant(id);
@@ -28,9 +29,9 @@ function ProductInfo({ product }: { product: Product }) {
   return (
     <div className={productInfoContainer}>
       { selectedIdVariant === 1 ?
-       (<MasterVariant productName={productName} masterVariant={masterVariant} />)
+       (<MasterVariant productName={productName!} masterVariant={masterVariant} />)
       : (<>{ variants.filter((el) => el.id === selectedIdVariant).map((el) => (
-        <MasterVariant key={el.id}  masterVariant={el} productName={productName} />
+        <MasterVariant key={el.id}  masterVariant={el} productName={productName!} />
       ))}</>)}
       <div className={variantsStyle}>
         {currentVariants.filter((el) => el.id !== selectedIdVariant).map((el) => (

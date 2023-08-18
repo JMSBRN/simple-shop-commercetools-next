@@ -25,3 +25,17 @@ export async function getCategories( id?: string) {
     return results;
    }
 };
+export async function getLanguages() {
+    const res =  await apiRoot.get().execute();
+    
+     return res.body.languages;
+ 
+};
+
+export function filterObjectAndReturnValue(obj: { [key: string]: string }, fieldName: string) {
+  if (obj.hasOwnProperty(fieldName)) {
+    return obj[fieldName];
+  } else {
+    return null;
+  }
+}

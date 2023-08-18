@@ -4,10 +4,8 @@ import Loader from '../loader/Loader';
 import { getCategories } from '@/commercetools/utilsCommercTools';
 import styles from './Categories.module.scss';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'react-i18next';
 
 function Categories() {
-  const { t } = useTranslation();
   const { categoriesContainer } = styles;
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -32,7 +30,7 @@ function Categories() {
      { !loaded && <Loader />}
       {categories.filter((el) => el.parent === undefined).map((el) => (
         <div key={el.id} onClick={() => push(`/sub-cat/${el.id}`)}>
-          <p>{t(Object.values(el.name)[0])}</p>
+          <p>{Object.values(el.name)[0]}</p>
         </div>
       ))}
     </div>

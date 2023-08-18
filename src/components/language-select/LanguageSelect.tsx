@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useState } from 'react';
 
 function LanguageSelect() {
-  const { i18n } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState<string>('');
-
-  useEffect(() => {
-    setCurrentLanguage(i18n.language);
-  }, [i18n.language]);
 
   const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
+   
+    //i18n.changeLanguage(value);
 
-    i18n.changeLanguage(value);
+    setCurrentLanguage(value);
   };
 
   return (

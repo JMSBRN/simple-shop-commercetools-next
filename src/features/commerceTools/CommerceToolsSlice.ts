@@ -1,14 +1,19 @@
+import { Category, Product } from '@commercetools/platform-sdk';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { Category } from '@commercetools/platform-sdk';
+import { fetchCategories, fetchProducts } from '../thunks/FetchCategories';
 import { RootState } from '@/store/store';
 
 interface InitialState {
    language: string;
    categories: Category[];
+   products: Product[];
+   status: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
 const initialState: InitialState = {
   language: 'en-US',
-  categories: []
+  categories: [],
+  products: [],
+  status: 'idle'
 };
 const commerceToolseSlice = createSlice({
   name: 'commercetools',
@@ -17,14 +22,29 @@ const commerceToolseSlice = createSlice({
     setCategories: (state, action: PayloadAction<Category[]>) => {
       state.categories = action.payload;
     },
+    setProducts: (state, action: PayloadAction<Product[]>) => {
+      state.products = action.payload;
+    },
     setLanguage: (state, action: PayloadAction<string>) => {
       state.language = action.payload;
-      console.log(state.language);
     },
+  }, extraReducers : (builder) => {
+    builder
+    .addCase(fetchCategories.pending, (state) => {
+      state.status = 'loading';
+    }).addCase(fetchCategories.fulfilled, (state, action) => {
+      state.status = 'succeeded';
+      state.categories = action.payload;
+    }).addCase(fetchProducts.pending, (state) => {
+      state.status = 'loading';
+    }).addCase(fetchProducts.fulfilled, (state, action) => {
+      state.status = 'succeeded';
+      state.products = action.payload;
+    });
   }
  
  });
 
-export const { setCategories, setLanguage } = commerceToolseSlice.actions;
+export const { setCategories, setProducts, setLanguage } = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;
 export default commerceToolseSlice.reducer;

@@ -12,7 +12,7 @@ function Products({ products }: { products: Product[] }) {
   const { productsContainer, productsStyle, productInfoStyle } = styles;
 
   const handleGetProductInfo = (id: string) => {
-    push(`/products/product-info/${id}`);
+    push(`/product-info/${id}`);
   };
 
   return (

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Product } from '@commercetools/platform-sdk';
 import ProductCardVariant from './prduct-variant/ProductCardVariant';
 import { filterObjectAndReturnValue } from '@/commercetools/utilsCommercTools';
+import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { setDynamicArray } from './utilsProductCard';
 import styles from './ProductCard.module.scss';
+import { useAppSelector } from '@/hooks/storeHooks';
 
 function ProductCard({ product }: { product: Product }) {
   const {
@@ -13,12 +15,13 @@ function ProductCard({ product }: { product: Product }) {
     activVariantStyle,
     productNameStyle
   } = styles;
+  const { language } = useAppSelector(selectCommerceTools);
   const { staged, current } = product.masterData;
   const { name } = staged;
-  const productName = filterObjectAndReturnValue(name, 'en-US');
+  const productName = filterObjectAndReturnValue(name, language);
   const { masterVariant, variants } = current;
   const [selectedOption, setSelectedOption] = useState<number>(0);
-
+  
   const handleOptionChange = (option: number) => {
     setSelectedOption(option === selectedOption ? 0 : option);
   };

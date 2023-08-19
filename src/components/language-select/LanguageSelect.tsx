@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { fetchCategories } from '@/features/thunks/FetchCategories';
 import { getLanguages } from '@/commercetools/utilsCommercTools';
 import { setLanguage } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch } from '@/hooks/storeHooks';
@@ -21,13 +22,14 @@ function LanguageSelect() {
     const { value } = e.target;
 
     dispatch(setLanguage(value));
+    dispatch(fetchCategories());
   };
   
   return (
     <>
       <select onChange={(e) => changeLanguage(e)}>
-        <option value={''} disabled>
-          {'shoose language'}
+        <option value={'en-US'}>
+           default language
         </option>
         {languages.map((el, idx) => (
           <option key={idx} value={el}>

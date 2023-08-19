@@ -13,6 +13,16 @@ export async function getProducts(id?: string) {
     }
 };
 
+export async function getProductsByCategoryId(id: string) {
+     const res = await apiRoot.products().get({
+      queryArgs: {
+        where: `masterData(current(categories(id="${id}")))`
+      }
+     }).execute();
+
+     return res.body.results;
+};
+
 export async function getCategories( id?: string) {
    if(id) {
     const res =  await apiRoot.categories().withId({ ID: id }).get().execute();

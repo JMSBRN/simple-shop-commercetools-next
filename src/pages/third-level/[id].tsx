@@ -2,23 +2,27 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { filterObjectAndReturnValue, getCategories } from '@/commercetools/utilsCommercTools';
 import { Category } from '@commercetools/platform-sdk';
 import React from 'react';
+import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from '../../styles/ThirdLevel.module.scss';
+import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
 function ThirdLevel({ categories }: { categories: Category[] }) {
-  const { push, query } = useRouter();
+  const  { language } = useAppSelector(selectCommerceTools);
+  const { push, query, back } = useRouter();
   const { id } = query;
-  const { thirdLevelContainer, categoriesStyle } = styles;
+  const { thirdLevelContainer, categoriesStyle, backLinkStyle } = styles;
 
   return (
     <div className={thirdLevelContainer}>
+      <div className={backLinkStyle} onClick={() => back()}>Back</div>
       <h2>Third Level Categories</h2>
       <div className={categoriesStyle}>
         {categories
           .filter((el) => el.parent?.id === id)
           .map((el) => (
             <div key={el.id} onClick={() => push(`/products/${el.id}`)}>
-              <div>{filterObjectAndReturnValue(el.name, 'en-US')}</div>
+              <div>{filterObjectAndReturnValue(el.name, language)}</div>
             </div>
           ))}
       </div>

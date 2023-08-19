@@ -1,25 +1,25 @@
-import { Category, Product } from '@commercetools/platform-sdk';
 import { GetStaticPaths, type GetStaticProps } from 'next';
 import {
   filterObjectAndReturnValue,
   getCategories,
-  getProducts,
+  getProductsByCategoryId,
 } from '@/commercetools/utilsCommercTools';
+import { Category } from '@commercetools/platform-sdk';
+import Link from 'next/link';
 import React from 'react';
+import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from '../../styles/SubCategories.module.scss';
+import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
 function Subcategories({ subCategories }: { subCategories: Category[] }) {
+  const  { language } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
   const { subCategoriesContainer, subCategoriesNames } = styles;
   const handleClick = async (el: Category) => {
-    const products = (await getProducts()) as Product[];
+    const products = await getProductsByCategoryId(el.id);
 
-    const isProductExisted = !!products.filter(
-      (pr) => pr.masterData.current.categories[0].id === el.id
-    )[0];
-
-    if (isProductExisted) {
+    if (products.length) {
       push(`/products/${el.id}`);
     } else {
       push(`/third-level/${el.id}`);
@@ -28,12 +28,13 @@ function Subcategories({ subCategories }: { subCategories: Category[] }) {
 
   return (
     <div className={subCategoriesContainer}>
+      <Link href={'/'}>home</Link>
       <h2>Sub Categories</h2>
       <div className={subCategoriesNames}>
         {subCategories.map((el) => (
           <div key={el.id} onClick={() => handleClick(el)}>
             <div className="">
-              {filterObjectAndReturnValue(el.name, 'en-US')}
+              {filterObjectAndReturnValue(el.name, language)}
             </div>
           </div>
         ))}

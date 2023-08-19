@@ -1,15 +1,27 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Product } from '@commercetools/platform-sdk';
 import ProductCard from '@/components/product-card/ProductCard';
-import React from 'react';
-import { getProducts } from '@/commercetools/utilsCommercTools';
+import { getProductsByCategoryId } from '@/commercetools/utilsCommercTools';
 import styles from '../../styles/Products.module.scss';
 import { useRouter } from 'next/router';
 
-function Products({ products }: { products: Product[] }) {
+function Products() {
   const { push, query } = useRouter();
-  const { id } = query;
   const { productsContainer, productsStyle, productInfoStyle } = styles;
+  const [products, setProducts] = useState<Product[]>([] as Product[]);
+  const { id } = query;
+  
+  const fetchFn = useCallback(async () => {
+    if(typeof id === 'string') {
+      const res = await getProductsByCategoryId(id);
+ 
+      if(res) setProducts(res);
+    }
+  }, [id]);
+
+  useEffect(() => {
+  fetchFn();
+  },[fetchFn]);
 
   const handleGetProductInfo = (id: string) => {
     push(`/product-info/${id}`);
@@ -19,7 +31,6 @@ function Products({ products }: { products: Product[] }) {
     <div className={productsContainer}>
       <div className={productsStyle}>
         {products
-          .filter((el) => el.masterData.current.categories[0].id === id)
           .map((el) => (
             <div key={el.id}>
               <div
@@ -37,28 +48,3 @@ function Products({ products }: { products: Product[] }) {
 }
 
 export default Products;
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const products = await getProducts() as Product[];
-
-  const paths = products.map((el) => ({
-    params: {
-      id: el.masterData.current.categories[0].id,
-    },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async () => {
-  const products = await getProducts();
-
-  return {
-    props: {
-      products,
-    },
-  };
-};

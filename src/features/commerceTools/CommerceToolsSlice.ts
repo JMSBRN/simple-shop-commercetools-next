@@ -10,7 +10,7 @@ interface InitialState {
    status: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
 const initialState: InitialState = {
-  language: 'en-US',
+  language: '',
   categories: [],
   products: [],
   status: 'idle'

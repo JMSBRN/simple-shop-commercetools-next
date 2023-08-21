@@ -1,43 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  getLanguages,
+  moveLanguageToFirstPosition,
+} from '@/commercetools/utilsCommercTools';
 import { fetchCategories } from '@/features/thunks/FetchCategories';
-import { getLanguages } from '@/commercetools/utilsCommercTools';
 import { setLanguage } from '@/features/commerceTools/CommerceToolsSlice';
+import styles from './LanguagesSelect.module.scss';
 import { useAppDispatch } from '@/hooks/storeHooks';
 
 function LanguageSelect() {
+  const { languagesSelectContainer } = styles;
   const dispatch = useAppDispatch();
   const [languages, setLanguages] = useState<string[]>([]);
 
-  async function fetchFunction() {
+ const fetchFunction = useCallback(async function (){
     const res = await getLanguages();
+    const currentLanguage = JSON.parse(window.localStorage.getItem('lang') || '"en"');
 
-    if (res) setLanguages(res);
-  }
+    dispatch(setLanguage(currentLanguage));
+    if (res) setLanguages(moveLanguageToFirstPosition(res, currentLanguage));
+  },[dispatch]);
 
   useEffect(() => {
     fetchFunction();
-  }, []);
+  }, [fetchFunction]);
 
   const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
 
     dispatch(setLanguage(value));
     dispatch(fetchCategories());
+    window.localStorage.setItem('lang', JSON.stringify(value));
   };
-  
+
   return (
-    <>
-      <select onChange={(e) => changeLanguage(e)}>
-        <option value={'en-US'}>
-           default language
-        </option>
-        {languages.map((el, idx) => (
-          <option key={idx} value={el}>
-            {el}
-          </option>
-        ))}
-      </select>
-    </>
+    <div className={languagesSelectContainer}>
+      {!!languages.length && (
+        <select onChange={(e) => changeLanguage(e)}>
+          {languages.map((el, idx) => (
+            <option key={idx} value={el}>
+              {el}
+            </option>
+          ))}
+        </select>
+      )}
+    </div>
   );
 }
 

@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const path = require('path');
+const { i18n } = require('./next-i18next.config.js');
 
 const nextConfig = {
+  i18n,
   reactStrictMode: true,
   sassOptions: {
     includePaths: [path.join(__dirname, 'src/styles')],
@@ -18,10 +20,6 @@ const nextConfig = {
     API_URL: process.env.API_URL,
     SCOPES: process.env.SCOPES,
   },
-  i18n: {
-    locales: ['en', 'de'],
-    defaultLocale: 'en',
-  }
 };
 
 module.exports = nextConfig;

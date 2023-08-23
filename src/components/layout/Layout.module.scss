@@ -1,0 +1,7 @@
+@import 'mixins';
+
+.layoutContainer {
+    width: 100%;
+    min-height: 100vh;
+    @include flex ( center, space-between, column);
+}

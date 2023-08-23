@@ -9,6 +9,13 @@
     h2 {
         margin-top: 10px;
     }
+     a {
+        text-decoration: none;
+        color: grey;
+        &:hover {
+            color: red;
+        }
+     }
 }
 .subCategoriesNames {
     margin-top: 50px;

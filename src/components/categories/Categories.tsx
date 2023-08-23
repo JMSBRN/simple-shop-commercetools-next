@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 function Categories() {
   const { categoriesContainer } = styles;
   const { categories, status, language } = useAppSelector(selectCommerceTools);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
   const dispatch = useAppDispatch();
 
  useEffect(() => {
@@ -21,7 +21,7 @@ function Categories() {
     <div className={categoriesContainer}>
      { status === 'loading' && <Loader />}
       {categories.filter((el) => el.parent === undefined).map((el) => (
-        <div key={el.id} onClick={() => push(`/sub-cat/${el.id}`)}>
+        <div key={el.id} onClick={() => push(`/sub-cat/${el.id}`, undefined, { locale })}>
           <p>{filterObjectAndReturnValue(el.name, language)}</p>
         </div>
       ))}

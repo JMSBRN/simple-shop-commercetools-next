@@ -1,3 +1,6 @@
 {
-    "title":"title de common"
+    "category":{
+     "title": "Kategorien",
+     "home-link": "Startseite"
+    }
 }

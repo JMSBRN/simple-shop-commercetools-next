@@ -9,7 +9,14 @@
     text-transform: uppercase;
     h2 {
         margin-top: 10px;
-    }    
+    }
+    a {
+        text-decoration: none;
+        color: grey;
+        &:hover {
+            color: red;
+        }
+     }
 }
 .categoriesStyle{
     margin-top: 50px;
@@ -23,5 +30,6 @@
     }
 }
 .backLinkStyle {
+    list-style: none;
     cursor: pointer;
 }

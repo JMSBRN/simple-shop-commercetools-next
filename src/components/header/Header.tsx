@@ -1,14 +1,17 @@
+import Categories from '../categories/Categories';
 import LanguageSelect from '../language-select/LanguageSelect';
 import React from 'react';
 import styles from './Header.module.scss';
 
 function Header() {
-  const { headerContainer } = styles;
+  const { headerContainer, logoStyle } = styles;
 
   return (
     <header className={headerContainer}>
-      <div className="">Shop Logo</div>
-      <div className="">Location</div>
+      <div className={logoStyle}>Store
+       <div>international</div>
+      </div>
+      <Categories />
       <LanguageSelect />
     </header>
   );

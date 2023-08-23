@@ -1,3 +1,7 @@
 {
-    "title":"title he-IL common"
+    "category":{
+     "title": "קטגוריות",
+     "home-link": "דף הבית"
+     
+    }
 }

@@ -9,6 +9,7 @@ module.exports = {
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'de', 'fr', 'he-IL'],
+    localeDetection: false // false === when browser language not change locale
   },
   /** To avoid issues when deploying to some paas (vercel...) */
   localePath:

@@ -6,6 +6,7 @@ import {
 import { fetchCategories } from '@/features/thunks/FetchCategories';
 import { setLanguage } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './LanguagesSelect.module.scss';
+import toggleServerSideLaguage from '@/utils/utilsApp';
 import { useAppDispatch } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
@@ -27,16 +28,10 @@ function LanguageSelect() {
     fetchFunction();
   }, [fetchFunction]);
 
-    const onToggleLanguageClick = (newLocale: string) => {
-      const { pathname, asPath, query } = router;
-
-      router.push({ pathname, query }, asPath, { locale: newLocale });
-    };
-
   const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
 
-    onToggleLanguageClick(value);
+    toggleServerSideLaguage(router, value);
     dispatch(setLanguage(value));
     dispatch(fetchCategories());
     window.localStorage.setItem('lang', JSON.stringify(value));

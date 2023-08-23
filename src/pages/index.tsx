@@ -1,15 +1,21 @@
-import Categories from '@/components/categories/Categories';
-import Footer from '@/components/footer/Footer';
 import { GetServerSideProps } from 'next/types';
 import Head from 'next/head';
-import Header from '@/components/header/Header';
+import WelcomePage from '@/components/welcome-page/WelcomePage';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import styles from '../styles/Home.module.scss';
-import { useTranslation } from 'next-i18next';
+import toggleServerSideLaguage from '@/utils/utilsApp';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
-  const { t } = useTranslation();
-
+  const router = useRouter();
+  
+  useEffect(() => {
+    const currentLanguage = JSON.parse(window.localStorage.getItem('lang') || '"en"');
+    
+    return toggleServerSideLaguage(router, currentLanguage);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
   return (
     <>
       <Head>
@@ -18,11 +24,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className="h2">{t('title')}</div>
-        <Header />
-        <Categories />
-        <Footer />
+      <main>
+        <WelcomePage />
       </main>
     </>
   );

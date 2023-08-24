@@ -21,7 +21,6 @@ function ProductCard({ product }: { product: Product }) {
   const productName = filterObjectAndReturnValue(name, language);
   const { masterVariant, variants } = current;
   const [selectedOption, setSelectedOption] = useState<number>(0);
-  
   const handleOptionChange = (option: number) => {
     setSelectedOption(option === selectedOption ? 0 : option);
   };

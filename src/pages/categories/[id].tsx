@@ -1,3 +1,4 @@
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   filterObjectAndReturnValue,
   getCategories,
@@ -6,7 +7,6 @@ import {
 } from '@/commercetools/utilsCommercTools';
 import { Category } from '@commercetools/platform-sdk';
 import { type GetStaticProps } from 'next';
-import React from 'react';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../styles/SubCategories.module.scss';
@@ -22,7 +22,10 @@ function Subcategories({
 }) {
   const { language } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
-  const { subCategoriesContainer, subCategoriesNames } = styles;
+  const { subCategoriesContainer, subCategoriesNames, mainCategoryNameStyle } =
+    styles;
+  const [mainCategoryName, setMainCategoryName] = useState<string>('');
+
   const handleClick = async (el: Category) => {
     const products = await getProductsByCategoryId(el.id);
 
@@ -33,8 +36,27 @@ function Subcategories({
     }
   };
 
+  const fetchFn = useCallback(async () => {
+    const id = subCategories[0].ancestors[0].id;
+    const res = await getCategoryNameWithId(id, language);
+
+    if (res !== parentCategoryName) {
+      setMainCategoryName(res);
+    } 
+  }, [language, parentCategoryName, subCategories]);
+
+  useEffect(() => {
+    fetchFn();
+    return () => {
+      setMainCategoryName('');
+    };
+  }, [fetchFn]);
+
   return (
     <div className={subCategoriesContainer}>
+      <div className={mainCategoryNameStyle}>
+        {mainCategoryName}
+      </div>
       <h2>{parentCategoryName}</h2>
       <div className={subCategoriesNames}>
         {subCategories.map((el) => (
@@ -75,9 +97,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
   const id = params?.id as string;
   const categories = (await getCategories()) as Category[];
   const parentCategoryName = await getCategoryNameWithId(id, locale!);
-  const subCategories = categories.filter(
-    (el) => el.parent?.id === id
-  );
+  const subCategories = categories.filter((el) => el.parent?.id === id);
 
   return {
     props: {

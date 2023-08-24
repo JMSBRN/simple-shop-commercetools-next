@@ -1,7 +1,6 @@
 {
     "category":{
-     "title": "קטגוריות",
-     "home-link": "דף הבית"
-     
-    }
+     "title": "קטגוריות"
+    },
+    "product-info": "מידע על המוצר"
 }

@@ -1,6 +1,6 @@
 {
     "category":{
-     "title": "Catégories",
-     "home-link": "Page d'accueil"
-    }
+     "title": "Catégories"
+    },
+    "product-info": "Information sur le produit"
 }

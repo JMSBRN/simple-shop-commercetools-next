@@ -21,7 +21,7 @@ function Categories() {
     <div className={categoriesContainer}>
      { status === 'loading' && <Loader />}
       {categories.filter((el) => el.parent === undefined).map((el) => (
-        <div key={el.id} onClick={() => push(`/sub-cat/${el.id}`, undefined, { locale })}>
+        <div key={el.id} onClick={() => push(`/categories/${el.id}`, undefined, { locale })}>
           <p>{filterObjectAndReturnValue(el.name, language)}</p>
         </div>
       ))}

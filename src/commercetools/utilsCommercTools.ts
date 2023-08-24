@@ -1,3 +1,4 @@
+import { Category } from '@commercetools/platform-sdk';
 import { apiRoot } from './BuildClient';
 
 export async function getProducts(id?: string) {
@@ -38,6 +39,19 @@ export async function getCategories(id?: string) {
     return results;
   }
 }
+
+export  async function getCategoryNameWithId (id: string, language: string) {
+  const res = await getCategories(id as string) as Category;
+  
+  return (filterObjectAndReturnValue(res.name, language)) as string;
+};
+
+export async function getMainParentId(id: string) {
+  const res = await getCategories(id as string) as Category;
+  
+  return res.ancestors[0].id;
+}
+
 export async function getLanguages() {
   const res = await apiRoot.get().execute();
 

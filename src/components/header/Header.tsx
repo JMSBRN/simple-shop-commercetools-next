@@ -1,5 +1,6 @@
 import Categories from '../categories/Categories';
 import LanguageSelect from '../language-select/LanguageSelect';
+import Link from 'next/link';
 import React from 'react';
 import styles from './Header.module.scss';
 
@@ -8,9 +9,12 @@ function Header() {
 
   return (
     <header className={headerContainer}>
-      <div className={logoStyle}>Store
-       <div>international</div>
-      </div>
+      <Link href={'/'}>
+        <div className={logoStyle}>
+          Store
+          <div>international</div>
+        </div>
+      </Link>
       <Categories />
       <LanguageSelect />
     </header>

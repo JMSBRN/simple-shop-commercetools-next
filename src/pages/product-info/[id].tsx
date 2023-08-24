@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticProps } from 'next';
 import { Product } from '@commercetools/platform-sdk';
 import ProductInfo from '@/components/product-info/ProductInfo';
 import React from 'react';
@@ -12,16 +12,17 @@ function ProductInfoDynamic({ product }: { product: Product }) {
 
 export default ProductInfoDynamic;
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
   const products = await getProducts() as Product[];
 
-  const paths = products.map((el) => (
-      {
-        params: {
-          id: el.id
-        }
-      }
-  ));
+  const paths = products.flatMap((el) => 
+   locales?.map((locale) => ({
+      params: {
+        id: el.id
+      },
+      locale
+   }))
+  );
 
   return {
     paths,

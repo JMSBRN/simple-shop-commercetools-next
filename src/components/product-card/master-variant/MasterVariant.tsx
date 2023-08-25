@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { ProductVariant } from '@commercetools/platform-sdk';
 import React from 'react';
 import { formatValue } from '../utilsProductCard';
+import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MasterVariant.module.scss';
+import { useAppSelector } from '@/hooks/storeHooks';
 
 function MasterVariant({
   masterVariant,
@@ -23,6 +25,8 @@ function MasterVariant({
     imageLayoutStyle
   } = styles;
   const { images, attributes, prices } = masterVariant;
+
+  const { country } = useAppSelector(selectCommerceTools);
 
   return (
     <div className={masterVariantContainer}>
@@ -51,7 +55,7 @@ function MasterVariant({
       </div>
       <div className="description">{}</div>
       <div className={pricesStyle}>
-        {prices?.map((price) => (
+        {prices?.filter((el) => el.country === country).map((price) => (
           <div key={price.id}>
             <div className={priceCurrencyStyle}>{formatValue(price.value)}</div>
             <div className={priceCurrencyCodeStyle}>

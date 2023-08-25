@@ -2,51 +2,50 @@ import Image from 'next/image';
 import { ProductVariant } from '@commercetools/platform-sdk';
 import React from 'react';
 import { formatValue } from '../utilsProductCard';
+import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './ProductCardVariant.module.scss';
+import { useAppSelector } from '@/hooks/storeHooks';
 
 function ProductCardVariant({ variant }: { variant: ProductVariant }) {
   const {
     variantContainerStyle,
-    attributesStyle,
     pricesStyle,
     priceCurrencyStyle,
-    priceCurrencyCodeStyle,
-    imageLayout
+    imageLayout,
+    noPriceMessage
   } = styles;
+  const { country } = useAppSelector(selectCommerceTools);
 
   return (
     <div className={variantContainerStyle}>
       <div className={imageLayout}>
-      {variant.images?.map((image, idx) => (
-        <Image
-          priority
-          key={idx.toString()}
-          src={image.url}
-          width={image.dimensions.w}
-          height={image.dimensions.h}
-          alt={image.label || 'alt not exist sorry for that'}
-        />
-      ))}
-      </div>
-      <div className={attributesStyle}>
-        {variant.attributes?.map((atr, idx) => (
-          <div key={idx}>
-            <div className="name">{atr.name}</div>
-            <div className="label">{atr.value.label}</div>
-          </div>
+        {variant.images?.map((image, idx) => (
+          <Image
+            priority
+            key={idx.toString()}
+            src={image.url}
+            width={image.dimensions.w}
+            height={image.dimensions.h}
+            alt={image.label || 'alt not exist sorry for that'}
+          />
         ))}
       </div>
       <div className={pricesStyle}>
-        {variant.prices?.map((price) => (
-            <div key={price.id}>
-              <div className={priceCurrencyStyle}>
-                {formatValue(price.value)}
+        {variant.prices?.filter((el) => el.country === country).length ? (
+          variant.prices
+            ?.filter((el) => el.country === country)
+            .map((price) => (
+              <div key={price.id}>
+                <div className={priceCurrencyStyle}>
+                {`${formatValue(price.value)} ${price.value.currencyCode}`}
+                </div>
               </div>
-              <div className={priceCurrencyCodeStyle}>
-                {price.value.currencyCode}
-              </div>
-            </div>
-          ))}
+            ))
+        ) : (
+          <div className={noPriceMessage}>
+            no price in this country
+          </div>
+        )}
       </div>
     </div>
   );

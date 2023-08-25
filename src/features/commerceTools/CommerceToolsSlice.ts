@@ -5,12 +5,14 @@ import { RootState } from '@/store/store';
 
 interface InitialState {
    language: string;
+   country: string;
    categories: Category[];
    products: Product[];
    status: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
 const initialState: InitialState = {
   language: '',
+  country: '',
   categories: [],
   products: [],
   status: 'idle'
@@ -27,6 +29,9 @@ const commerceToolseSlice = createSlice({
     },
     setLanguage: (state, action: PayloadAction<string>) => {
       state.language = action.payload;
+    },
+    setCountry: (state, action: PayloadAction<string>) => {
+      state.country = action.payload;
     },
   }, extraReducers : (builder) => {
     builder
@@ -45,6 +50,6 @@ const commerceToolseSlice = createSlice({
  
  });
 
-export const { setCategories, setProducts, setLanguage } = commerceToolseSlice.actions;
+export const { setCategories, setProducts, setLanguage, setCountry } = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;
 export default commerceToolseSlice.reducer;

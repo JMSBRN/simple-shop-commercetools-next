@@ -12,25 +12,16 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../styles/Products.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
 
 function Products({ products }: { products: Product[] }) {
-  const { push, query } = useRouter();
+  const { query } = useRouter();
   const { id } = query;
-  const { t } = useTranslation('common');
   const {
     productsContainer,
-    productsStyle,
-    productInfoStyle,
     parentCategoryNameStyle,
   } = styles;
   const [parentCategoryName, setParentCategoryName] = useState<string>('');
   const { language } = useAppSelector(selectCommerceTools);
-
-  const handleGetProductInfo = (id: string) => {
-    push(`/product-info/${id}`);
-  };
-
   const fetchFn = useCallback(async () => {
     const res = await getCategoryNameWithId(id as string, language);
 
@@ -48,19 +39,11 @@ function Products({ products }: { products: Product[] }) {
     <>
       <div className={parentCategoryNameStyle}>{parentCategoryName}</div>
       <div className={productsContainer}>
-        <div className={productsStyle}>
           {products.map((el) => (
             <div key={el.id}>
-              <div
-                className={productInfoStyle}
-                onClick={() => handleGetProductInfo(el.id)}
-              >
-                {t('product-info')}
-              </div>
               <ProductCard product={el} />
             </div>
           ))}
-        </div>
       </div>
     </>
   );

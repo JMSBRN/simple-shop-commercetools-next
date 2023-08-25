@@ -9,7 +9,7 @@ import { Category } from '@commercetools/platform-sdk';
 import { type GetStaticProps } from 'next';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import styles from '../../styles/SubCategories.module.scss';
+import styles from '../../styles/Categories.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 

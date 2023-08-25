@@ -7,15 +7,6 @@
   text-align: center;
   @include flex(center, center, column);
 }
-.attributesStyle {
-  width: 100%;
-  @include flex();
-  div {
-    margin: 0 3px;
-    color: grey;
-    text-align: center;
-  }
-}
 
 .imageLayout {
   width: 100%;
@@ -32,14 +23,8 @@
 .pricesStyle {
   margin-top: 20px;
   width: 100%;
-  text-align: center;
 }
 
-.priceCurrencyStyle{
-  font-weight: 900;
-  font-size: 20px;
-  color: red;
-}
-.priceCurrencyCodeStyle{
-  color: grey;
+.noPriceMessage {
+  font-size: 10px;
 }

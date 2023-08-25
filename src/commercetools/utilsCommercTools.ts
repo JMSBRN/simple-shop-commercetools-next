@@ -54,8 +54,13 @@ export async function getMainParentId(id: string) {
 
 export async function getLanguages() {
   const res = await apiRoot.get().execute();
-
+  
   return res.body.languages;
+}
+export async function getCountries() {
+  const res = await apiRoot.get().execute();
+  
+  return res.body.countries;
 }
 
 export function filterObjectAndReturnValue(
@@ -101,3 +106,18 @@ export function moveLanguageToFirstPosition(
   // or if the 'en' language is not found, return the original array as-is.
   return languages;
 }
+
+export function setLanguageFromCountry (country: string) {
+   switch (country) {
+    case 'GB':
+      return 'en';
+    case 'IL':
+      return 'he-IL';
+    case 'DE':
+      return 'de';
+    case 'FR':
+      return 'fr';
+    default:
+      return 'en';
+   };
+  }

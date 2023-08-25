@@ -16,3 +16,14 @@
    text-transform: uppercase;
    opacity: 0.4;
 }
+.productWrapper {
+   position: relative;
+}
+
+.productInfoStyle {
+   position: absolute;
+   top: 50px;
+   width: 97%;
+   height: 50%;
+   cursor: pointer;
+}

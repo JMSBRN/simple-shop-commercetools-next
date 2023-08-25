@@ -14,11 +14,13 @@ import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
 function Products({ products }: { products: Product[] }) {
-  const { query } = useRouter();
+  const { push, query } = useRouter();
   const { id } = query;
   const {
     productsContainer,
     parentCategoryNameStyle,
+    productWrapper,
+    productInfoStyle
   } = styles;
   const [parentCategoryName, setParentCategoryName] = useState<string>('');
   const { language } = useAppSelector(selectCommerceTools);
@@ -40,8 +42,9 @@ function Products({ products }: { products: Product[] }) {
       <div className={parentCategoryNameStyle}>{parentCategoryName}</div>
       <div className={productsContainer}>
           {products.map((el) => (
-            <div key={el.id}>
+            <div key={el.id} className={productWrapper}>
               <ProductCard product={el} />
+              <div className={productInfoStyle} onClick={() => push(`/product-info/${el.id}`)}/>
             </div>
           ))}
       </div>

@@ -1,0 +1,9 @@
+@import 'mixins';
+
+.notFoundContainer {
+  @include flex ();
+  div {
+    max-width: 100px;
+    min-width:500px;
+  }
+}

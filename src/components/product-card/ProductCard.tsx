@@ -24,7 +24,7 @@ function ProductCard({ product }: { product: Product }) {
   const handleOptionChange = (option: number) => {
     setSelectedOption(option === selectedOption ? 0 : option);
   };
-  
+
   function setActiveCalss(condition: boolean) {
     if (condition) {
       return activVariantStyle;

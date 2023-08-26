@@ -1,0 +1,22 @@
+    @import 'mixins';
+
+    .atributesContainer{
+        width: 150px;
+        height: 120px;
+        @include flex(flex-start, space-around, column);
+        color: grey;
+        text-transform: uppercase;
+
+    }
+    .atributeStyle{
+        margin: 3px;
+        width: 130px;
+        display: flex;
+        justify-content: space-between;
+        img {
+            filter: invert(54%) sepia(0%) saturate(2557%) hue-rotate(349deg) brightness(91%) contrast(87%);
+        }
+    }
+    .atributeValueStyle{
+        width: 90px;
+    }

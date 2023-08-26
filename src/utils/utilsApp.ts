@@ -6,4 +6,4 @@ const toggleServerSideLaguage = (router: NextRouter, newLocale: string) => {
     router.push({ pathname, query }, asPath, { locale: newLocale });
   };
 
-  export default toggleServerSideLaguage;
+export default toggleServerSideLaguage;

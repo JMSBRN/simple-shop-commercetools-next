@@ -1,5 +1,8 @@
-import { Category } from '@commercetools/platform-sdk';
+import { Attribute, Category } from '@commercetools/platform-sdk';
 import { apiRoot } from './BuildClient';
+import colorIcon from '../../public/svgs/colors.svg';
+import sizeIcon from '../../public/svgs/size.svg';
+import weightIcon from '../../public/svgs/weight.svg';
 
 export async function getProducts(id?: string) {
   if (id) {
@@ -121,3 +124,16 @@ export function setLanguageFromCountry (country: string) {
       return 'en';
    };
   }
+
+  export   function setIconSrcForAtribute(atribute: Attribute) {
+    const { name } = atribute;
+  
+     if(name.includes('Color')) {
+      return colorIcon;
+     } else if (name.includes('Weight')){
+      return weightIcon;
+     } else if (name.includes('Size')) {
+      return sizeIcon;
+     }
+     return null;
+  } 

@@ -1,3 +1,4 @@
+import Atributes from '../atributes/Atributes';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ProductVariant } from '@commercetools/platform-sdk';
@@ -20,9 +21,8 @@ function MasterVariant({
     attributesStyle,
     pricesStyle,
     priceCurrencyStyle,
-    priceCurrencyCodeStyle,
     ImageStyle,
-    imageLayoutStyle
+    imageLayoutStyle,
   } = styles;
   const { images, attributes, prices } = masterVariant;
 
@@ -32,37 +32,33 @@ function MasterVariant({
     <div className={masterVariantContainer}>
       <div className={productTitle}>{productName}</div>
       <div className={imageLayoutStyle}>
-      {images?.map((el) => (
-        <Link key={el.url} href={el.url} target="blank">
-          <Image
-           className={ImageStyle}
-            priority
-            src={el.url}
-            alt={el.label || 'product image'}
-            width={el.dimensions.w}
-            height={el.dimensions.h}
-          />
-        </Link>
-      ))}
+        {images?.map((el) => (
+          <Link key={el.url} href={el.url} target="blank">
+            <Image
+              className={ImageStyle}
+              priority
+              src={el.url}
+              alt={el.label || 'product image'}
+              width={el.dimensions.w}
+              height={el.dimensions.h}
+            />
+          </Link>
+        ))}
       </div>
       <div className={attributesStyle}>
-        {attributes?.map((atr, idx) => (
-          <div key={idx}>
-            <div className="name">{atr.name}</div>
-            <div className="label">{atr.value.label}</div>
-          </div>
-        ))}
+        <Atributes atributes={attributes!} />
       </div>
       <div className="description">{}</div>
       <div className={pricesStyle}>
-        {prices?.filter((el) => el.country === country).map((price) => (
-          <div key={price.id}>
-            <div className={priceCurrencyStyle}>{formatValue(price.value)}</div>
-            <div className={priceCurrencyCodeStyle}>
-              {price.value.currencyCode}
+        {prices
+          ?.filter((el) => el.country === country)
+          .map((price) => (
+            <div key={price.id}>
+              <div className={ priceCurrencyStyle }>{`${formatValue(
+                price.value
+              )} ${price.value.currencyCode}`}</div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

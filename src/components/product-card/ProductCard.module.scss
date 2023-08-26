@@ -8,9 +8,6 @@
     max-height: 400px;
     padding: 10px 0;
     @include flex(center, center, column);
-    &:hover {
-        box-shadow: 0px 0px 10px rgb(228, 228, 228);
-    }
 }
 .productNameStyle {
     text-transform: uppercase;

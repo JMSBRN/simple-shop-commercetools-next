@@ -1,8 +1,8 @@
+import { getCountries, getProducts } from '@/commercetools/utilsCommercTools';
 import { GetStaticProps } from 'next';
 import { Product } from '@commercetools/platform-sdk';
 import ProductInfo from '@/components/product-info/ProductInfo';
 import React from 'react';
-import { getProducts } from '@/commercetools/utilsCommercTools';
 
 function ProductInfoDynamic({ product }: { product: Product }) {
   return (
@@ -14,15 +14,16 @@ export default ProductInfoDynamic;
 
 export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
   const products = await getProducts() as Product[];
-
-  const paths = products.flatMap((el) => 
+  const countries = await getCountries();
+  const paths = countries.flatMap((country) => products.flatMap((el) => 
    locales?.map((locale) => ({
       params: {
+        country,
         id: el.id
       },
       locale
    }))
-  );
+  ));
 
   return {
     paths,

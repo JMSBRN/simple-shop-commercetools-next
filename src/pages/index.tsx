@@ -10,7 +10,7 @@ export default function Home() {
   const router = useRouter();
   
   useEffect(() => {
-    const currentLanguage = JSON.parse(window.localStorage.getItem('lang') || '"en"');
+    const currentLanguage = JSON.parse(window.localStorage.getItem('lang') || '"en-lan"');
     
     return toggleServerSideLaguage(router, currentLanguage);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -33,6 +33,6 @@ export default function Home() {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale || 'en', ['translation', 'common'])),
+    ...(await serverSideTranslations(locale || 'en-lan', ['translation', 'common'])),
   },
 });

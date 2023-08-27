@@ -3,13 +3,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   getCategories,
   getCategoryNameWithId,
+  getCountries,
   getProductsByCategoryId,
 } from '@/commercetools/utilsCommercTools';
 import { GetStaticProps } from 'next';
 import ProductCard from '@/components/product-card/ProductCard';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import styles from '../../styles/Products.module.scss';
+import styles from '../../../styles/Products.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
@@ -25,7 +26,7 @@ function Products({ products }: { products: Product[] }) {
   const [parentCategoryName, setParentCategoryName] = useState<string>('');
   const { language } = useAppSelector(selectCommerceTools);
   const fetchFn = useCallback(async () => {
-    const res = await getCategoryNameWithId(id as string, language);
+    const res = await getCategoryNameWithId(id as string, language.replace(/-lan$/, ''));
 
     setParentCategoryName(res);
   }, [id, language]);
@@ -44,7 +45,7 @@ function Products({ products }: { products: Product[] }) {
           {products.map((el) => (
             <div key={el.id} className={productWrapper}>
               <ProductCard product={el} />
-              <div className={productInfoStyle} onClick={() => push(`/product-info/${el.id}`)}/>
+              <div className={productInfoStyle} onClick={() => push(`/GB/product-info/${el.id}`)}/>
             </div>
           ))}
       </div>
@@ -53,13 +54,20 @@ function Products({ products }: { products: Product[] }) {
 }
 export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
   const categories = (await getCategories()) as Category[];
-  const paths = categories.flatMap((el) =>
-    locales?.map((locale) => ({
-      params: {
-        id: el.id,
-      },
-      locale,
-    }))
+  const countries = await getCountries();
+
+  const paths = countries.flatMap((country) => 
+  categories
+    .filter((el) => el.parent !== undefined)
+    .flatMap((el) =>
+      locales?.map((locale: string) => ({
+        params: {
+          country,
+          id: el.id,
+        },
+        locale,
+      }))
+    )
   );
 
   return {
@@ -75,7 +83,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
   return {
     props: {
       products,
-      ...(await serverSideTranslations(locale || 'en', [
+      ...(await serverSideTranslations(locale || 'en-lan', [
         'translation',
         'common',
       ])),

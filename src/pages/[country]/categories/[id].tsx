@@ -3,13 +3,14 @@ import {
   filterObjectAndReturnValue,
   getCategories,
   getCategoryNameWithId,
+  getCountries,
   getProductsByCategoryId,
 } from '@/commercetools/utilsCommercTools';
 import { Category } from '@commercetools/platform-sdk';
 import { type GetStaticProps } from 'next';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import styles from '../../styles/Categories.module.scss';
+import styles from '../../../styles/Categories.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
@@ -30,15 +31,15 @@ function Subcategories({
     const products = await getProductsByCategoryId(el.id);
 
     if (products.length) {
-      push(`/products/${el.id}`);
+      push(`/GB/products/${el.id}`);
     } else {
-      push(`/categories/${el.id}`);
+      push(`/GB/categories/${el.id}`);
     }
   };
 
   const fetchFn = useCallback(async () => {
     const id = subCategories[0].ancestors[0].id;
-    const res = await getCategoryNameWithId(id, language);
+    const res = await getCategoryNameWithId(id, language.replace(/-lan$/, ''));
 
     if (res !== parentCategoryName) {
       setMainCategoryName(res);
@@ -62,7 +63,7 @@ function Subcategories({
         {subCategories.map((el) => (
           <div key={el.id} onClick={() => handleClick(el)}>
             <div className="">
-              {filterObjectAndReturnValue(el.name, language)}
+              {filterObjectAndReturnValue(el.name, language.replace(/-lan$/, ''))}
             </div>
           </div>
         ))}
@@ -75,17 +76,21 @@ export default Subcategories;
 
 export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
   const categories = (await getCategories()) as Category[];
+  const countries = await getCountries();
 
-  const paths = categories
+  const paths = countries.flatMap((country) => 
+  categories
     .filter((el) => el.parent !== undefined)
     .flatMap((el) =>
       locales?.map((locale: string) => ({
         params: {
+          country,
           id: el.parent?.id,
         },
         locale,
       }))
-    );
+    )
+  );
 
   return {
     paths,
@@ -103,7 +108,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
     props: {
       subCategories,
       parentCategoryName,
-      ...(await serverSideTranslations(locale || 'en', [
+      ...(await serverSideTranslations(locale || 'en-lan', [
         'translation',
         'common',
       ])),

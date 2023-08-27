@@ -18,7 +18,7 @@ function ProductInfo({ product }: { product: Product }) {
   const { masterVariant, variants } = current;
   const { name } = staged;
   const { language } = useAppSelector(selectCommerceTools);
-  const productName = filterObjectAndReturnValue(name, language);
+  const productName = filterObjectAndReturnValue(name, language.replace(/-lan$/, ''));
   const [currentVariants, setCurrentVariants] = useState<ProductVariant[]>(variants);
   const handleSelectVariant = (id: number) => {
      setSelectedIdVariant(id);

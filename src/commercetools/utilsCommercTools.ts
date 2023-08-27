@@ -57,8 +57,9 @@ export async function getMainParentId(id: string) {
 
 export async function getLanguages() {
   const res = await apiRoot.get().execute();
-  
-  return res.body.languages;
+
+  return  res.body.languages.map((el) =>  el = el + '-lan');
+
 }
 export async function getCountries() {
   const res = await apiRoot.get().execute();
@@ -93,7 +94,7 @@ export function moveLanguageToFirstPosition(
       ];
     }
   } else {
-    const indexOfEn = languages.indexOf('en');
+    const indexOfEn = languages.indexOf('en-lan');
 
     if (indexOfEn !== -1) {
       // Create a new array with 'en' in the first position
@@ -113,15 +114,15 @@ export function moveLanguageToFirstPosition(
 export function setLanguageFromCountry (country: string) {
    switch (country) {
     case 'GB':
-      return 'en';
+      return 'en-lan';
     case 'IL':
-      return 'he-IL';
+      return 'he-IL-lan';
     case 'DE':
-      return 'de';
+      return 'de-lan';
     case 'FR':
-      return 'fr';
+      return 'fr-lan';
     default:
-      return 'en';
+      return 'en-lan';
    };
   }
 

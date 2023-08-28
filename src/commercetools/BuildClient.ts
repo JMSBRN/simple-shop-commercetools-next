@@ -29,12 +29,12 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
   host: baseUrl,
 };
 
-// Export the ClientBuilder
 export const ctpClient = new ClientBuilder()
   .withProjectKey(projectKey) 
   .withHttpMiddleware(httpMiddlewareOptions)
   .withClientCredentialsFlow(authMiddlewareOptions)
   .build();
+
 export const apiRoot = 
 createApiBuilderFromCtpClient(ctpClient).withProjectKey({ projectKey });
 

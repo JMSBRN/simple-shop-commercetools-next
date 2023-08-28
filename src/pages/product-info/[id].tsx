@@ -1,12 +1,16 @@
+import AddToCard from '@/components/add-to-card/AddToCard';
 import { GetStaticProps } from 'next';
 import { Product } from '@commercetools/platform-sdk';
 import ProductInfo from '@/components/product-info/ProductInfo';
 import React from 'react';
 import { getProducts } from '@/commercetools/utilsCommercTools';
 
-function ProductInfoDynamic({ product }: { product: Product }) {
+function ProductInfoDynamic({ product }: { product: Product; }) {
   return (
+    <>
+    <AddToCard />
     <ProductInfo product={product} />
+    </>
   );
 }
 
@@ -36,6 +40,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
     return {
       props: {
+        id,
         product
       }
     };

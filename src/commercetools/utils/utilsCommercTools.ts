@@ -1,8 +1,8 @@
 import { Attribute, Category } from '@commercetools/platform-sdk';
-import { apiRoot } from './BuildClient';
-import colorIcon from '../../public/svgs/colors.svg';
-import sizeIcon from '../../public/svgs/size.svg';
-import weightIcon from '../../public/svgs/weight.svg';
+import { apiRoot } from '../BuildClient';
+import colorIcon from '../../../public/svgs/colors.svg';
+import sizeIcon from '../../../public/svgs/size.svg';
+import weightIcon from '../../../public/svgs/weight.svg';
 
 export async function getProducts(id?: string) {
   if (id) {

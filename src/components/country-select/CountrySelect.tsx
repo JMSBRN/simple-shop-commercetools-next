@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { getCountries } from '@/commercetools/utilsCommercTools';
+import { getCountries } from '@/commercetools/utils/utilsCommercTools';
 import { setCountry } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './CountrySelect.module.scss';
 import { useAppDispatch } from '@/hooks/storeHooks';

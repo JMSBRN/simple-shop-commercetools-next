@@ -4,7 +4,7 @@ import {
   getCategories,
   getCategoryNameWithId,
   getProductsByCategoryId,
-} from '@/commercetools/utilsCommercTools';
+} from '@/commercetools/utils/utilsCommercTools';
 import { GetStaticProps } from 'next';
 import ProductCard from '@/components/product-card/ProductCard';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';

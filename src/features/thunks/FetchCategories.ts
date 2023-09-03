@@ -1,5 +1,5 @@
 import { Category, Product } from '@commercetools/platform-sdk';
-import { getCategories, getProducts } from '@/commercetools/utilsCommercTools';
+import { getCategories, getProducts } from '@/commercetools/utils/utilsCommercTools';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchCategories = createAsyncThunk<Category[]>(

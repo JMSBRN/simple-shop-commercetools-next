@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   getLanguages,
   moveLanguageToFirstPosition,
-} from '@/commercetools/utilsCommercTools';
+} from '@/commercetools/utils/utilsCommercTools';
 import { fetchCategories } from '@/features/thunks/FetchCategories';
 import { setLanguage } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './LanguagesSelect.module.scss';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingList } from '@commercetools/platform-sdk';
 import { apiRoot } from '@/commercetools/BuildClient';
-import { filterObjectAndReturnValue } from '@/commercetools/utilsCommercTools';
+import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import styles from './WelcomePage.module.scss';
 
 function WelcomePage() {
@@ -36,15 +36,25 @@ function WelcomePage() {
           <div
             style={{ margin: '10px 0' }}
             key={el.id}
-            onClick={() => handleDeleteShopingList(el.id, el.version)}
+            
           >
-            {filterObjectAndReturnValue(el.name, 'en')}
-            <div className="">{el.id}</div>
-            <div className="">{el.lineItems.map(el => (
-              <div key={el.id}>{filterObjectAndReturnValue(el.name, 'en')}</div>
-            ))}</div>
-            <div className="">{JSON.stringify(el.createdBy)}</div>
+            <div>shopping list name : {filterObjectAndReturnValue(el.name, 'en')}</div>
+            <div>created by  ID: {el.createdBy?.clientId}</div>
             <div className="">version {el.version}</div>
+            <div
+             style={{ margin: '10px 0' }}
+             onClick={() => handleDeleteShopingList(el.id, el.version)}
+            >
+            shopping list id :{el.id}</div>
+            <div className="">shopping list key: { el.key || 'no exist' }</div>
+            <div className="">{el.lineItems.map(el => (
+              <div key={el.id}>
+                <div className="">lineItem name: {filterObjectAndReturnValue(el.name, 'en')}</div>
+                <div className="">lineItem id: {el.id}</div>
+                <div className="">product id: {el.productId}</div>
+                <div className="">quantity: {el.quantity}</div>
+              </div>
+            ))}</div>
           </div>
         ))}
       </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Product } from '@commercetools/platform-sdk';
 import ProductCardVariant from './prduct-variant/ProductCardVariant';
-import { filterObjectAndReturnValue } from '@/commercetools/utilsCommercTools';
+import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { setDynamicArray } from './utilsProductCard';
 import styles from './ProductCard.module.scss';

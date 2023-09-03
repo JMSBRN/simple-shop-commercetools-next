@@ -2,7 +2,7 @@ import { Product, ProductVariant } from '@commercetools/platform-sdk';
 import React, { useState } from 'react';
 import MasterVariant from '../product-card/master-variant/MasterVariant';
 import ProductCardVariant from '../product-card/prduct-variant/ProductCardVariant';
-import { filterObjectAndReturnValue } from '@/commercetools/utilsCommercTools';
+import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './ProductInfo.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';

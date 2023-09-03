@@ -3,7 +3,7 @@ import AddToCard from '@/components/add-to-card/AddToCard';
 import { GetStaticProps } from 'next';
 import { Product } from '@commercetools/platform-sdk';
 import ProductInfo from '@/components/product-info/ProductInfo';
-import { getProducts } from '@/commercetools/utilsCommercTools';
+import { getProducts } from '@/commercetools/utils/utilsCommercTools';
 
 function ProductInfoDynamic({ product }: { product: Product; }) {
   const [quantity, setQuantity] = useState(0);

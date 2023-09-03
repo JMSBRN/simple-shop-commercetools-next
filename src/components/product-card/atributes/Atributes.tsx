@@ -1,7 +1,7 @@
 import {
   filterObjectAndReturnValue,
   setIconSrcForAtribute,
-} from '@/commercetools/utilsCommercTools';
+} from '@/commercetools/utils/utilsCommercTools';
 import { Attribute } from '@commercetools/platform-sdk';
 import Image from 'next/image';
 import React from 'react';

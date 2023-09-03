@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import Loader from '../loader/Loader';
 import { fetchCategories } from '@/features/thunks/FetchCategories';
-import { filterObjectAndReturnValue } from '@/commercetools/utilsCommercTools';
+import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './Categories.module.scss';
 import { useRouter } from 'next/router';

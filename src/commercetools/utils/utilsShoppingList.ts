@@ -1,4 +1,4 @@
-import { LocalizedString } from '@commercetools/platform-sdk';
+import { LocalizedString, ShoppingList } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
 
 export const getShoppingLists = async (ID?: string) => {
@@ -56,4 +56,15 @@ export const updateQuantityInShoppingList = async (
   const { body, statusCode } = res;
 
   return { body, statusCode };
+};
+
+export const filterShoppingListsByProductId = (
+  shoppingLists: ShoppingList[],
+  productId: string
+) => {
+  return shoppingLists.filter((shoppingList) => {
+    return shoppingList.lineItems.some(
+      (lineItem) => lineItem.productId === productId
+    );
+  });
 };

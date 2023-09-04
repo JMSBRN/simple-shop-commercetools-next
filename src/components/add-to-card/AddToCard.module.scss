@@ -1,0 +1,32 @@
+@import 'mixins';
+
+.addToCardContiner{
+   width: 200px;
+   height: 80px; 
+   padding: 14px 0;
+   @include flex ();
+   background-color: rgb(176, 176, 176);
+    button {
+        width: 100%;
+        height: 100%;
+        font-size: 20px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        &:hover {
+         color: rgb(167, 65, 65);
+        }
+        &:active {
+            color: white;
+        }
+    }
+}
+
+.quantityContainer{
+    width: 130px;
+    height: 100%;
+    padding: 1px 0;
+    @include flex (center, center, column);
+    font-size: 18px;
+    border-right: 1px solid rgb(47, 47, 47);
+}

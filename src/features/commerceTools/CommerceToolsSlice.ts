@@ -1,21 +1,29 @@
-import { Category, Product } from '@commercetools/platform-sdk';
+import { Category, Product, ShoppingList } from '@commercetools/platform-sdk';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { fetchCategories, fetchProducts } from '../thunks/FetchCategories';
 import { RootState } from '@/store/store';
+import {
+  fetchCategories,
+} from '../thunks/FetchCategories';
+import { fetchProducts } from '../thunks/FetchProducts';
+import { fetchShoppingLists } from '../thunks/FetchShoppingLists';
 
 interface InitialState {
-   language: string;
-   country: string;
-   categories: Category[];
-   products: Product[];
-   status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  language: string;
+  country: string;
+  categories: Category[];
+  products: Product[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  shoppingLists: ShoppingList[];
+  quantity: number;
 }
 const initialState: InitialState = {
   language: '',
   country: '',
   categories: [],
   products: [],
-  status: 'idle'
+  status: 'idle',
+  shoppingLists: [],
+  quantity: 0,
 };
 const commerceToolseSlice = createSlice({
   name: 'commercetools',
@@ -33,23 +41,43 @@ const commerceToolseSlice = createSlice({
     setCountry: (state, action: PayloadAction<string>) => {
       state.country = action.payload;
     },
-  }, extraReducers : (builder) => {
+    setShoppingLists: (state, action: PayloadAction<ShoppingList[]>) => {
+      state.shoppingLists = action.payload;
+    },
+    setQuantity: (state, action: PayloadAction<number>) => {
+      state.quantity = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
     builder
-    .addCase(fetchCategories.pending, (state) => {
-      state.status = 'loading';
-    }).addCase(fetchCategories.fulfilled, (state, action) => {
-      state.status = 'succeeded';
-      state.categories = action.payload;
-    }).addCase(fetchProducts.pending, (state) => {
-      state.status = 'loading';
-    }).addCase(fetchProducts.fulfilled, (state, action) => {
-      state.status = 'succeeded';
-      state.products = action.payload;
-    });
-  }
- 
- });
+      .addCase(fetchCategories.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchShoppingLists.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.shoppingLists = action.payload;
+      })
+      .addCase(fetchCategories.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.categories = action.payload;
+      })
+      .addCase(fetchProducts.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.products = action.payload;
+      });
+  },
+});
 
-export const { setCategories, setProducts, setLanguage, setCountry } = commerceToolseSlice.actions;
+export const {
+  setCategories,
+  setProducts,
+  setLanguage,
+  setCountry,
+  setShoppingLists,
+  setQuantity,
+} = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;
 export default commerceToolseSlice.reducer;

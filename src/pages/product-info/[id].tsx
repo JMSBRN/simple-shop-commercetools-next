@@ -1,20 +1,13 @@
-import React, { useState } from 'react';
-import AddToCard from '@/components/add-to-card/AddToCard';
 import { GetStaticProps } from 'next';
 import { Product } from '@commercetools/platform-sdk';
 import ProductInfo from '@/components/product-info/ProductInfo';
+import React from 'react';
 import { getProducts } from '@/commercetools/utils/utilsCommercTools';
 
-function ProductInfoDynamic({ product }: { product: Product; }) {
-  const [quantity, setQuantity] = useState(0);
-
+function ProductInfoDynamic({ product }: { product: Product }) {
   return (
     <>
-    <AddToCard quantity={quantity} productId={product.id} />
-    <button onClick={() => setQuantity(quantity + 1)}>+</button>
-    {quantity}
-    <button onClick={() => setQuantity(quantity - 1)}>-</button>
-    <ProductInfo product={product} />
+      <ProductInfo product={product} />
     </>
   );
 }
@@ -22,15 +15,15 @@ function ProductInfoDynamic({ product }: { product: Product; }) {
 export default ProductInfoDynamic;
 
 export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
-  const products = await getProducts() as Product[];
+  const products = (await getProducts()) as Product[];
 
-  const paths = products.flatMap((el) => 
-   locales?.map((locale) => ({
+  const paths = products.flatMap((el) =>
+    locales?.map((locale) => ({
       params: {
-        id: el.id
+        id: el.id,
       },
-      locale
-   }))
+      locale,
+    }))
   );
 
   return {
@@ -41,12 +34,12 @@ export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const id = params?.id as string;
-  const product = await getProducts(id) as Product;
+  const product = (await getProducts(id)) as Product;
 
-    return {
-      props: {
-        id,
-        product
-      }
-    };
+  return {
+    props: {
+      id,
+      product,
+    },
+  };
 };

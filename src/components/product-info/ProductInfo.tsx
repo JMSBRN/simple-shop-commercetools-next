@@ -1,5 +1,6 @@
 import { Product, ProductVariant } from '@commercetools/platform-sdk';
 import React, { useState } from 'react';
+import AddToCard from '../add-to-card/AddToCard';
 import MasterVariant from '../product-card/master-variant/MasterVariant';
 import ProductCardVariant from '../product-card/prduct-variant/ProductCardVariant';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
@@ -12,7 +13,8 @@ function ProductInfo({ product }: { product: Product }) {
   const {
     productInfoContainer,
     variantsStyle,
-    variantStyle
+    variantStyle,
+    addToCardContainerStyle
   } = styles;
   const { current, staged } = product.masterData;
   const { masterVariant, variants } = current;
@@ -36,6 +38,9 @@ function ProductInfo({ product }: { product: Product }) {
       : (<>{ variants.filter((el) => el.id === selectedIdVariant).map((el) => (
         <MasterVariant key={el.id}  masterVariant={el} productName={productName!} />
       ))}</>)}
+      <div className={addToCardContainerStyle}>
+        <AddToCard productId={product.id} />
+      </div>
       <div className={variantsStyle}>
         {currentVariants.filter((el) => el.id !== selectedIdVariant).map((el) => (
           <div 

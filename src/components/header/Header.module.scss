@@ -29,3 +29,16 @@
   width: 30%;
   min-width: 300px;
 }
+.shoppingBasketContainer {
+  width: 40px;
+  height: auto;
+  @include flex(center, center, column);
+  color: grey;
+  font-size: 14px;
+  img {
+    filter: invert(63%) sepia(0%) saturate(48%) hue-rotate(190deg) brightness(96%) contrast(88%);
+  }
+}
+.countShoppingLists {
+  height: 15px;
+}

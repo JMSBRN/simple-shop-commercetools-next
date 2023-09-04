@@ -1,28 +1,16 @@
-import { Category, Product } from '@commercetools/platform-sdk';
-import { getCategories, getProducts } from '@/commercetools/utils/utilsCommercTools';
+import { Category } from '@commercetools/platform-sdk';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { getCategories } from '@/commercetools/utils/utilsCommercTools';
 
 export const fetchCategories = createAsyncThunk<Category[]>(
     'categories/fetchCategories',
     async () => {
       try {
-        const categories: Category[] = await getCategories() as Category[];
+        const categories = await getCategories() as Category[];
 
         return categories;
       } catch (error) {
         throw new Error(`Error fetching categories from commercetools: ${error}`);
-      }
-    }
-  );
-export const fetchProducts = createAsyncThunk<Product[]>(
-    'categories/fetchProducts',
-    async () => {
-      try {
-        const products: Product[] = await getProducts() as Product[];
-
-        return products;
-      } catch (error) {
-        throw new Error(`Error fetching products from commercetools: ${error}`);
       }
     }
   );

@@ -5,20 +5,15 @@ import {
   getShoppingLists,
   updateQuantityInShoppingList,
 } from '@/commercetools/utils/utilsShoppingList';
-import {
-  selectCommerceTools,
-  setQuantity,
-} from '@/features/commerceTools/CommerceToolsSlice';
-import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { ShoppingList } from '@commercetools/platform-sdk';
 import { fetchShoppingLists } from '@/features/thunks/FetchShoppingLists';
 import styles from './AddToCard.module.scss';
+import { useAppDispatch } from '@/hooks/storeHooks';
 
 function AddToCard({ productId }: { productId: string }) {
   const { addToCardContiner, quantityContainer } = styles;
   const dispatch = useAppDispatch();
-  const { quantity } = useAppSelector(selectCommerceTools);
-  const [currentQuantity, setCurrentQuantity] = useState(0);
+  const [quantity, setQuantity] = useState<number>(0);
 
   const handleCreateCard = async () => {
     const shoppingLists = (await getShoppingLists()) as ShoppingList[];
@@ -62,13 +57,12 @@ function AddToCard({ productId }: { productId: string }) {
   };
 
   const handlePlusQuantuty = () => {
-    setCurrentQuantity(currentQuantity + 1);
-    dispatch(setQuantity(currentQuantity));
+    
+    setQuantity(quantity + 1 );
   };
   const handleMinusQuantuty = () => {
-    if (currentQuantity) {
-      setCurrentQuantity(currentQuantity - 1);
-      dispatch(setQuantity(currentQuantity));
+    if (quantity) {
+      setQuantity(quantity - 1);
     }
   };
 
@@ -76,7 +70,7 @@ function AddToCard({ productId }: { productId: string }) {
     <div className={addToCardContiner}>
       <div className={quantityContainer}>
         <button onClick={handlePlusQuantuty}>+</button>
-        {currentQuantity}
+        {quantity}
         <button onClick={handleMinusQuantuty}>-</button>
       </div>
       <button type="button" onClick={handleCreateCard}>

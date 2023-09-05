@@ -47,7 +47,10 @@
         height: 40px;
         padding: 0 6px;
         font-size: 13px;
-        @include flex(center, space-between);
+        display: grid;
+        grid-template-columns: 0.5fr 1fr 2fr 0.5fr;
+        align-items: center;
+        justify-content: center;
         background-color: white;
     }
     .itemDelete{

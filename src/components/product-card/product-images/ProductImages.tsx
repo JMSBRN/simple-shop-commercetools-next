@@ -27,7 +27,7 @@ function ProductImages({
     };
 
     fetchFn();
-  }, [productId, urls]);
+  }, [productId]);
   return (
     <div className={imagesContainer}>
       {urls?.map((el) => (

@@ -7,6 +7,17 @@ export const getShoppingLists = async (ID?: string) => {
   }
   return (await apiRoot.shoppingLists().get().execute()).body.results;
 };
+export const deleteShoppingList = async (ID: string, version: number) => {
+   const res =  await apiRoot.shoppingLists().withId({ ID }).delete({
+      queryArgs: {
+        version
+      }
+    }).execute();
+    const { body, statusCode } = res;
+
+    return { body, statusCode };
+ 
+};
 
 export const createShoppingListWithProductId = async (
   name: LocalizedString,

@@ -1,4 +1,5 @@
 import ProductImages from '../product-card/product-images/ProductImages';
+import ProductPrice from '../product-card/product-price/ProductPrice';
 import React from 'react';
 import { ShoppingList } from '@commercetools/platform-sdk';
 import { deleteShoppingList } from '@/commercetools/utils/utilsShoppingList';
@@ -25,7 +26,7 @@ function MiniCartModal({
     itemDelete,
     ItemImages,
     itemName,
-    itemQuantity
+    itemPrice
   } = styles;
 
   const dispatch = useAppDispatch();
@@ -57,9 +58,11 @@ function MiniCartModal({
                   <ProductImages productId={item.productId} />
                 </div>
                 <div className={itemName}>
-                  {filterObjectAndReturnValue(item.name, 'en')}
+                  {filterObjectAndReturnValue(item.name, 'en') || 'no product name'}
                 </div>
-                <div className={itemQuantity}>{item.quantity}</div>
+                <div className={itemPrice}>
+                  <ProductPrice quantity={item.quantity}  productId={item.productId}/>
+                </div>
               </div>
             ))}
           </div>

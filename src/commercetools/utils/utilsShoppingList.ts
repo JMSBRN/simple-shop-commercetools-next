@@ -90,4 +90,13 @@ export const getImagesUrlsFromProduct = async (productId: string) => {
      return el.url;
 });
 };
+export const getPricesUrlsFromProduct = async (productId: string) => {
+   const res = await getProducts(productId) as Product;
+     const { current } = res.masterData;
+     const { prices } = current.masterVariant;
+
+   if(prices) return prices.map((el) => {
+     return el;
+});
+};
 

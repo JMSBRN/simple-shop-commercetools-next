@@ -48,7 +48,7 @@
         padding: 0 6px;
         font-size: 13px;
         display: grid;
-        grid-template-columns: 0.5fr 1fr 2fr 0.5fr;
+        grid-template-columns: 0.5fr 1fr 1.5fr 1fr;
         align-items: center;
         justify-content: center;
         background-color: white;
@@ -67,9 +67,9 @@
     .itemName{
         text-transform: uppercase;
     }
-    .itemQuantity{
-        font-size: 14px;
-        font-weight: 500;
+    .itemPrice{
+        font-size: 12px;
+        font-weight: 300;
     }
     .buttonsContiner{
         position: absolute;

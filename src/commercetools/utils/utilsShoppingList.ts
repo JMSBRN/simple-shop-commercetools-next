@@ -1,5 +1,6 @@
-import { LocalizedString, ShoppingList } from '@commercetools/platform-sdk';
+import { LocalizedString, Product, ShoppingList } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
+import { getProducts } from './utilsCommercTools';
 
 export const getShoppingLists = async (ID?: string) => {
   if (ID) {
@@ -79,3 +80,14 @@ export const filterShoppingListsByProductId = (
     );
   });
 };
+
+export const getImagesUrlsFromProduct = async (productId: string) => {
+   const res = await getProducts(productId) as Product;
+     const { current } = res.masterData;
+     const { images } = current.masterVariant;
+
+   if(images) return images.map((el) => {
+     return el.url;
+});
+};
+

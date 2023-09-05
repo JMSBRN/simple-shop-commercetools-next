@@ -13,8 +13,8 @@
     }
     .miniModalClose {
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 5px;
+        right: 10px;
         padding: 1px 3px;
         font-size: 18px;
         font-weight: 500;
@@ -57,6 +57,9 @@
             background-color: grey;
             color: white;
         }
+    }
+    .ItemImages {
+        width: 90px;
     }
     .itemName{
         text-transform: uppercase;

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Price } from '@commercetools/platform-sdk';
 import { formatValue } from '../utilsProductCard';
-import { getPricesUrlsFromProduct } from '@/commercetools/utils/utilsShoppingList';
+import { getCurrencySymbol } from '@/commercetools/utils/utilsCommercTools';
+import { getPricesFromProduct } from '@/commercetools/utils/utilsShoppingList';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './ProductPrice.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
@@ -14,13 +15,13 @@ function ProductPrice({
   quantity: number;
 }) {
   const { country } = useAppSelector(selectCommerceTools);
-  const { productPriceContainer } = styles;
+  const { productPriceContainer, noPriceMessage } = styles;
 
   const [prices, setPrices] = useState<Price[]>();
 
   useEffect(() => {
     const fetchFn = async () => {
-      const res = await getPricesUrlsFromProduct(productId);
+      const res = await getPricesFromProduct(productId);
 
       if (res) setPrices(res);
     };
@@ -37,13 +38,14 @@ function ProductPrice({
           ?.filter((el) => el.country === country)
           .map((el) => (
             <div key={el.id}>
-              <div className="">{`${quantity || 1} * ${formatValue(el.value)}`}
-              <span>{el.value.currencyCode}</span>
+              <div>{`${quantity || 1} * ${formatValue(el.value)}`}
+              <span>{getCurrencySymbol(country, el.value.currencyCode)}</span>
               </div>
             </div>
           ))
       ) : (
-        <div className="">no price</div>
+        <div className={noPriceMessage}>
+          <div>{quantity || 1} </div> no price</div>
       )}
     </div>
   );

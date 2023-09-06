@@ -34,9 +34,17 @@
     .shoppingListsStyle{
         margin: 0 auto;
         width: 95%;
-        height: auto;
-        min-height: 150px;
+        height: 150px;
+        padding: 5px;
         align-items: center;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: 8px;
+          }
+        &::-webkit-scrollbar-thumb {
+            background: rgb(234, 234, 234); 
+            border-radius: 3px;
+          }
     }
     .shoppingList{
         margin: 3px auto;
@@ -70,6 +78,14 @@
     .itemPrice{
         font-size: 12px;
         font-weight: 300;
+    }
+    .subTotal {
+        margin-top: 30px;
+        width: 100%;
+        height: 30px;
+        padding: 2px 8px;
+        text-align: end;
+        color: lightgray;
     }
     .buttonsContiner{
         position: absolute;

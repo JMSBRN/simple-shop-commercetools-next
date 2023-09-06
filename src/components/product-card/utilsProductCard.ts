@@ -12,6 +12,10 @@ import { PriceValue } from './interfacesProductCard';
     return parts.join('.');
   }
 
+    function getPriceValue(value: PriceValue): number {
+    return value.centAmount / Math.pow(10, value.fractionDigits);
+  }
+
     function setDynamicArray (items: number) {
     const arr = [];
 
@@ -23,5 +27,6 @@ import { PriceValue } from './interfacesProductCard';
 
   export {
     formatValue,
+    getPriceValue,
     setDynamicArray
   };

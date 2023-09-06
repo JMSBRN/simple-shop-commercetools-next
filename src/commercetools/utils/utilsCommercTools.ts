@@ -110,20 +110,20 @@ export function moveLanguageToFirstPosition(
   return languages;
 }
 
-export function setLanguageFromCountry (country: string) {
-   switch (country) {
-    case 'GB':
-      return 'en';
-    case 'IL':
-      return 'he-IL';
-    case 'DE':
-      return 'de';
-    case 'FR':
-      return 'fr';
-    default:
-      return 'en';
-   };
-  }
+ export const getCurrencySymbol = (locale: string, currency: string) => {
+   if(currency) {
+     return (0).toLocaleString(
+       locale,
+       {
+         style: 'currency',
+         currency: currency,
+         minimumFractionDigits: 0,
+         maximumFractionDigits: 0
+       }
+     ).replace(/\d/g, '').trim();
+   }
+   return '';
+  };
 
   export   function setIconSrcForAtribute(atribute: Attribute) {
     const { name } = atribute;

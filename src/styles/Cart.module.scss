@@ -1,8 +1,147 @@
 @import 'mixins';
-.cartContiner{
+
+.cartContiner {
     margin: 0 auto;
     width: 100%;
     height: 100vh;
+    @include flex (center, flex-start, column);
+
+}
+
+
+.cartTitle {
+    margin-top: 50px;
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    font-size: 23px;
+    font-weight: 500;
     @include flex ();
+    background-color: rgb(228, 228, 228);
+    color: rgb(136, 136, 136);
+}
+
+.mainContainer {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+
+.leftSideContainer {
+    width: 100%;
+    height: 100%;
+    padding-left: 30px;
+    @include flex(flex-start, center, column);
+}
+
+.lineItems {
+    width: 80%;
+    height: auto;
+    min-height: 200px;
+    max-height: 400px;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgb(183, 183, 183);
+        border-radius: 3px;
+    }
+}
+
+.lineItem {
+    margin: 10px auto;
+    width: 96%;
+    height: 180px;
+    border: 1px solid rgb(125, 125, 125, 0.4);
+}
+
+.promoCodeContainer {
+    width: 60%;
+    height: 100px;
+    @include flex ();
+    input {
+       width: 250px;
+       height: 30px;
+       border: none;
+       outline: none;
+       font-size: 20px;
+       border-bottom: 1px solid rgb(125, 125, 125, 0.4);
+       color: rgb(136, 136, 136);
+       
+    }
+    button {
+        margin-left: 20px;
+        width: auto;
+        height: auto;
+        padding: 6px 30px;
+        border: none;
+        text-transform: uppercase;
+        color: rgb(136, 136, 136);
+    }
+
+}
+
+.cartTotalsContainer {
+    width: 100%;
+    height: 100%;
+    @include flex(center, center, column);
+
+    button {
+        margin: 10px auto;
+        width: 200px;
+        height: 50px;
+        font-size: 16px;
+        font-weight: 500;
+        text-transform: uppercase;
+        border: none;
+        background-color: rgb(131, 131, 131);
+        color: white;
+        cursor: pointer;
+
+        &:active {
+            border: 1px solid rgb(125, 125, 125, 0.4);
+            background-color: white;
+            color: rgb(100, 100, 100);
+        }
+    }
+}
+
+.cartTotalsTable {
+    margin: 30px auto;
+    width: 90%;
+    height: 300px;
+    border: 1px solid rgb(125, 125, 125, 0.4);
+    color: rgb(136, 136, 136);
+}
+
+.cartTotalsTitle {
+    width: 100%;
+    height: 70px;
+    padding: 20px 40px 0 40px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgb(125, 125, 125, 0.4);
+}
+
+.cartTotalsInfo {
+    width: 100%;
+    height: 60px;
+    text-align: start;
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: uppercase;
+    @include flex(center, space-around);
+}
+
+.cartTotals  {
+   @extend .cartTotalsInfo;
+   font-size: 25px;
+    border-top: 1px solid rgb(125, 125, 125, 0.4);
 
 }

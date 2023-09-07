@@ -1,0 +1,72 @@
+@import 'mixins';
+
+.lineItem {
+    margin: 10px auto;
+    width: 96%;
+    height: 180px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 50px 3fr repeat(3, 1fr);
+    align-items: center;
+    border: 1px solid rgb(125, 125, 125, 0.4);
+    div {
+        color: grey;
+    }
+}
+
+.deleteLineItem {}
+
+.description {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    img {
+        width: 100px;
+        height: 130px;
+        background-color: rgb(202, 202, 202, 0.5);
+    }
+}
+
+.descriptionInfoContainer {
+    @include flex (flex-start, center, column);
+}
+
+.price {
+    padding: 3px;
+    text-align: center;
+    text-transform: uppercase;
+}
+.saleBage{
+    margin: 5px auto;
+    width: 100px;
+    height: 40px;
+    @include flex ();
+    border-radius: 10px;
+    background-color: rgb(255, 255, 46, 0.9);
+}
+.quantity {
+    width: 100%;
+    height: 65px;
+    display: grid;
+    grid-template-columns: 1fr 30px 1fr;
+    align-items: center;
+    div {
+        font-size: 20px;
+        text-align: center;
+    }
+    button {
+        width: 100%;
+        height: 100%;
+        border: none;
+        cursor: pointer;
+        &:active {
+            background-color: white;
+        }
+    }
+}
+
+.total {
+    text-align: center;
+}

@@ -1,4 +1,4 @@
-import { Category, Product, ShoppingList } from '@commercetools/platform-sdk';
+import { Cart, Category, Product, ShoppingList } from '@commercetools/platform-sdk';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/store/store';
 import {
@@ -10,18 +10,22 @@ import { fetchShoppingLists } from '../thunks/FetchShoppingLists';
 interface InitialState {
   language: string;
   country: string;
+  currency: string;
   categories: Category[];
   products: Product[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   shoppingLists: ShoppingList[];
+  cart: Cart;
 }
 const initialState: InitialState = {
   language: '',
   country: '',
+  currency: '',
   categories: [],
   products: [],
   status: 'idle',
   shoppingLists: [],
+  cart: {} as Cart,
 };
 const commerceToolseSlice = createSlice({
   name: 'commercetools',
@@ -39,8 +43,14 @@ const commerceToolseSlice = createSlice({
     setCountry: (state, action: PayloadAction<string>) => {
       state.country = action.payload;
     },
+    setCurrency: (state, action: PayloadAction<string>) => {
+      state.currency = action.payload;
+    },
     setShoppingLists: (state, action: PayloadAction<ShoppingList[]>) => {
       state.shoppingLists = action.payload;
+    },
+    setCart: (state, action: PayloadAction<Cart>) => {
+      state.cart = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -71,7 +81,9 @@ export const {
   setProducts,
   setLanguage,
   setCountry,
+  setCurrency,
   setShoppingLists,
+  setCart,
 } = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;
 export default commerceToolseSlice.reducer;

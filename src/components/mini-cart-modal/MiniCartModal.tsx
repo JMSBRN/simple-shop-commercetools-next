@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
+  addShoopingListToCart,
+  createCart,
+} from '@/commercetools/utils/utilsCarts';
+import {
   deleteShoppingList,
   getTotalSumFromSoppingLists,
 } from '@/commercetools/utils/utilsShoppingList';
@@ -7,12 +11,15 @@ import {
   filterObjectAndReturnValue,
   getCurrencySymbol,
 } from '@/commercetools/utils/utilsCommercTools';
+import {
+  selectCommerceTools,
+  setCart,
+} from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import ProductImages from '../product-card/product-images/ProductImages';
 import ProductPrice from '../product-card/product-price/ProductPrice';
 import { ShoppingList } from '@commercetools/platform-sdk';
 import { fetchShoppingLists } from '@/features/thunks/FetchShoppingLists';
-import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';
 import { useRouter } from 'next/router';
 
@@ -39,6 +46,7 @@ function MiniCartModal({
   } = styles;
 
   const dispatch = useAppDispatch();
+  const { currency } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
 
   const handleDeleteShoppingList = async (ID: string, version: number) => {
@@ -46,9 +54,28 @@ function MiniCartModal({
 
     if (res.statusCode === 200) dispatch(fetchShoppingLists());
   };
-  const handleRedirectToCartPage = () => {
-    push('/cart');
+  const handleRedirectToCartPage = async () => {
     onClick();
+    if (shoppingLists.length) {
+      console.log(currency);
+      
+      const res = await createCart(currency);
+
+      if (res) {
+        push('/cart');
+        dispatch(setCart(res));
+        const { id, version } = res;
+
+        shoppingLists.forEach( async (el) => {
+          await addShoopingListToCart(
+            id,
+            version,
+            el.id
+          );
+        });
+
+      }
+    }
   };
 
   function TotalSum() {

@@ -61,7 +61,7 @@ function Subcategories({
       <div className={subCategoriesNames}>
         {subCategories.map((el) => (
           <div key={el.id} onClick={() => handleClick(el)}>
-            <div className="">
+            <div>
               {filterObjectAndReturnValue(el.name, language)}
             </div>
           </div>

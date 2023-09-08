@@ -1,6 +1,6 @@
 @import 'mixins';
 
-.lineItem {
+.lineItemStyle {
     margin: 10px auto;
     width: 96%;
     height: 180px;
@@ -14,7 +14,12 @@
     }
 }
 
-.deleteLineItem {}
+.deleteLineItem {
+    cursor: pointer;
+    &:active {
+        color: red;
+    }
+}
 
 .description {
     width: 100%;
@@ -25,7 +30,6 @@
     img {
         width: 100px;
         height: 130px;
-        background-color: rgb(202, 202, 202, 0.5);
     }
 }
 
@@ -46,7 +50,7 @@
     border-radius: 10px;
     background-color: rgb(255, 255, 46, 0.9);
 }
-.quantity {
+.quantityStyle {
     width: 100%;
     height: 65px;
     display: grid;

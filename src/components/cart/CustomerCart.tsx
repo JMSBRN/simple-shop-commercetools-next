@@ -1,17 +1,16 @@
+import { Cart, LineItem } from '@commercetools/platform-sdk';
+import React, { useEffect, useState } from 'react';
 import CartLineItem from './cart-line-item/CartLineItem';
 import Link from 'next/link';
-import React from 'react';
-import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './CustomerCart.module.scss';
-import { useAppSelector } from '@/hooks/storeHooks';
 
-function CustomerCart() {
+function CustomerCart({ cart }: { cart:Cart}) {
     const { 
       cartContainer,
       cartTitle,
       mainContainer,
       leftSideContainer,
-      lineItems,
+      lineItemsStyle,
       promoCodeContainer,
       cartTotalsContainer,
       cartTotalsTable,
@@ -20,10 +19,15 @@ function CustomerCart() {
       cartTotals,
       lineItemHeadlines,
      } = styles;
+     const [currentlineItems, setCurrentLineitems] = useState([] as LineItem[]);
 
-     const { cart } = useAppSelector(selectCommerceTools);
-
-   console.log(cart);
+      const { id, lineItems } = cart;
+       
+      useEffect(() => {
+        lineItems && setCurrentLineitems(lineItems);
+        
+      }, [lineItems]);
+   
   return (
     <div className={cartContainer}>
       <div className={cartTitle}>
@@ -39,8 +43,15 @@ function CustomerCart() {
             <div>Quantity</div>
             <div>Total</div>
           </div>
-        <div className={lineItems}>
-        <CartLineItem />
+        <div className={lineItemsStyle}>
+          {currentlineItems.map(el => (
+            <CartLineItem
+            cartId={id}
+             key={el.id}
+            lineItem={el}
+             />
+
+          ))}
           </div>
          <div className={promoCodeContainer}>
           <input type="text" />

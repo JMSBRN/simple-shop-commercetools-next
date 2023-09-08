@@ -33,7 +33,7 @@ function AddToCard({ productId }: { productId: string }) {
       if (res.id) dispatch(fetchShoppingLists());
     }
     if (filteredList.length) {
-      const { id } = filteredList[0];
+      const { id } = filteredList.find(el => el.id)!;
 
       if (quantity && id) {
         const findedShoppingList = (await getShoppingLists(id)) as ShoppingList;
@@ -44,7 +44,7 @@ function AddToCard({ productId }: { productId: string }) {
           const result = await updateQuantityInShoppingList(
             id,
             version,
-            lineItems[0].id,
+            lineItems.find(el => el.id)?.id!,
             quantity
           );
 

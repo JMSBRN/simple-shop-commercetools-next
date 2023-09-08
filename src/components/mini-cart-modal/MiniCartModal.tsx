@@ -1,7 +1,9 @@
+import { Cart, ShoppingList } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
 import {
   addShoopingListToCart,
   createCart,
+  getCarts,
 } from '@/commercetools/utils/utilsCarts';
 import {
   deleteShoppingList,
@@ -13,12 +15,11 @@ import {
 } from '@/commercetools/utils/utilsCommercTools';
 import {
   selectCommerceTools,
-  setCart,
+  setCarts,
 } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import ProductImages from '../product-card/product-images/ProductImages';
 import ProductPrice from '../product-card/product-price/ProductPrice';
-import { ShoppingList } from '@commercetools/platform-sdk';
 import { fetchShoppingLists } from '@/features/thunks/FetchShoppingLists';
 import styles from './MiniCartModal.module.scss';
 import { useRouter } from 'next/router';
@@ -44,10 +45,9 @@ function MiniCartModal({
     itemPrice,
     subTotal,
   } = styles;
-
+ const { push } = useRouter();
   const dispatch = useAppDispatch();
-  const { currency } = useAppSelector(selectCommerceTools);
-  const { push } = useRouter();
+  const { carts, currency, country } = useAppSelector(selectCommerceTools);
 
   const handleDeleteShoppingList = async (ID: string, version: number) => {
     const res = await deleteShoppingList(ID, version);
@@ -57,23 +57,24 @@ function MiniCartModal({
   const handleRedirectToCartPage = async () => {
     onClick();
     if (shoppingLists.length) {
-      console.log(currency);
-      
-      const res = await createCart(currency);
+      const res = await createCart(currency, country);
 
-      if (res) {
-        push('/cart');
-        dispatch(setCart(res));
-        const { id, version } = res;
+      if (res?.id) {
+        const { id } = res;
+        
+        shoppingLists.forEach(async (el) => {
+          const cart = await getCarts(id)as Cart;
+          
+          if(cart.id) {
+            const res = await addShoopingListToCart(id, cart.version, el.id) as Cart;
+            
+            if(res.id) {
+              push(`/cart/${res.id}`);
 
-        shoppingLists.forEach( async (el) => {
-          await addShoopingListToCart(
-            id,
-            version,
-            el.id
-          );
+              dispatch(setCarts([...carts, res!]));
+            }
+          }
         });
-
       }
     }
   };

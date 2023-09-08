@@ -1,6 +1,7 @@
 import { Cart, Category, Product, ShoppingList } from '@commercetools/platform-sdk';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/store/store';
+import { fetchCarts } from '../thunks/FetchCarts';
 import {
   fetchCategories,
 } from '../thunks/FetchCategories';
@@ -15,7 +16,7 @@ interface InitialState {
   products: Product[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   shoppingLists: ShoppingList[];
-  cart: Cart;
+  carts: Cart[];
 }
 const initialState: InitialState = {
   language: '',
@@ -25,7 +26,7 @@ const initialState: InitialState = {
   products: [],
   status: 'idle',
   shoppingLists: [],
-  cart: {} as Cart,
+  carts: [] as Cart[],
 };
 const commerceToolseSlice = createSlice({
   name: 'commercetools',
@@ -49,8 +50,8 @@ const commerceToolseSlice = createSlice({
     setShoppingLists: (state, action: PayloadAction<ShoppingList[]>) => {
       state.shoppingLists = action.payload;
     },
-    setCart: (state, action: PayloadAction<Cart>) => {
-      state.cart = action.payload;
+    setCarts: (state, action: PayloadAction<Cart[]>) => {
+      state.carts = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -61,6 +62,10 @@ const commerceToolseSlice = createSlice({
       .addCase(fetchShoppingLists.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.shoppingLists = action.payload;
+      })
+      .addCase(fetchCarts.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.carts = action.payload;
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.status = 'succeeded';
@@ -83,7 +88,7 @@ export const {
   setCountry,
   setCurrency,
   setShoppingLists,
-  setCart,
+  setCarts,
 } = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;
 export default commerceToolseSlice.reducer;

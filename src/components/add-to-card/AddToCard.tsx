@@ -1,64 +1,55 @@
 import React, { useState } from 'react';
 import {
-  createShoppingListWithProductId,
-  filterShoppingListsByProductId,
-  getShoppingLists,
-  updateQuantityInShoppingList,
-} from '@/commercetools/utils/utilsShoppingList';
-import { ShoppingList } from '@commercetools/platform-sdk';
-import { fetchShoppingLists } from '@/features/thunks/FetchShoppingLists';
+  addLineItemToCart,
+  createCartWithProductId,
+  getCarts,
+} from '@/commercetools/utils/utilsCarts';
+import { selectCommerceTools, setCart } from '@/features/commerceTools/CommerceToolsSlice';
+import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import { Cart } from '@commercetools/platform-sdk';
 import styles from './AddToCard.module.scss';
-import { useAppDispatch } from '@/hooks/storeHooks';
 
-function AddToCard({ productId }: { productId: string }) {
+function AddToCard({
+  productId,
+  variantId,
+  currency,
+}: {
+  productId: string;
+  variantId: number;
+  currency: string;
+}) {
   const { addToCardContiner, quantityContainer } = styles;
   const dispatch = useAppDispatch();
+  const { cart, country } = useAppSelector(selectCommerceTools);
   const [quantity, setQuantity] = useState<number>(0);
-
+ const { id } = cart;
   const handleCreateCard = async () => {
-    const shoppingLists = (await getShoppingLists()) as ShoppingList[];
+    if (quantity && !id) {
+      const newCart = await createCartWithProductId(currency, country, productId, quantity);
+     
+      if (newCart?.id) {
+        dispatch(setCart(newCart));
+      }
+    } 
 
-    const filteredList = filterShoppingListsByProductId(
-      shoppingLists,
-      productId
-    );
-
-    if (quantity && !filteredList.length) {
-      const res = await createShoppingListWithProductId(
-        { en: 'my list' },
-        productId,
-        quantity
-      );
-
-      if (res.id) dispatch(fetchShoppingLists());
-    }
-    if (filteredList.length) {
-      const { id } = filteredList.find(el => el.id)!;
-
-      if (quantity && id) {
-        const findedShoppingList = (await getShoppingLists(id)) as ShoppingList;
-
-        if (findedShoppingList.id) {
-          const { id, version, lineItems } = findedShoppingList;
-
-          const result = await updateQuantityInShoppingList(
-            id,
-            version,
-            lineItems.find(el => el.id)?.id!,
-            quantity
+    if(quantity) {
+      const { version } = await getCarts(id)as Cart;
+   
+       const res =  await addLineItemToCart(
+          id,
+          version,
+          productId,
+          quantity,
+          variantId
           );
 
-          if (result.statusCode === 200) {
-            dispatch(fetchShoppingLists());
-          }
+          if(res?.id) dispatch(setCart(res));
         }
-      }
-    }
-  };
+
+};
 
   const handlePlusQuantuty = () => {
-    
-    setQuantity(quantity + 1 );
+    setQuantity(quantity + 1);
   };
   const handleMinusQuantuty = () => {
     if (quantity) {

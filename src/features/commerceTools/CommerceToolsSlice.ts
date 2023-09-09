@@ -16,6 +16,7 @@ interface InitialState {
   products: Product[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   shoppingLists: ShoppingList[];
+  cart: Cart;
   carts: Cart[];
 }
 const initialState: InitialState = {
@@ -26,6 +27,7 @@ const initialState: InitialState = {
   products: [],
   status: 'idle',
   shoppingLists: [],
+  cart: {} as Cart,
   carts: [] as Cart[],
 };
 const commerceToolseSlice = createSlice({
@@ -49,6 +51,9 @@ const commerceToolseSlice = createSlice({
     },
     setShoppingLists: (state, action: PayloadAction<ShoppingList[]>) => {
       state.shoppingLists = action.payload;
+    },
+    setCart: (state, action: PayloadAction<Cart>) => {
+      state.cart = action.payload;
     },
     setCarts: (state, action: PayloadAction<Cart[]>) => {
       state.carts = action.payload;
@@ -88,6 +93,7 @@ export const {
   setCountry,
   setCurrency,
   setShoppingLists,
+  setCart,
   setCarts,
 } = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;

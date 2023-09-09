@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import {
-  selectCommerceTools,
-  setShoppingLists,
-} from '@/features/commerceTools/CommerceToolsSlice';
-import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import React, { useState } from 'react';
 import Categories from '../categories/Categories';
 import CountrySelect from '../country-select/CountrySelect';
 import Image from 'next/image';
 import LanguageSelect from '../language-select/LanguageSelect';
 import Link from 'next/link';
 import MiniCartModal from '../mini-cart-modal/MiniCartModal';
-import { ShoppingList } from '@commercetools/platform-sdk';
-import { getShoppingLists } from '@/commercetools/utils/utilsShoppingList';
 import shoppingBasketIcon from '../../../public/icons/shopping_busket.png';
 import styles from './Header.module.scss';
 
@@ -24,20 +17,8 @@ function Header() {
     countShoppingLists,
   } = styles;
 
-  const dispatch = useAppDispatch();
-  const { shoppingLists } = useAppSelector(selectCommerceTools);
   const [isModalRendered, setIsModalRendered] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchFn = async () => {
-      const res = (await getShoppingLists()) as ShoppingList[];
-
-      dispatch(setShoppingLists(res));
-    };
-
-    fetchFn();
-  }, [dispatch]);
-
+  
   return (
     <header className={headerContainer}>
       <CountrySelect />
@@ -53,7 +34,7 @@ function Header() {
       <LanguageSelect />
       <div className={shoppingBasketContainer}>
         <div className={countShoppingLists}>
-          {!!shoppingLists.length ? shoppingLists.length : ''}
+          {0}
         </div>
         <Image
           onClick={() => setIsModalRendered(true)}
@@ -66,7 +47,6 @@ function Header() {
       {isModalRendered && (
         <MiniCartModal
           onClick={() => setIsModalRendered(false)}
-          shoppingLists={shoppingLists}
         />
       )}
     </header>

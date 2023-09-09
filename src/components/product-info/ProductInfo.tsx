@@ -19,6 +19,8 @@ function ProductInfo({ product }: { product: Product }) {
   const { current, staged } = product.masterData;
   const { masterVariant, variants } = current;
   const { name } = staged;
+  const { prices } = masterVariant;
+  const currency = prices?.find(el => el.value.currencyCode)?.value.currencyCode;
   const { language } = useAppSelector(selectCommerceTools);
   const productName = filterObjectAndReturnValue(name, language);
   const [currentVariants, setCurrentVariants] = useState<ProductVariant[]>(variants);
@@ -39,7 +41,7 @@ function ProductInfo({ product }: { product: Product }) {
         <MasterVariant key={el.id}  masterVariant={el} productName={productName!} />
       ))}</>)}
       <div className={addToCardContainerStyle}>
-        <AddToCard productId={product.id} />
+        <AddToCard productId={product.id} variantId={masterVariant.id} currency={currency!} />
       </div>
       <div className={variantsStyle}>
         {currentVariants.filter((el) => el.id !== selectedIdVariant).map((el) => (

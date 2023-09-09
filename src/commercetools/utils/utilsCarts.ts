@@ -1,21 +1,45 @@
 import { apiRoot } from '../BuildClient';
 
-export const getCarts = async (ID?:string) => {
-  if(ID) {
+export const getCarts = async (ID?: string) => {
+  if (ID) {
     return (await apiRoot.carts().withId({ ID }).get().execute()).body;
   }
   return (await apiRoot.carts().get().execute()).body.results;
-
 };
 
-export const createCart = async (currency: string, country: string) => {
+export const removeLineItemfromCart = async (ID: string, version: number, lineItemId: string) => {
+   const res = await apiRoot.carts().withId({ ID }).post({
+    body: {
+      version,
+      actions: [{
+        action: 'removeLineItem',
+        lineItemId,
+      }]
+    }
+   }).execute();
+
+   return res;
+}; 
+
+export const createCartWithProductId = async (
+  currency: string,
+  country: string,
+  productId?: string,
+  quantity?: number
+) => {
   if (currency) {
     const res = await apiRoot
       .carts()
       .post({
         body: {
           currency,
-          country
+          country,
+          lineItems: [
+            {
+              productId,
+              quantity,
+            },
+          ],
         },
       })
       .execute();
@@ -51,13 +75,15 @@ export const addShoopingListToCart = async (
     return res.body;
   }
 };
-export const updateCartLineitemQuantity =async (
-  ID:string,
+export const addLineItemToCart = async (
+  ID: string,
   version: number,
-  lineItemId:string,
-  quantity: number
-  ) => {
-  const res = await apiRoot
+  productId: string,
+  quantity: number,
+  variantId: number
+) => {
+  if (ID) {
+    const res = await apiRoot
       .carts()
       .withId({ ID })
       .post({
@@ -65,10 +91,10 @@ export const updateCartLineitemQuantity =async (
           version,
           actions: [
             {
-              action: 'changeLineItemQuantity',
-              lineItemId,
-              quantity
-             
+              action: 'addLineItem',
+              productId,
+              quantity,
+              variantId,
             },
           ],
         },
@@ -76,5 +102,30 @@ export const updateCartLineitemQuantity =async (
       .execute();
 
     return res.body;
+  }
 };
+export const updateCartLineitemQuantity = async (
+  ID: string,
+  version: number,
+  lineItemId: string,
+  quantity: number
+) => {
+  const res = await apiRoot
+    .carts()
+    .withId({ ID })
+    .post({
+      body: {
+        version,
+        actions: [
+          {
+            action: 'changeLineItemQuantity',
+            lineItemId,
+            quantity,
+          },
+        ],
+      },
+    })
+    .execute();
 
+  return res.body;
+};

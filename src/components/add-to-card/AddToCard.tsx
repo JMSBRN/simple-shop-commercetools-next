@@ -4,9 +4,10 @@ import {
   createCartWithProductId,
   getCarts,
 } from '@/commercetools/utils/utilsCarts';
-import { selectCommerceTools, setCart } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
+import { fetchCarts } from '@/features/thunks/FetchCarts';
+import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './AddToCard.module.scss';
 
 function AddToCard({
@@ -20,33 +21,31 @@ function AddToCard({
 }) {
   const { addToCardContiner, quantityContainer } = styles;
   const dispatch = useAppDispatch();
-  const { cart, country } = useAppSelector(selectCommerceTools);
+  const { carts, country } = useAppSelector(selectCommerceTools);
   const [quantity, setQuantity] = useState<number>(0);
- const { id } = cart;
+  const cart = carts?.find((el) => el.id) as Cart;
+
   const handleCreateCard = async () => {
-    if (quantity && !id) {
-      const newCart = await createCartWithProductId(currency, country, productId, quantity);
-     
+    if (quantity && !cart?.id) {
+      const newCart = await createCartWithProductId(
+        currency,
+        country,
+        productId,
+        quantity
+      );
+
       if (newCart?.id) {
-        dispatch(setCart(newCart));
+        dispatch(fetchCarts());
       }
-    } 
+    }
 
-    if(quantity) {
-      const { version } = await getCarts(id)as Cart;
-   
-       const res =  await addLineItemToCart(
-          id,
-          version,
-          productId,
-          quantity,
-          variantId
-          );
+    if (quantity && cart.id) {
+      const { version } = (await getCarts(cart.id)) as Cart;
 
-          if(res?.id) dispatch(setCart(res));
-        }
-
-};
+      await addLineItemToCart(cart.id, version, productId, quantity, variantId);
+      dispatch(fetchCarts());
+    }
+  };
 
   const handlePlusQuantuty = () => {
     setQuantity(quantity + 1);

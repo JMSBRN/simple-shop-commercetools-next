@@ -1,4 +1,7 @@
+import { Cart } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
+import { getPriceValue } from '@/components/product-card/utilsProductCard';
+import { getPricesFromProduct } from './utilsShoppingList';
 
 export const getCarts = async (ID?: string) => {
   if (ID) {
@@ -6,20 +9,45 @@ export const getCarts = async (ID?: string) => {
   }
   return (await apiRoot.carts().get().execute()).body.results;
 };
+export const deleteCart = async (ID: string, version: number) => {
+  if (ID) {
+    return (
+      await apiRoot
+        .carts()
+        .withId({ ID })
+        .delete({
+          queryArgs: {
+            version,
+          },
+        })
+        .execute()
+    ).body;
+  }
+};
 
-export const removeLineItemfromCart = async (ID: string, version: number, lineItemId: string) => {
-   const res = await apiRoot.carts().withId({ ID }).post({
-    body: {
-      version,
-      actions: [{
-        action: 'removeLineItem',
-        lineItemId,
-      }]
-    }
-   }).execute();
+export const removeLineItemfromCart = async (
+  ID: string,
+  version: number,
+  lineItemId: string
+) => {
+  const res = await apiRoot
+    .carts()
+    .withId({ ID })
+    .post({
+      body: {
+        version,
+        actions: [
+          {
+            action: 'removeLineItem',
+            lineItemId,
+          },
+        ],
+      },
+    })
+    .execute();
 
-   return res;
-}; 
+  return res;
+};
 
 export const createCartWithProductId = async (
   currency: string,
@@ -128,4 +156,51 @@ export const updateCartLineitemQuantity = async (
     .execute();
 
   return res.body;
+};
+
+export const getLineItemsFromCarts = async (carts: Cart[]) => {
+  const arr = carts.flatMap((cart) => cart.lineItems);
+
+  return [...arr];
+};
+
+export const getTotalSumFromCarts = async (carts: Cart[], country: string) => {
+  const linItems = await getLineItemsFromCarts(carts);
+  const p = linItems.map(async (item) => {
+    return {
+      prices: await getPricesFromProduct(item.productId),
+      quantity: item.quantity,
+    };
+  });
+
+  const prices = (await Promise.all(p)).map((e) => {
+    return {
+      p: {
+        value: e.prices
+          ?.filter((e) => e.country === country)
+          .map((p) => {
+            return getPriceValue(p.value);
+          })
+          .flat()
+          .reduce(
+            (acc, currentValue) =>
+              acc + (Array.isArray(currentValue) ? 0 : currentValue),
+            0
+          ),
+        currencyCode: e.prices
+          ?.filter((e) => e.country === country)
+          .find((el) => el)?.value.currencyCode,
+      },
+      q: e.quantity,
+    };
+  });
+  const currencyCode = prices.find((e) => e.p.currencyCode)?.p.currencyCode;
+  const totalPrice = prices.reduce((acc: number, item) => {
+    if (typeof item.p.value === 'number' && item.q > 0) {
+      return acc + item.p.value * item.q;
+    }
+    return acc;
+  }, 0);
+
+  return { totalPrice: totalPrice.toFixed(2), currencyCode };
 };

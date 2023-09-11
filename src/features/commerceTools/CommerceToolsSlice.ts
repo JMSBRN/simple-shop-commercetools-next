@@ -52,9 +52,6 @@ const commerceToolseSlice = createSlice({
     setShoppingLists: (state, action: PayloadAction<ShoppingList[]>) => {
       state.shoppingLists = action.payload;
     },
-    setCart: (state, action: PayloadAction<Cart>) => {
-      state.cart = action.payload;
-    },
     setCarts: (state, action: PayloadAction<Cart[]>) => {
       state.carts = action.payload;
     }
@@ -93,7 +90,6 @@ export const {
   setCountry,
   setCurrency,
   setShoppingLists,
-  setCart,
   setCarts,
 } = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;

@@ -2,7 +2,7 @@ import { Cart, ShoppingList } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
 import {
   addShoopingListToCart,
-  createCart,
+  createCartWithProductId,
   getCarts,
 } from '@/commercetools/utils/utilsCarts';
 import {
@@ -57,7 +57,7 @@ function MiniCartModal({
   const handleRedirectToCartPage = async () => {
     onClick();
     if (shoppingLists.length) {
-      const res = await createCart(currency, country);
+      const res = await createCartWithProductId(currency, country);
 
       if (res?.id) {
         const { id } = res;

@@ -1,0 +1,12 @@
+@import 'mixins';
+
+.productPriceContainer {
+    text-transform: uppercase;
+    span {
+        margin-left: 4px;
+        font-size: 10px;
+    }
+}
+.noPriceMessage {
+  @include flex (center, space-between);
+}

@@ -1,31 +1,21 @@
-import React, { useEffect, useState } from 'react';
 import { Cart } from '@commercetools/platform-sdk';
 import CustomerCart from '@/components/cart/CustomerCart';
+import { GetServerSideProps } from 'next';
+import React from 'react';
 import { getCarts } from '@/commercetools/utils/utilsCarts';
-import { useRouter } from 'next/router';
 
-function CustomerCartPage() {
- 
-     const [cart, setCart] = useState<Cart>({} as Cart);
-
-      const { lineItems } = cart;
-      const { id } = useRouter().query;
-
-      useEffect(() => {
-        const fn = async () => {
-          const res = await getCarts(id as string) as Cart;
-
-            if(res.id) {
-               setCart(res);
-
-            }          
-        };
-
-        fn();
-
-      }, [id, lineItems]);
-   
-   return <CustomerCart cart={cart} />;
+function CustomerCartPage({ cart }: { cart: Cart }) {
+  return <CustomerCart cart={cart} />;
 };
 
 export default CustomerCartPage;
+
+export const getServerSideProps: GetServerSideProps = async ( { params }) => {
+  const cart = await getCarts(params?.id as string);
+
+  return {
+    props: {
+      cart
+    }
+  };
+};

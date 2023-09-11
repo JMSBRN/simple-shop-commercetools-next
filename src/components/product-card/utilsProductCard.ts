@@ -25,8 +25,16 @@ import { PriceValue } from './interfacesProductCard';
     return arr;
   };
 
+    const setTotalPriceWithComma = (quantity: number, price: PriceValue) => {
+     if(quantity === 1) {
+      return formatValue(price);
+     }
+     return (quantity * getPriceValue(price)).toFixed(2);
+  };
+
   export {
     formatValue,
     getPriceValue,
-    setDynamicArray
+    setDynamicArray,
+    setTotalPriceWithComma
   };

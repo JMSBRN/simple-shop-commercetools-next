@@ -3,9 +3,13 @@ import {
   filterObjectAndReturnValue,
   getCurrencySymbol,
 } from '@/commercetools/utils/utilsCommercTools';
-import { getCarts, updateCartLineitemQuantity } from '@/commercetools/utils/utilsCarts';
+import {
+  getCarts,
+  updateCartLineitemQuantity,
+} from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import Image from 'next/image';
+import LineItemTotalPrice from '../line-item-price/LineItemPrice';
 import React from 'react';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { formatValue } from '@/components/product-card/utilsProductCard';
@@ -15,9 +19,11 @@ import styles from './CartLineItem.module.scss';
 function CartLineItem({
   cartId,
   lineItem,
+  handleDeleteLineItem
 }: {
   cartId: string;
   lineItem: LineItem;
+  handleDeleteLineItem: (lineitemId: string) => Promise<void>
 }) {
   const {
     lineItemStyle,
@@ -32,38 +38,47 @@ function CartLineItem({
   const dispatch = useAppDispatch();
   const { country, language } = useAppSelector(selectCommerceTools);
 
-  const { id, variant, name, totalPrice, quantity } = lineItem;
+  const { id, variant, name, quantity, productId } = lineItem;
   const { images, sku, prices } = variant;
 
   const handlePlusQuantity = async () => {
-    const cart = await getCarts(cartId) as Cart;
+    const cart = (await getCarts(cartId)) as Cart;
 
-    if(cart.id) {
-         const { version } = cart;
+    if (cart.id) {
+      const { version } = cart;
 
-       const res = await updateCartLineitemQuantity(cart.id, version, id, quantity + 1);
+      const res = await updateCartLineitemQuantity(
+        cart.id,
+        version,
+        id,
+        quantity + 1
+      );
 
-       if(res.id) dispatch(fetchCarts());
-       
+      if (res.id) dispatch(fetchCarts());
+    }
+  };
+  const handleMinusQuantity = async () => {
+    if (quantity > 1) {
+      const cart = (await getCarts(cartId)) as Cart;
+
+      if (cart.id) {
+        const { version } = cart;
+
+        const res = await updateCartLineitemQuantity(
+          cart.id,
+          version,
+          id,
+          quantity - 1
+        );
+
+        if (res.id) dispatch(fetchCarts());
       }
-    };
-    const handleMinusQuantity = async () => {
-      if(quantity > 1) {
-        const cart = await getCarts(cartId) as Cart;
-        
-        if(cart.id) {
-          const { version } = cart;
-          
-          const res = await updateCartLineitemQuantity(cart.id, version, id, quantity - 1);
-
-          if(res.id) dispatch(fetchCarts());
-         }
     }
   };
 
   return (
     <div className={lineItemStyle}>
-      <div className={deleteLineItem}>delete</div>
+      <div className={deleteLineItem} onClick={() => handleDeleteLineItem(id)}>delete</div>
       <div className={description}>
         <Image
           src={images?.find((el) => el.url)?.url!}
@@ -88,24 +103,17 @@ function CartLineItem({
         {false && <div className={saleBage}>Sale</div>}
       </div>
       <div className={quantityStyle}>
-        <button
-          type="button"
-          onClick={handlePlusQuantity}
-        >
+        <button type="button" onClick={handlePlusQuantity}>
           +
         </button>
         <div>{quantity}</div>
-        <button
-          type="button"
-          onClick={handleMinusQuantity}
-        >
+        <button type="button" onClick={handleMinusQuantity}>
           -
         </button>
       </div>
-      <div className={total}>{`${formatValue(totalPrice)} ${getCurrencySymbol(
-        country,
-        totalPrice.currencyCode
-      )}`}</div>
+      <div className={total}>
+        <LineItemTotalPrice quantity={quantity} productId={productId} />
+      </div>
     </div>
   );
 }

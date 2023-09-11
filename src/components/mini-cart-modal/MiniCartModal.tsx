@@ -14,6 +14,7 @@ import ProductPrice from '../product-card/product-price/ProductPrice';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';
+import { useRouter } from 'next/router';
 
 function MiniCartModal({ onClick }: { onClick: () => void }) {
   const {
@@ -29,6 +30,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     itemPrice,
     total,
   } = styles;
+  const { push } = useRouter();
   const dispatch = useAppDispatch();
   const { carts } = useAppSelector(selectCommerceTools);
   const cart = carts?.find(el => el.id) as Cart;
@@ -39,10 +41,14 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
   ) => {
     const res = await removeLineItemfromCart(ID, version, lineitemId);
 
-    if (res.statusCode === 200) dispatch(fetchCarts());
+    if (res.statusCode === 200) {
+      dispatch(fetchCarts());
+    } 
   };
   const handleRedirectToCartPage = async () => {
     onClick();
+    push(`/cart/${cart.id}`);
+    
   };
 
   return (

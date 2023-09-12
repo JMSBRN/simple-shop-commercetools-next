@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  getCarts,
   getTotalSumFromCart,
   removeLineItemfromCart,
 } from '@/commercetools/utils/utilsCarts';
@@ -14,7 +13,7 @@ import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice
 import styles from './CustomerCart.module.scss';
 import { useRouter } from 'next/router';
 
-function CustomerCart({ cart }: { cart: Cart }) {
+function CustomerCart() {
   const {
     cartContainer,
     cartTitle,
@@ -34,23 +33,26 @@ function CustomerCart({ cart }: { cart: Cart }) {
     totalPrice: string;
     currencyCode: string | undefined;
   }>();
-  const { locale } = useRouter();
+  const { push, locale } = useRouter();
   const dispatch = useAppDispatch();
+  const { carts } = useAppSelector(selectCommerceTools);
+  const cart = carts?.find(el => el.id) as Cart;
   const { country } = useAppSelector(selectCommerceTools);
-  const { id, lineItems } = cart;
-
+  
   useEffect(() => {
     const fn = async () => {
-      const res = await getTotalSumFromCart(cart, country);
+      if(cart) {
+        const res = await getTotalSumFromCart(cart, country);
 
-      if (res) setTotal(res);
+        if (res) setTotal(res);
+
+      }
     };
 
     fn();
   }, [cart, country]);
 
   const handleDeleteLineItem = async (lineitemId: string) => {
-    const cart = (await getCarts(id)) as Cart;
 
     if (cart.id) {
       const res = await removeLineItemfromCart(
@@ -59,7 +61,12 @@ function CustomerCart({ cart }: { cart: Cart }) {
         lineitemId
       );
 
-      if (res.statusCode === 200) dispatch(fetchCarts());
+      if (res.statusCode === 200) {
+        dispatch(fetchCarts());
+      }
+      if(cart?.lineItems.length === 1){
+         push('/');
+      };
     }
   };
 
@@ -79,12 +86,12 @@ function CustomerCart({ cart }: { cart: Cart }) {
             <div>Total</div>
           </div>
           <div className={lineItemsStyle}>
-            {lineItems.map((el) => (
+            {cart?.lineItems.map((el) => (
               <CartLineItem
                 handleDeleteLineItem={async () =>
                   await handleDeleteLineItem(el.id)
                 }
-                cartId={id}
+                cartId={cart?.id}
                 key={el.id}
                 lineItem={el}
               />

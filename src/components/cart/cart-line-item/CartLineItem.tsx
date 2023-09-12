@@ -81,10 +81,12 @@ function CartLineItem({
       <div className={deleteLineItem} onClick={() => handleDeleteLineItem(id)}>delete</div>
       <div className={description}>
         <Image
+          priority
           src={images?.find((el) => el.url)?.url!}
           width={100}
-          height={120}
+          height={160}
           alt="product image"
+          style={{ width: '60%', height: 'auto' }}
         />
         <div className={descriptionInfoContainer}>
           <div>{filterObjectAndReturnValue(name, language)}</div>

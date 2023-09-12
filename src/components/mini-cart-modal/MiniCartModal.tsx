@@ -47,6 +47,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
   };
   const handleRedirectToCartPage = async () => {
     onClick();
+    dispatch(fetchCarts());
     push(`/cart/${cart.id}`);
     
   };

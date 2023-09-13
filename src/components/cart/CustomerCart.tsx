@@ -45,7 +45,6 @@ function CustomerCart() {
     ? getCurrencySymbol(locale!, total?.currencyCode as string)
     : '';
   const netAmount = totalPrice / (taxRate?.amount! + 1);
-
   const taxExluded = totalPrice - totalPrice / (taxRate?.amount! + 1);
 
   useEffect(() => {
@@ -63,7 +62,8 @@ function CustomerCart() {
               el,
               country
             );
-
+            
+               // if products has different TaxRate make arr with { productId, taxRate }
             setTaxRate(taxRate!);
           });
         }
@@ -118,7 +118,7 @@ function CustomerCart() {
             ))}
           </div>
           <div className={promoCodeContainer}>
-            <input type="text" />
+            <input type="text" placeholder='promo code' />
             <button type="button">Apply</button>
           </div>
         </div>

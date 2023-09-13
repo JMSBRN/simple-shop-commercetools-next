@@ -89,6 +89,9 @@
         font-size: 20px;
         border-bottom: 1px solid rgb(125, 125, 125, 0.4);
         color: rgb(136, 136, 136);
+        &::-webkit-input-placeholder {
+            color: rgb(219, 255, 148);
+        }
 
     }
 
@@ -103,8 +106,7 @@
         color: rgb(136, 136, 136);
 
         &:active {
-            border: 1px solid rgb(125, 125, 125, 0.4);
-            background-color: white;
+            background-color: rgb(246, 246, 246);
             color: rgb(100, 100, 100);
         }
     }

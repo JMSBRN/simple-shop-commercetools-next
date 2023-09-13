@@ -199,9 +199,9 @@ export const getTotalSumFromCart = async (
   country: string
 ) => {
   const { lineItems } = cart;
-
   const p = lineItems.map(async (item) => {
     return {
+      id: item.productId,
       prices: await getPricesFromProduct(item.productId),
       quantity: item.quantity,
     };
@@ -209,6 +209,7 @@ export const getTotalSumFromCart = async (
 
   const prices = (await Promise.all(p)).map((e) => {
     return {
+      productId: e.id,
       p: {
         value: e.prices
           ?.filter((e) => e.country === country)
@@ -228,6 +229,7 @@ export const getTotalSumFromCart = async (
       q: e.quantity,
     };
   });
+  const productsId = prices.map(el => el.productId);
   const currencyCode = prices.find(e => e.p.currencyCode)?.p.currencyCode;
   const totalPrice = prices.reduce((acc: number, item) => {
     if (typeof item.p.value === 'number' && item.q > 0) {
@@ -236,6 +238,6 @@ export const getTotalSumFromCart = async (
     return acc;
   }, 0);
 
-  return { totalPrice: totalPrice.toFixed(2), currencyCode };
+  return { productsId,  totalPrice: totalPrice.toFixed(2), currencyCode };
 };
 

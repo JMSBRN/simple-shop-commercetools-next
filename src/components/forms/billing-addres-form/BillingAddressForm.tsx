@@ -3,14 +3,14 @@ import { BaseAddress } from '@commercetools/platform-sdk';
 import styles from './BillingAddressForm.module.scss';
 
 function BillingAddressForm({
-  address,
+  formRef,
   onSubmit,
 }: {
-  address: BaseAddress;
+  formRef: React.LegacyRef<HTMLFormElement> | undefined;
   onSubmit: (updatedAddress: BaseAddress) => void;
 }) {
   const { billingFormContainer, inputRow, inputContainer } = styles;
-  const [formData, setFormData] = useState<BaseAddress>(address);
+  const [formData, setFormData] = useState<BaseAddress>({} as BaseAddress);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -28,12 +28,13 @@ function BillingAddressForm({
     onSubmit(formData);
   };
   const addressFields: (keyof BaseAddress)[][] = [
+    ['firstName', 'lastName'],
+    ['country', 'region'],
+    ['postalCode', 'city'],
     ['streetName', 'streetNumber'],
     ['additionalStreetInfo'],
-    ['postalCode', 'city'],
-    ['region', 'state'],
-    ['company', 'department'],
     ['building', 'apartment'],
+    ['company', 'department'],
     ['email', 'phone'],
   ];
 
@@ -76,7 +77,7 @@ function BillingAddressForm({
 
   return (
     <div className={billingFormContainer}>
-      <form onSubmit={handleSubmit}>
+      <form ref={formRef} onSubmit={handleSubmit}>
         {addressFields.map((pair, idx) => (
           <div className={inputRow} key={idx}>
             {pair.map((el, idx) => (
@@ -89,7 +90,6 @@ function BillingAddressForm({
           </div>
         ))}
         {renderTextAreaField('additionalAddressInfo', false)}
-        <input type="submit" />
       </form>
     </div>
   );

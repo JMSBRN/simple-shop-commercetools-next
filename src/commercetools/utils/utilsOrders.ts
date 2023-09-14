@@ -13,11 +13,11 @@ export const createOrderWithShippingAddress = async (
   address: _BaseAddress
 ) => {
   const { statusCode } = await addShippingAddresToCart(
-    ID,
+    cartId,
     cartVersion,
     address
   );
-
+  
   if (statusCode === 200) {
     return await apiRoot
       .orders()

@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { BaseAddress } from '@commercetools/platform-sdk';
+import { BaseAddress, Cart } from '@commercetools/platform-sdk';
+import React, { useRef } from 'react';
 import BillingAddressForm from '@/components/forms/billing-addres-form/BillingAddressForm';
 import OrderSummary from '@/components/order-summary/OrderSummary';
+import { createOrderWithShippingAddress } from '@/commercetools/utils/utilsOrders';
+import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from '../../styles/Checkout.module.scss';
+import { useAppSelector } from '@/hooks/storeHooks';
 
 function Checkout() {
   const {
@@ -13,14 +16,24 @@ function Checkout() {
     billingDetailsContainer,
     orderSummaryContainer,
   } = styles;
-  const [address, setAddress] = useState<BaseAddress>({} as BaseAddress);
-
-  useEffect(() => {
-    console.log(address);
-  }, [address]);
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const { carts } = useAppSelector(selectCommerceTools);
+  const cart = carts?.find(el => el.id) as Cart;
+  const { id, version } = cart;
   
-  const handleSubMit = (e: BaseAddress) => {
-    setAddress(e);
+  const handleSubMit = async (e?: BaseAddress) => {
+    if (e?.country)  {
+      const res = await createOrderWithShippingAddress(id, version, e);
+
+      console.log(res?.body);
+    }
+  };
+  const handlePlaceOrder = () => {
+    handleSubMit();
+    if(formRef.current){
+      formRef.current.requestSubmit();
+    } 
+   
   };
 
   return (
@@ -32,14 +45,13 @@ function Checkout() {
         <div className={billingDetailsContainer}>
           <div className={formTitle}>billingDetails</div>
           <BillingAddressForm
-            address={address}
+            formRef={formRef}
             onSubmit={handleSubMit}
-
           />
         </div>
         <div className={orderSummaryContainer}>
           <div className={formTitle}>orderSummary</div>
-          <OrderSummary  />
+          <OrderSummary handlePlaceOrder={handlePlaceOrder} />
         </div>
       </div>
     </div>

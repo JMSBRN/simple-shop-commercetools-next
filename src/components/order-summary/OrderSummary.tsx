@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './OrderSummary.module.scss';
 
-function OrderSummary() {
+function OrderSummary({ handlePlaceOrder }: { handlePlaceOrder: () => void }) {
     const {
       orderSummaryStyle,
       totalsInfo,
@@ -53,7 +53,7 @@ function OrderSummary() {
       </label>
     </div>
     <div className={totalSum}>Total : <span>10000.00</span></div>
-    <button className={checkoutBtn} >Checkout</button>
+    <button className={checkoutBtn} onClick={handlePlaceOrder} >Placeorder</button>
     <div className={errors}>error</div>
   </div>
   );

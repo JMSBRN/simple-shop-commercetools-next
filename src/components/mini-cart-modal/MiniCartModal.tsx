@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
 import ProductImages from '../product-card/product-images/ProductImages';
 import ProductPrice from '../product-card/product-price/ProductPrice';
-import { createOrderWithShippingAddress } from '@/commercetools/utils/utilsOrders';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';

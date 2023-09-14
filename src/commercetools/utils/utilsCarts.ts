@@ -1,4 +1,4 @@
-import { Cart } from '@commercetools/platform-sdk';
+import { Cart, _BaseAddress } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
 import { getPriceValue } from '@/components/product-card/utilsProductCard';
 import { getPricesFromProduct } from './utilsShoppingList';
@@ -58,6 +58,17 @@ export const createCartWithProductId = async (
 
     return res.body;
   }
+};
+export const addShippingAddresToCart =async (ID:string, version: number, address: _BaseAddress) => {
+  return( await apiRoot.carts().withId({ ID }).post({
+    body: {
+      version,
+      actions: [{
+        action: 'setShippingAddress',
+        address,
+      }]
+    }
+  }).execute());
 };
 export const addShoopingListToCart = async (
   ID: string,

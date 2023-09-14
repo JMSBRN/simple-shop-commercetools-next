@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
 import ProductImages from '../product-card/product-images/ProductImages';
 import ProductPrice from '../product-card/product-price/ProductPrice';
+import { createOrderWithShippingAddress } from '@/commercetools/utils/utilsOrders';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';
@@ -50,6 +51,9 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     dispatch(fetchCarts());
     push(`/cart/${cart.id}`);
     
+  };
+  const handleCheckout = async () => {
+    push('/checkout');
   };
 
   return (
@@ -93,7 +97,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
         <button onClick={handleRedirectToCartPage} type="button">
           Viewbag
         </button>
-        <button type="button">Checkout</button>
+        <button type="button" onClick={handleCheckout}>Checkout</button>
       </div>
     </div>
   );

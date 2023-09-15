@@ -34,7 +34,14 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
   const { push } = useRouter();
   const dispatch = useAppDispatch();
   const { carts, country } = useAppSelector(selectCommerceTools);
-  const cart = carts?.find(el => el.id) as Cart;
+  const [cart, setCart] = useState<Cart>();
+
+  useEffect(() => {
+    carts.forEach((el) => {
+      setCart(el);
+    });
+  }, [carts]);
+
   const handleDeleteLineItem = async (
     ID: string,
     version: number,
@@ -44,25 +51,27 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
 
     if (res.statusCode === 200) {
       dispatch(fetchCarts());
-    } 
+    }
   };
   const handleRedirectToCartPage = async () => {
-    onClick();
-    dispatch(fetchCarts());
-    push(`/cart/${cart.id}`);
-    
+    if(cart?.id) {
+      onClick();
+      push(`/cart/${cart.id}`);
+    }
   };
   const handleCheckout = async () => {
     onClick();
-    if(cart.cartState === 'Active') {
-      const { id } = (await createOrderWithShippingAddress(cart.id, cart.version, country))?.body!;
+    if (cart?.cartState === 'Active' && cart?.lineItems.length) {
+      const { id } = (
+        await createOrderWithShippingAddress(cart?.id, country)
+      )?.body!;
 
-       if(id) {
-          push(`/checkout/${id}`);
-        } 
+      if (id) {
+        push(`/checkout/${id}`);
       }
-      push(`/ordered/${cart.id}`); 
-
+    } else {
+      if (cart?.id) push(`/ordered/${cart.id}`);
+    }
   };
 
   return (
@@ -106,7 +115,9 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
         <button onClick={handleRedirectToCartPage} type="button">
           Viewbag
         </button>
-        <button type="button" onClick={handleCheckout}>Checkout</button>
+        <button type="button" onClick={handleCheckout}>
+          Checkout
+        </button>
       </div>
     </div>
   );
@@ -114,7 +125,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
 
 export default MiniCartModal;
 
-function TotalSum({ carts }: {carts: Cart[] }) {
+function TotalSum({ carts }: { carts: Cart[] }) {
   const [totalSum, setTotalSum] = useState<string>('');
   const [currencySymbol, setCurrencySymbol] = useState<string>('');
   const { country } = useAppSelector(selectCommerceTools);
@@ -123,7 +134,7 @@ function TotalSum({ carts }: {carts: Cart[] }) {
     const fn = async () => {
       if (carts.length) {
         const res = await getTotalSumFromCarts(carts, country);
-        
+
         if (res) {
           setTotalSum(res.totalPrice);
           setCurrencySymbol(getCurrencySymbol(country, res.currencyCode!));

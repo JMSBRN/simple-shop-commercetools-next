@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   addLineItemToCart,
   createCartWithProductId,
@@ -23,10 +23,16 @@ function AddToCard({
   const dispatch = useAppDispatch();
   const { carts, country } = useAppSelector(selectCommerceTools);
   const [quantity, setQuantity] = useState<number>(0);
-  const cart = carts?.find((el) => el.id)!;
+  const [cart, setCart] = useState<Cart>({} as Cart);
 
+  useEffect(() => {
+    carts.forEach(el => {
+     setCart(el);
+    });
+   }, [carts]);
+   
   const handleCreateCard = async () => {
-    if (quantity && !cart?.id) {
+    if (quantity && !cart.id) {
       const newCart = await createCartWithProductId(
         currency,
         country,

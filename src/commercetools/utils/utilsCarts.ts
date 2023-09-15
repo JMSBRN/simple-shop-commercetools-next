@@ -77,10 +77,12 @@ export const createCartWithProductId = async (
 };
 export const addShippingAddresToCart = async (
   ID: string,
-  version: number,
   country: string,
   address?: _BaseAddress
 ) => {
+  const res = await getCarts(ID) as Cart;
+  const { version } = res;
+
   return await apiRoot
     .carts()
     .withId({ ID })

@@ -1,9 +1,11 @@
 import { BaseAddress, Cart } from '@commercetools/platform-sdk';
 import React, { useRef } from 'react';
 import BillingAddressForm from '@/components/forms/billing-addres-form/BillingAddressForm';
+import { GetServerSideProps } from 'next';
 import OrderSummary from '@/components/order-summary/OrderSummary';
 import { createOrderWithShippingAddress } from '@/commercetools/utils/utilsOrders';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../styles/Checkout.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
@@ -20,13 +22,13 @@ function Checkout() {
   const formRef = useRef<HTMLFormElement | null>(null);
   const { carts, country } = useAppSelector(selectCommerceTools);
   const cart = carts?.find(el => el.id) as Cart;
-  const { id, version } = cart;
+  const { id } = cart;
   const { query } = useRouter();
   const orderId = query.id as string;
   
   const handleSubMit = async (e?: BaseAddress) => {
     if (e?.firstName)  {
-      const res = await createOrderWithShippingAddress(id, version, country, e);
+      const res = await createOrderWithShippingAddress(id, country, e);
 
       console.log(res?.body);
     }
@@ -62,3 +64,9 @@ function Checkout() {
 }
 
 export default Checkout;
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale || 'en', ['translation', 'common'])),
+  },
+});

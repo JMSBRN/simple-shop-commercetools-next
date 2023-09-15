@@ -1,5 +1,5 @@
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
-import React from 'react';
 import { deleteCart } from '@/commercetools/utils/utilsCarts';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
@@ -8,7 +8,11 @@ import styles from './WelcomePage.module.scss';
 function WelcomePage() {
   const { carts } = useAppSelector(selectCommerceTools);
   const dispatch = useAppDispatch();
- 
+  
+  useEffect(() => {
+    dispatch(fetchCarts());
+  }, [dispatch]);
+  
   return (
     <div className={styles.welcomePageContainer}>welcome page in develop mode
     
@@ -23,7 +27,10 @@ function WelcomePage() {
               dispatch(fetchCarts());
             }}
             style={{ cursor: 'pointer' }}
-            >{el.id}</div>
+            >{el.id}
+             <div className="">{el.cartState}</div>
+             <div className="">{el.createdBy?.clientId}</div>
+            </div>
           ))
          }
        </div>

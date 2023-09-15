@@ -9,13 +9,12 @@ export const getOrders = async (ID?: string) => {
 
 export const createOrderWithShippingAddress = async (
   cartId: string,
-  cartVersion: number,
+
   country: string,
   address?: _BaseAddress
 ) => {
   const { statusCode } = await addShippingAddresToCart(
     cartId,
-    cartVersion,
     country,
     address
   );

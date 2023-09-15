@@ -51,6 +51,8 @@ function Products({ products }: { products: Product[] }) {
     </>
   );
 }
+export default Products;
+
 export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
   const categories = (await getCategories()) as Category[];
   const paths = categories.flatMap((el) =>
@@ -68,7 +70,6 @@ export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
   };
 };
 
-export default Products;
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
   const products = await getProductsByCategoryId(params?.id as string);
 

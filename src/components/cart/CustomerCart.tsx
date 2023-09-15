@@ -1,6 +1,7 @@
 import { Cart, TaxRate } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
 import {
+  getCarts,
   getTotalSumFromCart,
   removeLineItemfromCart,
 } from '@/commercetools/utils/utilsCarts';
@@ -37,9 +38,7 @@ function CustomerCart() {
   }>();
   const { push, locale } = useRouter();
   const dispatch = useAppDispatch();
-  const { carts } = useAppSelector(selectCommerceTools);
-  const cart = carts?.find((el) => el.id) as Cart;
-  const { country } = useAppSelector(selectCommerceTools);
+  const { carts, country } = useAppSelector(selectCommerceTools);
   const [taxRate, setTaxRate] = useState<TaxRate>();
   const totalPrice = Number(total?.totalPrice);
   const currencySymbol = total?.currencyCode
@@ -47,7 +46,14 @@ function CustomerCart() {
     : '';
   const netAmount = totalPrice / (taxRate?.amount! + 1);
   const taxExluded = totalPrice - totalPrice / (taxRate?.amount! + 1);
-
+  const [cart, setCart] = useState<Cart>();
+  
+ useEffect(() => {
+   carts.forEach(el => {
+    setCart(el);
+   });
+ }, [carts]);
+ 
   useEffect(() => {
     const fn = async () => {
       if (cart) {
@@ -75,7 +81,7 @@ function CustomerCart() {
   }, [cart, country]);
 
   const handleDeleteLineItem = async (lineitemId: string) => {
-    if (cart.id) {
+    if (cart?.id) {
       const res = await removeLineItemfromCart(
         cart.id,
         cart.version,
@@ -92,14 +98,18 @@ function CustomerCart() {
   };
 
   const handleCheckout = async () => {
-    if(cart.cartState === 'Active') {
-      const { id } = (await createOrderWithShippingAddress(cart.id, cart.version, country))?.body!;
+    const res = await getCarts(cart?.id) as Cart;
 
-       if(id) {
-          push(`/checkout/${id}`);
-        } 
-      }
-      push(`/ordered/${cart.id}`); 
+    if(res.cartState === 'Active') {
+      const order = (await createOrderWithShippingAddress(res.id, country))?.body;
+      const { id } = order!;
+
+      if(id) {
+        push(`/checkout/${id}`);
+      } 
+    } else {
+      push(`/ordered/${cart?.id}`);
+    }
   };
 
   return (

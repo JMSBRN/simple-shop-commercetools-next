@@ -6,6 +6,7 @@ import { createOrderWithShippingAddress } from '@/commercetools/utils/utilsOrder
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from '../../styles/Checkout.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
+import { useRouter } from 'next/router';
 
 function Checkout() {
   const {
@@ -17,13 +18,15 @@ function Checkout() {
     orderSummaryContainer,
   } = styles;
   const formRef = useRef<HTMLFormElement | null>(null);
-  const { carts } = useAppSelector(selectCommerceTools);
+  const { carts, country } = useAppSelector(selectCommerceTools);
   const cart = carts?.find(el => el.id) as Cart;
   const { id, version } = cart;
+  const { query } = useRouter();
+  const orderId = query.id as string;
   
   const handleSubMit = async (e?: BaseAddress) => {
-    if (e?.country)  {
-      const res = await createOrderWithShippingAddress(id, version, e);
+    if (e?.firstName)  {
+      const res = await createOrderWithShippingAddress(id, version, country, e);
 
       console.log(res?.body);
     }
@@ -51,7 +54,7 @@ function Checkout() {
         </div>
         <div className={orderSummaryContainer}>
           <div className={formTitle}>orderSummary</div>
-          <OrderSummary handlePlaceOrder={handlePlaceOrder} />
+          <OrderSummary orderId={orderId} handlePlaceOrder={handlePlaceOrder} />
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
 import ProductImages from '../product-card/product-images/ProductImages';
 import ProductPrice from '../product-card/product-price/ProductPrice';
+import { createOrderWithShippingAddress } from '@/commercetools/utils/utilsOrders';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';
@@ -32,7 +33,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
   } = styles;
   const { push } = useRouter();
   const dispatch = useAppDispatch();
-  const { carts } = useAppSelector(selectCommerceTools);
+  const { carts, country } = useAppSelector(selectCommerceTools);
   const cart = carts?.find(el => el.id) as Cart;
   const handleDeleteLineItem = async (
     ID: string,
@@ -52,7 +53,16 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     
   };
   const handleCheckout = async () => {
-    push('/checkout');
+    onClick();
+    if(cart.cartState === 'Active') {
+      const { id } = (await createOrderWithShippingAddress(cart.id, cart.version, country))?.body!;
+
+       if(id) {
+          push(`/checkout/${id}`);
+        } 
+      }
+      push(`/ordered/${cart.id}`); 
+
   };
 
   return (

@@ -7,6 +7,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import CartLineItem from './cart-line-item/CartLineItem';
 import Link from 'next/link';
+import { createOrderWithShippingAddress } from '@/commercetools/utils/utilsOrders';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { getCurrencySymbol } from '@/commercetools/utils/utilsCommercTools';
 import { getRateFromTaxCategoryWithProductId } from '../product-card/utilsProductCard';
@@ -90,6 +91,17 @@ function CustomerCart() {
     }
   };
 
+  const handleCheckout = async () => {
+    if(cart.cartState === 'Active') {
+      const { id } = (await createOrderWithShippingAddress(cart.id, cart.version, country))?.body!;
+
+       if(id) {
+          push(`/checkout/${id}`);
+        } 
+      }
+      push(`/ordered/${cart.id}`); 
+  };
+
   return (
     <div className={cartContainer}>
       <div className={cartTitle}>
@@ -148,7 +160,7 @@ function CustomerCart() {
               } ${currencySymbol}`}</span>
             </div>
           </div>
-          <button type="button">Checkout</button>
+          <button type="button" onClick={handleCheckout}>Checkout</button>
         </div>
       </div>
     </div>

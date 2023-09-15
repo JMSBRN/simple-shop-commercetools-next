@@ -1,5 +1,5 @@
-import { _BaseAddress } from '@commercetools/platform-sdk';
-import { addShippingAddresToCart } from './utilsCarts';
+import { Cart, _BaseAddress } from '@commercetools/platform-sdk';
+import { addShippingAddresToCart, getCarts } from './utilsCarts';
 import { apiRoot } from '../BuildClient';
 
 export const getOrders = async (ID?: string) => {
@@ -10,24 +10,28 @@ export const getOrders = async (ID?: string) => {
 export const createOrderWithShippingAddress = async (
   cartId: string,
   cartVersion: number,
-  address: _BaseAddress
+  country: string,
+  address?: _BaseAddress
 ) => {
   const { statusCode } = await addShippingAddresToCart(
     cartId,
     cartVersion,
+    country,
     address
   );
   
   if (statusCode === 200) {
+    const { id, version } = await getCarts(cartId) as Cart;
+
     return await apiRoot
       .orders()
       .post({
         body: {
-          version: cartVersion,
+          version,
           orderState: 'Open',
           cart: {
             typeId: 'cart',
-            id: cartId,
+            id,
           },
         },
       })

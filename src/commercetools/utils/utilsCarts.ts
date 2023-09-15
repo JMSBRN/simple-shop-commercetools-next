@@ -9,29 +9,45 @@ export const getCarts = async (ID?: string) => {
   }
   return (await apiRoot.carts().get().execute()).body.results;
 };
-export const deleteCart = async (ID: string, version: number ) => {
+export const deleteCart = async (ID: string, version: number) => {
   if (ID) {
-    return (await apiRoot.carts().withId({ ID }).delete({
-      queryArgs: {
-        version
-      }
-    }).execute()).body;
+    return (
+      await apiRoot
+        .carts()
+        .withId({ ID })
+        .delete({
+          queryArgs: {
+            version,
+          },
+        })
+        .execute()
+    ).body;
   }
 };
 
-export const removeLineItemfromCart = async (ID: string, version: number, lineItemId: string) => {
-   const res = await apiRoot.carts().withId({ ID }).post({
-    body: {
-      version,
-      actions: [{
-        action: 'removeLineItem',
-        lineItemId,
-      }]
-    }
-   }).execute();
+export const removeLineItemfromCart = async (
+  ID: string,
+  version: number,
+  lineItemId: string
+) => {
+  const res = await apiRoot
+    .carts()
+    .withId({ ID })
+    .post({
+      body: {
+        version,
+        actions: [
+          {
+            action: 'removeLineItem',
+            lineItemId,
+          },
+        ],
+      },
+    })
+    .execute();
 
-   return res;
-}; 
+  return res;
+};
 
 export const createCartWithProductId = async (
   currency: string,
@@ -59,16 +75,30 @@ export const createCartWithProductId = async (
     return res.body;
   }
 };
-export const addShippingAddresToCart =async (ID:string, version: number, address: _BaseAddress) => {
-  return( await apiRoot.carts().withId({ ID }).post({
-    body: {
-      version,
-      actions: [{
-        action: 'setShippingAddress',
-        address,
-      }]
-    }
-  }).execute());
+export const addShippingAddresToCart = async (
+  ID: string,
+  version: number,
+  country: string,
+  address?: _BaseAddress
+) => {
+  return await apiRoot
+    .carts()
+    .withId({ ID })
+    .post({
+      body: {
+        version,
+        actions: [
+          {
+            action: 'setShippingAddress',
+            address: {
+              ...address,
+              country
+            },
+          },
+        ],
+      },
+    })
+    .execute();
 };
 export const addShoopingListToCart = async (
   ID: string,
@@ -153,18 +183,13 @@ export const updateCartLineitemQuantity = async (
   return res.body;
 };
 
-export const getLineItemsFromCarts = async (
-  carts: Cart[]
-) => {
+export const getLineItemsFromCarts = async (carts: Cart[]) => {
   const arr = carts.flatMap((cart) => cart.lineItems);
 
   return [...arr];
 };
 
-export const getTotalSumFromCarts = async (
-  carts: Cart[],
-  country: string
-) => {
+export const getTotalSumFromCarts = async (carts: Cart[], country: string) => {
   const lineItems = await getLineItemsFromCarts(carts);
 
   const p = lineItems.map(async (item) => {
@@ -195,7 +220,7 @@ export const getTotalSumFromCarts = async (
       q: e.quantity,
     };
   });
-  const currencyCode = prices.find(e => e.p.currencyCode)?.p.currencyCode;
+  const currencyCode = prices.find((e) => e.p.currencyCode)?.p.currencyCode;
   const totalPrice = prices.reduce((acc: number, item) => {
     if (typeof item.p.value === 'number' && item.q > 0) {
       return acc + item.p.value * item.q;
@@ -205,10 +230,7 @@ export const getTotalSumFromCarts = async (
 
   return { totalPrice: totalPrice.toFixed(2), currencyCode };
 };
-export const getTotalSumFromCart = async (
-  cart: Cart,
-  country: string
-) => {
+export const getTotalSumFromCart = async (cart: Cart, country: string) => {
   const { lineItems } = cart;
   const p = lineItems.map(async (item) => {
     return {
@@ -240,8 +262,8 @@ export const getTotalSumFromCart = async (
       q: e.quantity,
     };
   });
-  const productsId = prices.map(el => el.productId);
-  const currencyCode = prices.find(e => e.p.currencyCode)?.p.currencyCode;
+  const productsId = prices.map((el) => el.productId);
+  const currencyCode = prices.find((e) => e.p.currencyCode)?.p.currencyCode;
   const totalPrice = prices.reduce((acc: number, item) => {
     if (typeof item.p.value === 'number' && item.q > 0) {
       return acc + item.p.value * item.q;
@@ -249,6 +271,5 @@ export const getTotalSumFromCart = async (
     return acc;
   }, 0);
 
-  return { productsId,  totalPrice: totalPrice.toFixed(2), currencyCode };
+  return { productsId, totalPrice: totalPrice.toFixed(2), currencyCode };
 };
-

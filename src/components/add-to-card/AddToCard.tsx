@@ -23,7 +23,7 @@ function AddToCard({
   const dispatch = useAppDispatch();
   const { carts, country } = useAppSelector(selectCommerceTools);
   const [quantity, setQuantity] = useState<number>(0);
-  const cart = carts?.find((el) => el.id) as Cart;
+  const cart = carts?.find((el) => el.id)!;
 
   const handleCreateCard = async () => {
     if (quantity && !cart?.id) {

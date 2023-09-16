@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import {
-  filterObjectAndReturnValue,
-  getCurrencySymbol,
-} from '@/commercetools/utils/utilsCommercTools';
-import {
-  getTotalSumFromCarts,
-  removeLineItemfromCart,
-} from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
+import CartTotalSum from '../cart/total-summ/CartTotalSumm';
 import ProductImages from '../product-card/product-images/ProductImages';
 import ProductPrice from '../product-card/product-price/ProductPrice';
-import { createOrderWithShippingAddress } from '@/commercetools/utils/utilsOrders';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
+import {
+  filterObjectAndReturnValue,
+} from '@/commercetools/utils/utilsCommercTools';
+import {
+  removeLineItemfromCart,
+} from '@/commercetools/utils/utilsCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';
 import { useRouter } from 'next/router';
@@ -33,7 +31,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
   } = styles;
   const { push } = useRouter();
   const dispatch = useAppDispatch();
-  const { carts, country } = useAppSelector(selectCommerceTools);
+  const { carts } = useAppSelector(selectCommerceTools);
   const [cart, setCart] = useState<Cart>();
 
   useEffect(() => {
@@ -54,23 +52,15 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     }
   };
   const handleRedirectToCartPage = async () => {
-    if(cart?.id) {
+    if (cart?.id && cart?.lineItems.length) {
       onClick();
       push(`/cart/${cart.id}`);
     }
   };
   const handleCheckout = async () => {
     onClick();
-    if (cart?.cartState === 'Active' && cart?.lineItems.length) {
-      const { id } = (
-        await createOrderWithShippingAddress(cart?.id, country)
-      )?.body!;
-
-      if (id) {
-        push(`/checkout/${id}`);
-      }
-    } else {
-      if (cart?.id) push(`/ordered/${cart.id}`);
+    if (cart?.lineItems.length) {
+      push(`/checkout/${cart.id}`);
     }
   };
 
@@ -80,37 +70,39 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
         close
       </div>
       <div className={titleStyle}>Mini Cart</div>
-      <div className={shoppingListsStyle}>
-        {cart?.id &&
-          cart?.lineItems.map((item) => (
-            <div className={listItem} key={item.id}>
-              <div
-                className={itemDelete}
-                onClick={() =>
-                  handleDeleteLineItem(cart.id, cart.version, item.id)
-                }
-              >
-                delete
-              </div>
-              <div className={ItemImages}>
-                <ProductImages productId={item.productId} />
-              </div>
-              <div className={itemName}>
-                {filterObjectAndReturnValue(item.name, 'en') ||
-                  'no product name'}
-              </div>
-              <div className={itemPrice}>
-                <ProductPrice
-                  quantity={item.quantity}
-                  productId={item.productId}
-                />
-              </div>
-            </div>
-          ))}
-      </div>
-      <div className={total}>
-        Total: <TotalSum carts={carts} />
-      </div>
+      {cart?.lineItems.length ? (
+        <>
+          <div className={shoppingListsStyle}>
+            {cart?.id &&
+              cart?.lineItems.map((item) => (
+                <div className={listItem} key={item.id}>
+                  <div
+                    className={itemDelete}
+                    onClick={() =>
+                      handleDeleteLineItem(cart.id, cart.version, item.id)
+                    }
+                  >
+                    delete
+                  </div>
+                  <div className={ItemImages}>
+                    <ProductImages productId={item.productId} />
+                  </div>
+                  <div className={itemName}>
+                    {filterObjectAndReturnValue(item.name, 'en') ||
+                      'no product name'}
+                  </div>
+                  <div className={itemPrice}>
+                    <ProductPrice
+                      quantity={item.quantity}
+                      productId={item.productId}
+                    />
+                  </div>
+                </div>
+              ))}
+          </div>
+          <div className={total}>
+            Total: <CartTotalSum carts={carts} />
+          </div>
       <div className={buttonsContiner}>
         <button onClick={handleRedirectToCartPage} type="button">
           Viewbag
@@ -119,34 +111,12 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
           Checkout
         </button>
       </div>
+        </>
+      ) : (
+        <div>Empty Cart</div>
+      )}
     </div>
   );
 }
 
 export default MiniCartModal;
-
-function TotalSum({ carts }: { carts: Cart[] }) {
-  const [totalSum, setTotalSum] = useState<string>('');
-  const [currencySymbol, setCurrencySymbol] = useState<string>('');
-  const { country } = useAppSelector(selectCommerceTools);
-
-  useEffect(() => {
-    const fn = async () => {
-      if (carts.length) {
-        const res = await getTotalSumFromCarts(carts, country);
-
-        if (res) {
-          setTotalSum(res.totalPrice);
-          setCurrencySymbol(getCurrencySymbol(country, res.currencyCode!));
-        }
-      }
-    };
-
-    fn();
-  }, [carts, country]);
-  return (
-    <div
-      style={{ minWidth: '30px', width: 'auto', height: '20px' }}
-    >{`${totalSum} ${currencySymbol}`}</div>
-  );
-}

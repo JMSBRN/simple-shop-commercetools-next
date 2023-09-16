@@ -29,7 +29,6 @@ function BillingAddressForm({
   };
   const addressFields: (keyof BaseAddress)[][] = [
     ['firstName', 'lastName'],
-    ['country', 'region'],
     ['postalCode', 'city'],
     ['streetName', 'streetNumber'],
     ['additionalStreetInfo'],
@@ -89,7 +88,6 @@ function BillingAddressForm({
             ))}
           </div>
         ))}
-        {renderTextAreaField('additionalAddressInfo', false)}
       </form>
     </div>
   );

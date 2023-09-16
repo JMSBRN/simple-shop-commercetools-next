@@ -21,14 +21,13 @@ function Checkout() {
   } = styles;
   const formRef = useRef<HTMLFormElement | null>(null);
   const { carts, country } = useAppSelector(selectCommerceTools);
-  const cart = carts?.find(el => el.id) as Cart;
-  const { id } = cart;
   const { query } = useRouter();
-  const orderId = query.id as string;
+  const cartId = query.id as string;
+  const cart = carts?.find(el => el.id === cartId) as Cart;
   
   const handleSubMit = async (e?: BaseAddress) => {
     if (e?.firstName)  {
-      const res = await createOrderWithShippingAddress(id, country, e);
+      const res = await createOrderWithShippingAddress(cart?.id, country, e);
 
       console.log(res?.body);
     }
@@ -56,7 +55,7 @@ function Checkout() {
         </div>
         <div className={orderSummaryContainer}>
           <div className={formTitle}>orderSummary</div>
-          <OrderSummary orderId={orderId} handlePlaceOrder={handlePlaceOrder} />
+          <OrderSummary cart={cart} handlePlaceOrder={handlePlaceOrder} />
         </div>
       </div>
     </div>

@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Order } from '@commercetools/platform-sdk';
-import { formatValue } from '../product-card/utilsProductCard';
-import { getOrders } from '@/commercetools/utils/utilsOrders';
+import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import { Cart } from '@commercetools/platform-sdk';
+import CartTotalSum from '../cart/total-summ/CartTotalSumm';
+import ProductPrice from '../product-card/product-price/ProductPrice';
+import React from 'react';
+import { fetchCarts } from '@/features/thunks/FetchCarts';
+import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
+import { removeLineItemfromCart } from '@/commercetools/utils/utilsCarts';
+import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './OrderSummary.module.scss';
+import { useRouter } from 'next/router';
 
 function OrderSummary({
-  orderId,
+  cart,
   handlePlaceOrder,
 }: {
-  orderId: string;
+  cart: Cart;
   handlePlaceOrder: () => void;
 }) {
   const {
@@ -22,23 +28,30 @@ function OrderSummary({
     totalSum,
     checkoutBtn,
     errors,
+    listItem,
+    itemDelete,
+    itemName,
+    itemPrice
   } = styles;
 
-  const [order, setOrder] = useState<Order>({} as Order);
+  const dispatch = useAppDispatch();
+  const { carts } = useAppSelector(selectCommerceTools);
+  const { push } = useRouter();
+  const handleDeleteLineItem = async (
+    ID: string,
+    version: number,
+    lineitemId: string
+  ) => {
+    const res = await removeLineItemfromCart(ID, version, lineitemId);
 
-    useEffect(() => {
-    
-      const fn = async () => {
-        const res = await getOrders(orderId);
-
-         if( typeof res === 'object') {
-            setOrder(res as Order);
-         }
-      };
-
-      fn();
-    }, [orderId]);
-    
+    if (res.statusCode === 200) {
+      dispatch(fetchCarts());
+    }
+    if (cart?.lineItems.length === 1) {
+      push('/');
+    }
+  };
+  
   return (
     <div className={orderSummaryStyle}>
       <div className={totalsInfo}>
@@ -47,11 +60,32 @@ function OrderSummary({
           <span>total</span>
         </div>
         <div className={lineItemsStyle}>
-         {order.id && order.lineItems.map(el => (
-          <div key={el.id}>{el.id}</div>
+         {cart.lineItems.map(item => (
+                  <div className={listItem} key={item.id}>
+                  <div
+                    className={itemDelete}
+                    onClick={() =>
+                      handleDeleteLineItem(cart.id, cart.version, item.id)
+                    }
+                  >
+                    delete
+                  </div>
+                  <div className={itemName}>
+                    {filterObjectAndReturnValue(item.name, 'en') ||
+                      'no product name'}
+                  </div>
+                  <div className={itemPrice}>
+                    <ProductPrice
+                      quantity={item.quantity}
+                      productId={item.productId}
+                    />
+                  </div>
+                </div>
          ))}
         </div>
-        <div className={subTotal}>subtotal:</div>
+        <div className={subTotal}>
+          Total: <CartTotalSum carts={carts} />
+        </div>
       </div>
       <div className={shippingModeContainer}>
         shipping mode
@@ -68,7 +102,7 @@ function OrderSummary({
         </label>
       </div>
       <div className={totalSum}>
-        Total : <span>{order.id && formatValue(order.totalPrice)}</span>
+      Total: <CartTotalSum carts={carts} />
       </div>
       <button className={checkoutBtn} onClick={handlePlaceOrder}>
         Placeorder

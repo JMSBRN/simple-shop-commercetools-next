@@ -1,14 +1,12 @@
 import { Cart, TaxRate } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
 import {
-  getCarts,
   getTotalSumFromCart,
   removeLineItemfromCart,
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import CartLineItem from './cart-line-item/CartLineItem';
 import Link from 'next/link';
-import { createOrderWithShippingAddress } from '@/commercetools/utils/utilsOrders';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { getCurrencySymbol } from '@/commercetools/utils/utilsCommercTools';
 import { getRateFromTaxCategoryWithProductId } from '../product-card/utilsProductCard';
@@ -98,17 +96,8 @@ function CustomerCart() {
   };
 
   const handleCheckout = async () => {
-    const res = await getCarts(cart?.id) as Cart;
-
-    if(res.cartState === 'Active') {
-      const order = (await createOrderWithShippingAddress(res.id, country))?.body;
-      const { id } = order!;
-
-      if(id) {
-        push(`/checkout/${id}`);
-      } 
-    } else {
-      push(`/ordered/${cart?.id}`);
+    if(cart?.lineItems.length) {
+      push(`/checkout/${cart?.id}`);
     }
   };
 

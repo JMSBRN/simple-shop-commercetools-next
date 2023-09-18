@@ -1,7 +1,13 @@
-import { Cart, _BaseAddress } from '@commercetools/platform-sdk';
+import {
+  Cart,
+  TypedMoney,
+  _BaseAddress,
+} from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
+import { getCurrencySymbol } from './utilsCommercTools';
 import { getPriceValue } from '@/components/product-card/utilsProductCard';
 import { getPricesFromProduct } from './utilsShoppingList';
+import { getShippingMethodsWithCountry } from './utilsShippingMethods';
 
 export const getCarts = async (ID?: string) => {
   if (ID) {
@@ -50,29 +56,43 @@ export const removeLineItemfromCart = async (
 };
 
 export const createCartWithProductId = async (
-  currency: string,
   country: string,
   productId?: string,
   quantity?: number
 ) => {
-  if (currency) {
-    const res = await apiRoot
-      .carts()
-      .post({
-        body: {
-          currency,
-          country,
-          lineItems: [
-            {
-              productId,
-              quantity,
-            },
-          ],
-        },
-      })
-      .execute();
+  if (country) {
+    const currencies = (await apiRoot.get().execute()).body.currencies;
+     const currency = () => {};
+    const shippingMethodId = (
+      await getShippingMethodsWithCountry(country)
+    ).find((el) => el.id)?.id;
 
-    return res.body;
+    if (shippingMethodId) {
+      const res = await apiRoot
+        .carts()
+        .post({
+          body: {
+            currency,
+            country,
+            lineItems: [
+              {
+                productId,
+                quantity,
+              },
+            ],
+            shippingMethod: {
+              typeId: 'shipping-method',
+              id: shippingMethodId,
+            },
+            shippingAddress: {
+              country,
+            },
+          },
+        })
+        .execute();
+
+      return res.body;
+    }
   }
 };
 export const addShippingAddresToCart = async (
@@ -80,7 +100,7 @@ export const addShippingAddresToCart = async (
   country: string,
   address?: _BaseAddress
 ) => {
-  const res = await getCarts(ID) as Cart;
+  const res = (await getCarts(ID)) as Cart;
   const { version } = res;
 
   return await apiRoot
@@ -94,7 +114,7 @@ export const addShippingAddresToCart = async (
             action: 'setShippingAddress',
             address: {
               ...address,
-              country
+              country,
             },
           },
         ],
@@ -274,4 +294,20 @@ export const getTotalSumFromCart = async (cart: Cart, country: string) => {
   }, 0);
 
   return { productsId, totalPrice: totalPrice.toFixed(2), currencyCode };
+};
+
+export const getMoneyValueFromCartField = (
+  value: TypedMoney,
+) => {
+  const { centAmount, currencyCode, fractionDigits } = value;
+
+  const amount = centAmount / Math.pow(10, fractionDigits);
+  const formattedAmount = amount.toFixed(fractionDigits);
+
+  // Adding commas to the formatted amount
+  const parts = formattedAmount.split('.');
+
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  return `${parts.join('.')} ${getCurrencySymbol(currencyCode, value.currencyCode)}`;
 };

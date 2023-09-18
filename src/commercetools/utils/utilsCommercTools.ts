@@ -116,7 +116,7 @@ export function moveLanguageToFirstPosition(
        locale,
        {
          style: 'currency',
-         currency: currency,
+         currency,
          minimumFractionDigits: 0,
          maximumFractionDigits: 0
        }

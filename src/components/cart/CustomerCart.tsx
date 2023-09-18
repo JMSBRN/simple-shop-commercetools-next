@@ -1,15 +1,13 @@
-import { Cart, TaxRate } from '@commercetools/platform-sdk';
+import { Cart, TaxedPrice } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
 import {
-  getTotalSumFromCart,
+  getMoneyValueFromCartField,
   removeLineItemfromCart,
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import CartLineItem from './cart-line-item/CartLineItem';
 import Link from 'next/link';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
-import { getCurrencySymbol } from '@/commercetools/utils/utilsCommercTools';
-import { getRateFromTaxCategoryWithProductId } from '../product-card/utilsProductCard';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './CustomerCart.module.scss';
 import { useRouter } from 'next/router';
@@ -30,53 +28,20 @@ function CustomerCart() {
     lineItemHeadlines,
   } = styles;
 
-  const [total, setTotal] = useState<{
-    totalPrice: string;
-    currencyCode: string | undefined;
-  }>();
-  const { push, locale } = useRouter();
+  const { push } = useRouter();
   const dispatch = useAppDispatch();
-  const { carts, country } = useAppSelector(selectCommerceTools);
-  const [taxRate, setTaxRate] = useState<TaxRate>();
-  const totalPrice = Number(total?.totalPrice);
-  const currencySymbol = total?.currencyCode
-    ? getCurrencySymbol(locale!, total?.currencyCode as string)
-    : '';
-  const netAmount = totalPrice / (taxRate?.amount! + 1);
-  const taxExluded = totalPrice - totalPrice / (taxRate?.amount! + 1);
+  const { carts } = useAppSelector(selectCommerceTools);
   const [cart, setCart] = useState<Cart>();
+  const { query } = useRouter();
+  const cartId = query.id as string; 
   
  useEffect(() => {
-   carts.forEach(el => {
-    setCart(el);
-   });
- }, [carts]);
- 
-  useEffect(() => {
-    const fn = async () => {
-      if (cart) {
-        const res = await getTotalSumFromCart(cart, country);
-
-        if (res) {
-          const { productsId, currencyCode, totalPrice } = res;
-
-          setTotal({ totalPrice, currencyCode });
-
-          productsId.forEach(async (el) => {
-            const taxRate = await getRateFromTaxCategoryWithProductId(
-              el,
-              country
-            );
-            
-               // if products has different TaxRate make arr with { productId, taxRate }
-            setTaxRate(taxRate!);
-          });
-        }
-      }
-    };
-
-    fn();
-  }, [cart, country]);
+  return () => {
+    carts.filter(el => el.id === cartId).forEach(el => {
+     setCart(el);
+    });
+  };
+ }, [cartId, carts]);
 
   const handleDeleteLineItem = async (lineitemId: string) => {
     if (cart?.id) {
@@ -101,8 +66,11 @@ function CustomerCart() {
     }
   };
 
-  return (
-    <div className={cartContainer}>
+  if (cart) {
+    const { taxPortions, totalGross, totalNet, totalTax } = cart.taxedPrice as TaxedPrice;
+
+    return (
+      <div className={cartContainer}>
       <div className={cartTitle}>
         <h3>Customer Cart</h3>
         <Link href={'/'}>Home</Link>
@@ -117,9 +85,9 @@ function CustomerCart() {
             <div>Total</div>
           </div>
           <div className={lineItemsStyle}>
-            {cart?.lineItems.map((el) => (
+            {cart.lineItems.map((el) => (
               <CartLineItem
-                handleDeleteLineItem={async () =>
+              handleDeleteLineItem={async () =>
                   await handleDeleteLineItem(el.id)
                 }
                 cartId={cart?.id}
@@ -137,26 +105,25 @@ function CustomerCart() {
           <div className={cartTotalsTable}>
             <div className={cartTotalsTitle}>Cart Totals</div>
             <div className={cartTotalsInfo}>
-              Net amount:
+              Net amount
               <span>
-                {!!netAmount
-                  ? `${netAmount.toFixed(2)} ${currencySymbol}`
-                  : '--'}
+              {getMoneyValueFromCartField(totalNet)}
               </span>
             </div>
             <div className={cartTotalsInfo}>
-              {taxRate?.name || 'Tax'}
+              <div>{taxPortions.map((el, idx) => (
+                <span
+                 key={idx}>
+                  <span>{el.name} </span>
+                  <span>{`${(el.rate * 100)} %`}</span>
+                </span>
+              ))}</div>
               <span>
-                {!!taxExluded
-                  ? `${taxExluded.toFixed(2)} ${currencySymbol}`
-                  : '--'}
+              { totalTax && getMoneyValueFromCartField(totalTax)}
               </span>
             </div>
             <div className={cartTotals}>
-              Total :
-              <span>{`${
-                !!Number(total?.totalPrice) ? total?.totalPrice : '--'
-              } ${currencySymbol}`}</span>
+              Total :  {getMoneyValueFromCartField(totalGross)}
             </div>
           </div>
           <button type="button" onClick={handleCheckout}>Checkout</button>
@@ -164,6 +131,9 @@ function CustomerCart() {
       </div>
     </div>
   );
+  }
+
+  return <div className=""></div>;
 }
 
 export default CustomerCart;

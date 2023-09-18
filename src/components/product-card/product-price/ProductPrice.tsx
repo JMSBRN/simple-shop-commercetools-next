@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { selectCommerceTools, setCurrency } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Price } from '@commercetools/platform-sdk';
 import { formatValue } from '../utilsProductCard';
 import { getCurrencySymbol } from '@/commercetools/utils/utilsCommercTools';
 import { getPricesFromProduct } from '@/commercetools/utils/utilsShoppingList';
+import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './ProductPrice.module.scss';
 
 function ProductPrice({
@@ -26,11 +26,6 @@ function ProductPrice({
 
       if (res) {
         setPrices(res);
-        const currency = res
-          .filter((el) => el.country === country)
-          .find((el) => el.value.currencyCode)?.value.currencyCode;
-          
-          if(currency) dispatch(setCurrency(currency));
       }
     };
 

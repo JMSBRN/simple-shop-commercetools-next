@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import {
+  getMoneyValueFromCartField,
+  removeLineItemfromCart,
+} from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
-import CartTotalSum from '../cart/total-summ/CartTotalSumm';
 import ProductImages from '../product-card/product-images/ProductImages';
-import ProductPrice from '../product-card/product-price/ProductPrice';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import {
   filterObjectAndReturnValue,
 } from '@/commercetools/utils/utilsCommercTools';
-import {
-  removeLineItemfromCart,
-} from '@/commercetools/utils/utilsCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';
 import { useRouter } from 'next/router';
@@ -92,16 +91,13 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
                       'no product name'}
                   </div>
                   <div className={itemPrice}>
-                    <ProductPrice
-                      quantity={item.quantity}
-                      productId={item.productId}
-                    />
+                  {`${item.quantity} * ${getMoneyValueFromCartField(item.price.value)}`}
                   </div>
                 </div>
               ))}
           </div>
           <div className={total}>
-            Total: <CartTotalSum carts={carts} />
+            Total:  { cart?.taxedPrice && getMoneyValueFromCartField(cart?.taxedPrice.totalGross)}
           </div>
       <div className={buttonsContiner}>
         <button onClick={handleRedirectToCartPage} type="button">

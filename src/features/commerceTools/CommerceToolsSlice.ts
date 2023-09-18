@@ -11,7 +11,6 @@ import { fetchShoppingLists } from '../thunks/FetchShoppingLists';
 interface InitialState {
   language: string;
   country: string;
-  currency: string;
   categories: Category[];
   products: Product[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -22,7 +21,6 @@ interface InitialState {
 const initialState: InitialState = {
   language: '',
   country: '',
-  currency: '',
   categories: [],
   products: [],
   status: 'idle',
@@ -45,9 +43,6 @@ const commerceToolseSlice = createSlice({
     },
     setCountry: (state, action: PayloadAction<string>) => {
       state.country = action.payload;
-    },
-    setCurrency: (state, action: PayloadAction<string>) => {
-      state.currency = action.payload;
     },
     setShoppingLists: (state, action: PayloadAction<ShoppingList[]>) => {
       state.shoppingLists = action.payload;
@@ -88,7 +83,6 @@ export const {
   setProducts,
   setLanguage,
   setCountry,
-  setCurrency,
   setShoppingLists,
   setCarts,
 } = commerceToolseSlice.actions;

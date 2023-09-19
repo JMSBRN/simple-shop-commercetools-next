@@ -1,18 +1,14 @@
 import { Cart, TaxedPrice } from '@commercetools/platform-sdk';
-import React, { useEffect, useState } from 'react';
-import {
-  getMoneyValueFromCartField,
-  removeLineItemfromCart,
-} from '@/commercetools/utils/utilsCarts';
-import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import CartLineItem from './cart-line-item/CartLineItem';
 import Link from 'next/link';
-import { fetchCarts } from '@/features/thunks/FetchCarts';
-import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
+import React, {  } from 'react';
+import {
+  getMoneyValueFromCartField,
+} from '@/commercetools/utils/utilsCarts';
 import styles from './CustomerCart.module.scss';
 import { useRouter } from 'next/router';
 
-function CustomerCart() {
+function CustomerCart({ cart }:{ cart: Cart }) {
   const {
     cartContainer,
     cartTitle,
@@ -29,44 +25,13 @@ function CustomerCart() {
   } = styles;
 
   const { push } = useRouter();
-  const dispatch = useAppDispatch();
-  const { carts } = useAppSelector(selectCommerceTools);
-  const [cart, setCart] = useState<Cart>();
-  const { query } = useRouter();
-  const cartId = query.id as string; 
   
- useEffect(() => {
-  return () => {
-    carts.filter(el => el.id === cartId).forEach(el => {
-     setCart(el);
-    });
-  };
- }, [cartId, carts]);
-
-  const handleDeleteLineItem = async (lineitemId: string) => {
-    if (cart?.id) {
-      const res = await removeLineItemfromCart(
-        cart.id,
-        cart.version,
-        lineitemId
-      );
-
-      if (res.statusCode === 200) {
-        dispatch(fetchCarts());
-      }
-      if (cart?.lineItems.length === 1) {
-        push('/');
-      }
-    }
-  };
-
   const handleCheckout = async () => {
     if(cart?.lineItems.length) {
       push(`/checkout/${cart?.id}`);
     }
   };
 
-  if (cart) {
     const { taxPortions, totalGross, totalNet, totalTax } = cart.taxedPrice as TaxedPrice;
 
     return (
@@ -87,10 +52,8 @@ function CustomerCart() {
           <div className={lineItemsStyle}>
             {cart.lineItems.map((el) => (
               <CartLineItem
-              handleDeleteLineItem={async () =>
-                  await handleDeleteLineItem(el.id)
-                }
                 cartId={cart?.id}
+                version={cart.version}
                 key={el.id}
                 lineItem={el}
               />
@@ -131,9 +94,6 @@ function CustomerCart() {
       </div>
     </div>
   );
-  }
-
-  return <div className=""></div>;
 }
 
 export default CustomerCart;

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import {
   getCarts,
   getMoneyValueFromCartField,
+  removeLineItemfromCart,
   updateCartLineitemQuantity,
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
@@ -15,12 +16,12 @@ import { useRouter } from 'next/router';
 
 function CartLineItem({
   cartId,
+  version,
   lineItem,
-  handleDeleteLineItem,
 }: {
   cartId: string;
+  version: number;
   lineItem: LineItem;
-  handleDeleteLineItem: (lineitemId: string) => Promise<void>;
 }) {
   const {
     lineItemStyle,
@@ -71,9 +72,24 @@ function CartLineItem({
     }
   };
 
+  const handleDeleteLineItem = async (
+    ID: string,
+    version: number,
+    lineitemId: string
+  ) => {
+    const res = await removeLineItemfromCart(ID, version, lineitemId);
+
+    if (res.statusCode === 200) {
+      dispatch(fetchCarts());
+    }
+    if (quantity === 1) {
+      push('/');
+    }
+  };
+
   return (
     <div className={lineItemStyle}>
-      <div className={deleteLineItem} onClick={() => handleDeleteLineItem(id)}>
+      <div className={deleteLineItem} onClick={() => handleDeleteLineItem(cartId, version, id )}>
         delete
       </div>
       <div className={description}>

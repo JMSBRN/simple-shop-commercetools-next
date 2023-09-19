@@ -185,7 +185,7 @@ export const updateCartLineitemQuantity = async (
   lineItemId: string,
   quantity: number
 ) => {
-  const res = await apiRoot
+return (await apiRoot
     .carts()
     .withId({ ID })
     .post({
@@ -200,9 +200,7 @@ export const updateCartLineitemQuantity = async (
         ],
       },
     })
-    .execute();
-
-  return res.body;
+    .execute());
 };
 
 export const getLineItemsFromCarts = async (carts: Cart[]) => {

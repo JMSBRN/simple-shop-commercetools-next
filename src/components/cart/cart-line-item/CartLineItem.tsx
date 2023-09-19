@@ -1,4 +1,5 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
+import React, { useState } from 'react';
 import {
   getCarts,
   getMoneyValueFromCartField,
@@ -6,13 +7,11 @@ import {
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import Image from 'next/image';
-import React from 'react';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
-import {
-  filterObjectAndReturnValue,
-} from '@/commercetools/utils/utilsCommercTools';
+import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './CartLineItem.module.scss';
+import { useRouter } from 'next/router';
 
 function CartLineItem({
   cartId,
@@ -35,42 +34,40 @@ function CartLineItem({
   } = styles;
   const dispatch = useAppDispatch();
   const { language } = useAppSelector(selectCommerceTools);
-
   const { id, variant, name, quantity, price } = lineItem;
   const { images, sku } = variant;
-
-  const handlePlusQuantity = async () => {
+  const [currentQuantity, setCurrentQuantity] = useState<number>(quantity);
+  const { push } = useRouter();
+  const upDateQuantityLineItem = async (cartId: string, quantity: number) => {
     const cart = (await getCarts(cartId)) as Cart;
 
     if (cart.id) {
       const { version } = cart;
 
-      const res = await updateCartLineitemQuantity(
+      await updateCartLineitemQuantity(
         cart.id,
         version,
         id,
-        quantity + 1
+        quantity
       );
-
-      if (res.id) dispatch(fetchCarts());
     }
   };
+
+  const handlePlusQuantity = async () => {
+    setCurrentQuantity(currentQuantity + 1);
+    await upDateQuantityLineItem(cartId, currentQuantity + 1);
+    dispatch(fetchCarts());
+  };
+
   const handleMinusQuantity = async () => {
-    if (quantity > 1) {
-      const cart = (await getCarts(cartId)) as Cart;
-
-      if (cart.id) {
-        const { version } = cart;
-
-        const res = await updateCartLineitemQuantity(
-          cart.id,
-          version,
-          id,
-          quantity - 1
-        );
-
-        if (res.id) dispatch(fetchCarts());
-      }
+    if (currentQuantity > 1) {
+      setCurrentQuantity(currentQuantity - 1);
+      await upDateQuantityLineItem(cartId, currentQuantity - 1);
+      dispatch(fetchCarts());
+    }
+    if(currentQuantity === 1) {
+      await upDateQuantityLineItem(cartId, 0);
+      push('/');
     }
   };
 
@@ -94,14 +91,14 @@ function CartLineItem({
         </div>
       </div>
       <div className={priceStyle}>
-          {getMoneyValueFromCartField(price.value)}
+        {getMoneyValueFromCartField(price.value)}
         {false && <div className={saleBage}>Sale</div>}
       </div>
       <div className={quantityStyle}>
         <button type="button" onClick={handlePlusQuantity}>
           +
         </button>
-        <div>{quantity}</div>
+        <div>{currentQuantity}</div>
         <button type="button" onClick={handleMinusQuantity}>
           -
         </button>

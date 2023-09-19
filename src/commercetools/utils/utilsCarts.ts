@@ -8,6 +8,7 @@ import { getCurrencySymbol } from './utilsCommercTools';
 import { getPriceValue } from '@/components/product-card/utilsProductCard';
 import { getPricesFromProduct } from './utilsShoppingList';
 import { getShippingMethodsWithCountry } from './utilsShippingMethods';
+import { setCurrency } from '@/utils/utilsApp';
 
 export const getCarts = async (ID?: string) => {
   if (ID) {
@@ -61,12 +62,11 @@ export const createCartWithProductId = async (
   quantity?: number
 ) => {
   if (country) {
-    const currencies = (await apiRoot.get().execute()).body.currencies;
-     const currency = () => {};
+    const currency = setCurrency(country);
     const shippingMethodId = (
       await getShippingMethodsWithCountry(country)
     ).find((el) => el.id)?.id;
-
+    
     if (shippingMethodId) {
       const res = await apiRoot
         .carts()

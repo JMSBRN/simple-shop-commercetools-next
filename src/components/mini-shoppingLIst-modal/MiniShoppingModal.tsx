@@ -47,7 +47,7 @@ function MiniCartModal({
   } = styles;
  const { push } = useRouter();
   const dispatch = useAppDispatch();
-  const { carts, currency, country } = useAppSelector(selectCommerceTools);
+  const { carts, country } = useAppSelector(selectCommerceTools);
 
   const handleDeleteShoppingList = async (ID: string, version: number) => {
     const res = await deleteShoppingList(ID, version);
@@ -57,7 +57,7 @@ function MiniCartModal({
   const handleRedirectToCartPage = async () => {
     onClick();
     if (shoppingLists.length) {
-      const res = await createCartWithProductId(currency, country);
+      const res = await createCartWithProductId(country);
 
       if (res?.id) {
         const { id } = res;

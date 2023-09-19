@@ -13,11 +13,9 @@ import styles from './AddToCard.module.scss';
 function AddToCard({
   productId,
   variantId,
-  currency,
 }: {
   productId: string;
   variantId: number;
-  currency: string;
 }) {
   const { addToCardContiner, quantityContainer } = styles;
   const dispatch = useAppDispatch();
@@ -34,7 +32,6 @@ function AddToCard({
   const handleCreateCard = async () => {
     if (quantity && !cart.id) {
       const newCart = await createCartWithProductId(
-        currency,
         country,
         productId,
         quantity

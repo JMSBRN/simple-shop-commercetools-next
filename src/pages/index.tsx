@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next/types';
 import Head from 'next/head';
 import WelcomePage from '@/components/welcome-page/WelcomePage';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import toggleServerSideLaguage from '@/utils/utilsApp';
+import { toggleServerSideLaguage } from '@/utils/utilsApp';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 

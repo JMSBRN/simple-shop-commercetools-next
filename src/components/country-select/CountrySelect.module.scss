@@ -2,6 +2,7 @@
     width: 100px;
     height: 20px;
     text-align: center;
+    color: grey;
     select {
         appearance: none;
         background-color: transparent;
@@ -10,5 +11,8 @@
         outline: none;
         text-align: center;
         cursor: pointer;
+    }
+    div {
+        font-size: 10px;
     }
 }

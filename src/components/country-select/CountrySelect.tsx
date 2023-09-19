@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { selectCommerceTools, setCountry } from '@/features/commerceTools/CommerceToolsSlice';
+import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { getCountries } from '@/commercetools/utils/utilsCommercTools';
-import { setCountry } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './CountrySelect.module.scss';
-import { useAppDispatch } from '@/hooks/storeHooks';
 
 function CountrySelect() {
   const dispatch = useAppDispatch();
+  const { carts } = useAppSelector(selectCommerceTools);
   const [countries, setCountries] = useState<string[]>([]);
   const [currentCountry, setCurrentCountry] = useState<string>('');
+  const isCartsCreated = !!carts.length;
 
   const fetchFunction = useCallback(
     async function () {
@@ -40,7 +42,11 @@ function CountrySelect() {
   return (
     <div className={styles.countrySelectContainer}>
       {!!countries.length && (
-        <select onChange={(e) => handleChangeCountry(e)} defaultValue={currentCountry}>
+        <select 
+        onChange={(e) => handleChangeCountry(e)}
+        defaultValue={currentCountry}
+        disabled={isCartsCreated}
+        >
           {countries.map((el, idx) => (
             <option key={idx} value={el}>
               {el}
@@ -48,6 +54,7 @@ function CountrySelect() {
           ))}
         </select>
       )}
+      {!isCartsCreated && <div>select avalible country</div> }
     </div>
   );
 }

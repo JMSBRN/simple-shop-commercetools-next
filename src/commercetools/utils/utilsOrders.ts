@@ -1,39 +1,31 @@
-import { Cart, _BaseAddress } from '@commercetools/platform-sdk';
-import { addShippingAddresToCart, getCarts } from './utilsCarts';
+import { Cart } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
+import { getCarts } from './utilsCarts';
 
 export const getOrders = async (ID?: string) => {
   if (ID) return (await apiRoot.orders().withId({ ID }).get().execute()).body;
   return (await apiRoot.orders().get().execute()).body.results;
 };
 
-export const createOrderWithShippingAddress = async (
+export const createOrder = async (
   cartId: string,
-
-  country: string,
-  address?: _BaseAddress
 ) => {
-  const { statusCode } = await addShippingAddresToCart(
-    cartId,
-    country,
-    address
-  );
+ 
+    if (cartId) {
+      const { id, version } = await getCarts(cartId) as Cart;
   
-  if (statusCode === 200) {
-    const { id, version } = await getCarts(cartId) as Cart;
-
-    return await apiRoot
-      .orders()
-      .post({
-        body: {
-          version,
-          orderState: 'Open',
-          cart: {
-            typeId: 'cart',
-            id,
+      return ( await apiRoot
+        .orders()
+        .post({
+          body: {
+            version,
+            orderState: 'Open',
+            cart: {
+              typeId: 'cart',
+              id,
+            },
           },
-        },
-      })
-      .execute();
-  }
+        })
+        .execute());
+    }
 };

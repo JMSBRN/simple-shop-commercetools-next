@@ -1,5 +1,6 @@
 import {
   Cart,
+  TaxedPrice,
   TypedMoney,
   _BaseAddress,
 } from '@commercetools/platform-sdk';
@@ -294,6 +295,18 @@ export const getTotalSumFromCart = async (cart: Cart, country: string) => {
   return { productsId, totalPrice: totalPrice.toFixed(2), currencyCode };
 };
 
+export const getOriginalSubTotal = (
+  taxedPrice: TaxedPrice,
+  taxedShippingPrice: TaxedPrice
+) =>  {
+  const originalSubTotal =
+    taxedPrice.totalNet.centAmount +
+    taxedPrice.totalTax?.centAmount! -
+    taxedShippingPrice.totalGross.centAmount;
+
+  return originalSubTotal;
+};
+
 export const getMoneyValueFromCartField = (
   value: TypedMoney,
 ) => {
@@ -309,3 +322,22 @@ export const getMoneyValueFromCartField = (
 
   return `${parts.join('.')} ${getCurrencySymbol(currencyCode, value.currencyCode)}`;
 };
+
+export const setShippingMethodToCart =async (cartId: string, methodId: string) => {
+  const cart = (await getCarts(cartId)) as Cart;
+  const { version } = cart;
+
+  return  (await apiRoot.carts().withId({ ID: cartId }).post({
+    body: {
+      version,
+      actions: [{
+        action: 'setShippingMethod',
+        shippingMethod: {
+          typeId: 'shipping-method',
+          id: methodId,
+        }
+      }]
+    }
+  }).execute());
+};
+

@@ -7,3 +7,11 @@ export const getShippingMethodsWithCountry = async (country: string) => {
     }
    }).execute()).body.results;  
 };
+export const getShipingMethodByKey = async (key: string) => {
+   return (await apiRoot.shippingMethods().withKey({ key }).get({
+    queryArgs: {
+        key
+    }
+   }).execute()).body;  
+};
+ 

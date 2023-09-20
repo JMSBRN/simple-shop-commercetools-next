@@ -48,6 +48,7 @@
     height: 50px;
     padding-left: 20px;
     @include flex(center, flex-start);
+    gap: 20px;
 }
 .totalsInfoTitles{
     height: 30px;
@@ -64,6 +65,11 @@
             margin-bottom: 10px;
         }
     }
+}
+.deliveryTax {
+    padding: 10px;
+    text-transform: uppercase;
+    text-align: start;
 }
 .paymentMethodContainer{
     width: 100%;

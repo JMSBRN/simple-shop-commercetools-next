@@ -1,11 +1,16 @@
+import { Cart, ShippingMethod } from '@commercetools/platform-sdk';
+import React, { useEffect, useState } from 'react';
+import {
+  getMoneyValueFromCartField,
+  removeLineItemfromCart,
+  setShippingMethodToCart,
+} from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
-import { Cart } from '@commercetools/platform-sdk';
-import CartTotalSum from '../cart/total-summ/CartTotalSumm';
+import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
 import ProductPrice from '../product-card/product-price/ProductPrice';
-import React from 'react';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
-import { removeLineItemfromCart } from '@/commercetools/utils/utilsCarts';
+import { getShippingMethodsWithCountry } from '@/commercetools/utils/utilsShippingMethods';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './OrderSummary.module.scss';
 import { useRouter } from 'next/router';
@@ -25,18 +30,23 @@ function OrderSummary({
     subTotal,
     shippingModeContainer,
     paymentMethodContainer,
+    deliveryTax,
     totalSum,
     checkoutBtn,
     errors,
     listItem,
     itemDelete,
     itemName,
-    itemPrice
+    itemPrice,
   } = styles;
 
   const dispatch = useAppDispatch();
-  const { carts } = useAppSelector(selectCommerceTools);
+  const { country } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
+  const [shippingMethods, setShippingMethods] = useState<ShippingMethod[]>(
+    [] as ShippingMethod[]
+  );
+  const cartShippingMethodId = cart.shippingInfo?.shippingMethod?.id as string; 
   const handleDeleteLineItem = async (
     ID: string,
     version: number,
@@ -51,7 +61,23 @@ function OrderSummary({
       push('/');
     }
   };
-  
+
+  useEffect(() => {
+    const fn = async () => {
+      const res = await getShippingMethodsWithCountry(country);
+
+      if(res) setShippingMethods(res);
+    };
+
+    fn();
+  }, [country]);
+
+  const handleChooseShippingMethod = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const res = await setShippingMethodToCart(cart.id, e.currentTarget.id);
+
+    if (res.statusCode === 200 ) dispatch(fetchCarts());
+  };
+
   return (
     <div className={orderSummaryStyle}>
       <div className={totalsInfo}>
@@ -60,39 +86,53 @@ function OrderSummary({
           <span>total</span>
         </div>
         <div className={lineItemsStyle}>
-         {cart.lineItems.map(item => (
-                  <div className={listItem} key={item.id}>
-                  <div
-                    className={itemDelete}
-                    onClick={() =>
-                      handleDeleteLineItem(cart.id, cart.version, item.id)
-                    }
-                  >
-                    delete
-                  </div>
-                  <div className={itemName}>
-                    {filterObjectAndReturnValue(item.name, 'en') ||
-                      'no product name'}
-                  </div>
-                  <div className={itemPrice}>
-                    <ProductPrice
-                      quantity={item.quantity}
-                      productId={item.productId}
-                    />
-                  </div>
-                </div>
-         ))}
+          {cart.lineItems.map((item) => (
+            <div className={listItem} key={item.id}>
+              <div
+                className={itemDelete}
+                onClick={() =>
+                  handleDeleteLineItem(cart.id, cart.version, item.id)
+                }
+              >
+                delete
+              </div>
+              <div className={itemName}>
+                {filterObjectAndReturnValue(item.name, 'en') ||
+                  'no product name'}
+              </div>
+              <div className={itemPrice}>
+                <ProductPrice
+                  quantity={item.quantity}
+                  productId={item.productId}
+                />
+              </div>
+            </div>
+          ))}
         </div>
         <div className={subTotal}>
-          Total: <CartTotalSum carts={carts} />
-        </div>
+          Sub Total:   <OriginalTotal cart={cart}/>
+          </div>
       </div>
       <div className={shippingModeContainer}>
-        shipping mode
-        <label>
-          <input type="radio" />
-          <input type="radio" />
-        </label>
+        {
+          shippingMethods.map(el => (
+            <div key={el.id}>
+              <label>
+                {el.name}
+                <input
+                type="radio"
+                name="delivery"
+                id={el.id}
+                checked={cartShippingMethodId === el.id}
+                onChange={handleChooseShippingMethod}
+                />
+              </label>
+            </div>
+          ))
+        }
+      </div>
+      <div className={deliveryTax}>
+       Delivery tax: {getMoneyValueFromCartField(cart.shippingInfo?.taxedPrice?.totalGross!)}
       </div>
       <div className={paymentMethodContainer}>
         <label>
@@ -102,7 +142,7 @@ function OrderSummary({
         </label>
       </div>
       <div className={totalSum}>
-      Total: <CartTotalSum carts={carts} />
+        Total: {getMoneyValueFromCartField(cart.taxedPrice?.totalGross!)}
       </div>
       <button className={checkoutBtn} onClick={handlePlaceOrder}>
         Placeorder

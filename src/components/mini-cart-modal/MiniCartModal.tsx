@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
 import {
   getMoneyValueFromCartField,
   removeLineItemfromCart,
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import { useEffect, useState } from 'react';
 import { Cart } from '@commercetools/platform-sdk';
+import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
 import ProductImages from '../product-card/product-images/ProductImages';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import {
@@ -27,6 +28,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     itemName,
     itemPrice,
     total,
+    subTotal
   } = styles;
   const { push } = useRouter();
   const dispatch = useAppDispatch();
@@ -91,22 +93,29 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
                       'no product name'}
                   </div>
                   <div className={itemPrice}>
-                  {`${item.quantity} * ${getMoneyValueFromCartField(item.price.value)}`}
+                    {`${item.quantity} * ${getMoneyValueFromCartField(
+                      item.totalPrice
+                    )}`}
                   </div>
                 </div>
               ))}
           </div>
-          <div className={total}>
-            Total:  { cart?.taxedPrice && getMoneyValueFromCartField(cart?.taxedPrice.totalGross)}
+          <div className={subTotal}>
+            Sub Total:  <OriginalTotal cart={cart} />
           </div>
-      <div className={buttonsContiner}>
-        <button onClick={handleRedirectToCartPage} type="button">
-          Viewbag
-        </button>
-        <button type="button" onClick={handleCheckout}>
-          Checkout
-        </button>
-      </div>
+          <div className={total}>
+            Total:
+            {cart?.taxedPrice &&
+              getMoneyValueFromCartField(cart?.taxedPrice.totalGross)}
+          </div>
+          <div className={buttonsContiner}>
+            <button onClick={handleRedirectToCartPage} type="button">
+              Viewbag
+            </button>
+            <button type="button" onClick={handleCheckout}>
+              Checkout
+            </button>
+          </div>
         </>
       ) : (
         <div>Empty Cart</div>
@@ -116,3 +125,4 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
 }
 
 export default MiniCartModal;
+

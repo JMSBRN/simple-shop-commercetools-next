@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import BillingAddressForm from '@/components/forms/billing-addres-form/BillingAddressForm';
 import { GetServerSideProps } from 'next';
 import OrderSummary from '@/components/order-summary/OrderSummary';
-import { createOrderWithShippingAddress } from '@/commercetools/utils/utilsOrders';
+import { createOrder } from '@/commercetools/utils/utilsOrders';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../styles/Checkout.module.scss';
@@ -20,14 +20,15 @@ function Checkout() {
     orderSummaryContainer,
   } = styles;
   const formRef = useRef<HTMLFormElement | null>(null);
-  const { carts, country } = useAppSelector(selectCommerceTools);
+  const { carts } = useAppSelector(selectCommerceTools);
   const { query } = useRouter();
   const cartId = query.id as string;
   const cart = carts?.find(el => el.id === cartId) as Cart;
   
   const handleSubMit = async (e?: BaseAddress) => {
-    if (e?.firstName)  {
-      const res = await createOrderWithShippingAddress(cart?.id, country, e);
+    
+    if (e)  {
+      const res = await createOrder(cart?.id);
 
       console.log(res?.body);
     }

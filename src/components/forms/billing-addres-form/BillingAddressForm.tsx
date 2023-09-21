@@ -51,7 +51,7 @@ function BillingAddressForm({
           name={fieldName}
           value={formData[fieldName] || ''}
           onChange={handleChange}
-          // required={required}
+          required={required}
         />
       </label>
     </div>
@@ -68,7 +68,7 @@ function BillingAddressForm({
           name={fieldName}
           value={formData[fieldName] || ''}
           onChange={handleChange}
-          // required={required}
+          required={required}
         />
       </label>
     </div>

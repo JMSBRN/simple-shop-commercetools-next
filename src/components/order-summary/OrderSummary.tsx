@@ -51,8 +51,8 @@ function OrderSummary({
     [] as ShippingMethod[]
   );
   const [payments, setPayments] = useState<Payment[]>([] as Payment[]);
+  const [isOrdered, setIsOrdered] = useState<boolean>(false);
   const cartShippingMethodId = cart.shippingInfo?.shippingMethod?.id as string;
-  const isAllPaymentsMethodChossen = cart.paymentInfo?.payments.length! === 2;
   const handleDeleteLineItem = async (
     ID: string,
     version: number,
@@ -68,6 +68,10 @@ function OrderSummary({
     }
   };
 
+  useEffect(() => {
+   setIsOrdered(cart.cartState === 'Ordered');
+  }, [cart]);
+  
   useEffect(() => {
     const fn = async () => {
       const res = await getShippingMethodsWithCountry(country);
@@ -153,6 +157,7 @@ function OrderSummary({
                 id={el.id}
                 checked={cartShippingMethodId === el.id}
                 onChange={handleChooseShippingMethod}
+                disabled={isOrdered}
               />
             </label>
           </div>
@@ -175,7 +180,7 @@ function OrderSummary({
                   !!cart.paymentInfo?.payments.find((p) => p.id === el.id)?.id
                 }
                 onChange={handleChoosePaymentMethod}
-                disabled={isAllPaymentsMethodChossen}
+                disabled={isOrdered}
               />
             </label>
           </div>
@@ -184,8 +189,13 @@ function OrderSummary({
       <div className={totalSum}>
         Total: {getMoneyValueFromCartField(cart.taxedPrice?.totalGross!)}
       </div>
-      <button className={checkoutBtn} onClick={handlePlaceOrder}>
-        Placeorder
+      <button
+       className={checkoutBtn}
+       onClick={handlePlaceOrder}
+       disabled={isOrdered}
+       style={ isOrdered ? { backgroundColor: 'white', color: 'red' }: {} as React.CSSProperties}
+      >
+        {isOrdered ? 'Card Ordered' : 'Placeorder'}
       </button>
       <div className={errors}>error</div>
     </div>

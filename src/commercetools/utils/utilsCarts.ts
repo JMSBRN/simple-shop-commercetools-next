@@ -357,4 +357,20 @@ export const addPaymentToCart = async (cartId: string, payMentId: string) => {
     }
   }).execute());
 };
+export const removePaymentFromCart = async (cartId: string, payMentId: string) => {
+   const { version } = await getCarts(cartId) as Cart;
+
+  return (await apiRoot.carts().withId({ ID: cartId }).post({
+    body: {
+      version,
+      actions: [{
+        action: 'removePayment',
+        payment: {
+          typeId: 'payment',
+          id: payMentId,
+        }
+      }]
+    }
+  }).execute());
+};
 

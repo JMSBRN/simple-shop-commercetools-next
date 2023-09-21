@@ -94,7 +94,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
                   </div>
                   <div className={itemPrice}>
                     {`${item.quantity} * ${getMoneyValueFromCartField(
-                      item.totalPrice
+                      item.price.value
                     )}`}
                   </div>
                 </div>

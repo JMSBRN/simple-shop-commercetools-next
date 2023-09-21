@@ -1,20 +1,22 @@
-import { Cart } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
-import { getCarts } from './utilsCarts';
 
 export const getOrders = async (ID?: string) => {
-  if (ID) return (await apiRoot.orders().withId({ ID }).get().execute()).body;
-  return (await apiRoot.orders().get().execute()).body.results;
+  if (ID) return (await apiRoot.orders().withId({ ID }).get().execute());
+  return (await apiRoot.orders().get().execute());
+};
+export const deleteOrder = async (ID: string, version: number) => {
+  return (await apiRoot.orders().withId({ ID }).delete({
+    queryArgs: {
+      version
+    }
+  }).execute());
 };
 
-export const createOrder = async (
-  cartId: string,
-) => {
- 
-    if (cartId) {
-      const { id, version } = await getCarts(cartId) as Cart;
-  
-      return ( await apiRoot
+export const createOrder = async (cartId: string, version: number, cartState: string) => {
+  if (cartId) {
+
+    if (cartState === 'Active') {
+      return await apiRoot
         .orders()
         .post({
           body: {
@@ -22,10 +24,11 @@ export const createOrder = async (
             orderState: 'Open',
             cart: {
               typeId: 'cart',
-              id,
+              id: cartId,
             },
           },
         })
-        .execute());
+        .execute();
     }
+  }
 };

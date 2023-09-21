@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import BillingAddressForm from '@/components/forms/billing-addres-form/BillingAddressForm';
 import { GetServerSideProps } from 'next';
 import OrderSummary from '@/components/order-summary/OrderSummary';
+import { addShippingAddresToCart } from '@/commercetools/utils/utilsCarts';
 import { createOrder } from '@/commercetools/utils/utilsOrders';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -20,25 +21,36 @@ function Checkout() {
     orderSummaryContainer,
   } = styles;
   const formRef = useRef<HTMLFormElement | null>(null);
-  const { carts } = useAppSelector(selectCommerceTools);
-  const { query } = useRouter();
+  const { carts, country } = useAppSelector(selectCommerceTools);
+  const { query, push } = useRouter();
   const cartId = query.id as string;
-  const cart = carts?.find(el => el.id === cartId) as Cart;
-  
-  const handleSubMit = async (e?: BaseAddress) => {
-    
-    if (e)  {
-      const res = await createOrder(cart?.id);
+  const cart = carts?.find((el) => el.id === cartId) as Cart;
 
-      console.log(res?.body);
+  const handleSubMit = async (e?: BaseAddress) => {
+    if (e?.firstName) {
+      const { statusCode, body } = await addShippingAddresToCart(
+        cartId,
+        country,
+        e
+      );
+
+      if (statusCode === 200) {
+        const { version, cartState } = body;
+
+        const res = await createOrder(body.id, version, cartState);
+        const { id, orderState } = res?.body!;
+
+        if (orderState === 'Open') {
+          push(`/ordered/${id}`);
+        }
+      }
     }
   };
   const handlePlaceOrder = () => {
     handleSubMit();
-    if(formRef.current){
+    if (formRef.current) {
       formRef.current.requestSubmit();
-    } 
-   
+    }
   };
 
   return (
@@ -49,10 +61,7 @@ function Checkout() {
       <div className={checkoutContainer}>
         <div className={billingDetailsContainer}>
           <div className={formTitle}>billingDetails</div>
-          <BillingAddressForm
-            formRef={formRef}
-            onSubmit={handleSubMit}
-          />
+          <BillingAddressForm formRef={formRef} onSubmit={handleSubMit} />
         </div>
         <div className={orderSummaryContainer}>
           <div className={formTitle}>orderSummary</div>
@@ -67,6 +76,9 @@ export default Checkout;
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale || 'en', ['translation', 'common'])),
+    ...(await serverSideTranslations(locale || 'en', [
+      'translation',
+      'common',
+    ])),
   },
 });

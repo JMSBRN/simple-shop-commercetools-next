@@ -2,8 +2,10 @@ import { Cart, Payment, ShippingMethod } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
 import {
   addPaymentToCart,
+  getCarts,
   getMoneyValueFromCartField,
   removeLineItemfromCart,
+  removePaymentFromCart,
   setShippingMethodToCart,
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
@@ -49,7 +51,7 @@ function OrderSummary({
     [] as ShippingMethod[]
   );
   const [payments, setPayments] = useState<Payment[]>([] as Payment[]);
-  const cartShippingMethodId = cart.shippingInfo?.shippingMethod?.id as string; 
+  const cartShippingMethodId = cart.shippingInfo?.shippingMethod?.id as string;
   const isAllPaymentsMethodChossen = cart.paymentInfo?.payments.length! === 2;
   const handleDeleteLineItem = async (
     ID: string,
@@ -70,35 +72,39 @@ function OrderSummary({
     const fn = async () => {
       const res = await getShippingMethodsWithCountry(country);
 
-      if(res.length) setShippingMethods(res);
+      if (res.length) setShippingMethods(res);
 
-      const payments = await getPayments() as Payment[];
+      const payments = (await getPayments()) as Payment[];
 
-      if(payments.length) setPayments(payments);
+      if (payments.length) setPayments(payments);
     };
 
     fn();
   }, [country]);
 
-  const handleChooseShippingMethod = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const res = await setShippingMethodToCart(cart.id, e.currentTarget.id);
+  const handleChooseShippingMethod = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { statusCode } = await setShippingMethodToCart(
+      cart.id,
+      e.currentTarget.id
+    );
 
-    if (res.statusCode === 200 ) dispatch(fetchCarts());
+    if (statusCode === 200) dispatch(fetchCarts());
   };
-  const handleChoosePaymentMethod = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChoosePaymentMethod = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.currentTarget.id;
+    const { paymentInfo } = (await getCarts(cart.id)) as Cart;
+    const existMethodId = paymentInfo?.payments.find(
+      (el) => el.id !== value
+    )?.id;
 
-    if (!cart.paymentInfo) {
-      const res = await addPaymentToCart(cart.id, value);
-
-      if (res.statusCode === 200 ) dispatch(fetchCarts());
-    } else if(cart.paymentInfo?.payments.length < 2) {
-      
-      const res = await addPaymentToCart(cart.id, value);
-
-      if (res.statusCode === 200 ) dispatch(fetchCarts());
+    await addPaymentToCart(cart.id, value);
+    if (existMethodId) {
+      await removePaymentFromCart(cart.id, existMethodId);
     }
-     
   };
 
   return (
@@ -133,44 +139,45 @@ function OrderSummary({
           ))}
         </div>
         <div className={subTotal}>
-          Sub Total:   <OriginalTotal cart={cart}/>
-          </div>
+          Sub Total: <OriginalTotal cart={cart} />
+        </div>
       </div>
       <div className={shippingModeContainer}>
-        {
-          shippingMethods.map(el => (
-            <div key={el.id}>
-              <label>
-                {el.name}
-                <input
+        {shippingMethods.map((el) => (
+          <div key={el.id}>
+            <label>
+              {el.name}
+              <input
                 type="radio"
                 name="delivery"
                 id={el.id}
                 checked={cartShippingMethodId === el.id}
                 onChange={handleChooseShippingMethod}
-                />
-              </label>
-            </div>
-          ))
-        }
+              />
+            </label>
+          </div>
+        ))}
       </div>
       <div className={deliveryTax}>
-       Delivery tax: {getMoneyValueFromCartField(cart.shippingInfo?.taxedPrice?.totalGross!)}
+        Delivery tax:{' '}
+        {getMoneyValueFromCartField(cart.shippingInfo?.taxedPrice?.totalGross!)}
       </div>
       <div className={paymentMethodContainer}>
-        {payments.map(el => (
+        {payments.map((el) => (
           <div key={el.id}>
-        <label>
-          {filterObjectAndReturnValue(el.paymentMethodInfo.name!, 'en')}
-          <input
-          type="radio"
-          name='payment'
-          id={el.id}
-          onChange={handleChoosePaymentMethod}
-          disabled={isAllPaymentsMethodChossen}
-          />
-        </label>
-
+            <label>
+              {filterObjectAndReturnValue(el.paymentMethodInfo.name!, 'en')}
+              <input
+                type="radio"
+                name="payment"
+                id={el.id}
+                defaultChecked={
+                  !!cart.paymentInfo?.payments.find((p) => p.id === el.id)?.id
+                }
+                onChange={handleChoosePaymentMethod}
+                disabled={isAllPaymentsMethodChossen}
+              />
+            </label>
           </div>
         ))}
       </div>

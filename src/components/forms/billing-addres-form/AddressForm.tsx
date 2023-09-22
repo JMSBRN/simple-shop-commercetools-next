@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { BaseAddress } from '@commercetools/platform-sdk';
-import styles from './BillingAddressForm.module.scss';
+import styles from './AddressForm.module.scss';
 
-function BillingAddressForm({
+function AddressForm({
   formRef,
+  addressFields,
   onSubmit,
 }: {
   formRef: React.LegacyRef<HTMLFormElement> | undefined;
+  addressFields: (keyof BaseAddress)[][];
   onSubmit: (updatedAddress: BaseAddress) => void;
 }) {
-  const { billingFormContainer, inputRow, inputContainer } = styles;
+  const { formContainer, inputRow, inputContainer } = styles;
   const [formData, setFormData] = useState<BaseAddress>({} as BaseAddress);
 
   const handleChange = (
@@ -27,15 +29,6 @@ function BillingAddressForm({
     event.preventDefault();
     onSubmit(formData);
   };
-  const addressFields: (keyof BaseAddress)[][] = [
-    ['firstName', 'lastName'],
-    ['postalCode', 'city'],
-    ['streetName', 'streetNumber'],
-    ['additionalStreetInfo'],
-    ['building', 'apartment'],
-    ['company', 'department'],
-    ['email', 'phone'],
-  ];
 
   const renderInputField = (
     fieldName: keyof BaseAddress,
@@ -75,7 +68,7 @@ function BillingAddressForm({
   );
 
   return (
-    <div className={billingFormContainer}>
+    <div className={formContainer}>
       <form ref={formRef} onSubmit={handleSubmit}>
         {addressFields.map((pair, idx) => (
           <div className={inputRow} key={idx}>
@@ -93,4 +86,4 @@ function BillingAddressForm({
   );
 }
 
-export default BillingAddressForm;
+export default AddressForm;

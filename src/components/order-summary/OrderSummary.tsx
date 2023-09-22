@@ -1,7 +1,8 @@
-import { Cart, Payment, ShippingMethod } from '@commercetools/platform-sdk';
-import React, { useEffect, useState } from 'react';
+import { BaseAddress, Cart, Payment, ShippingMethod } from '@commercetools/platform-sdk';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   addPaymentToCart,
+  addShippingAddresToCart,
   getCarts,
   getMoneyValueFromCartField,
   removeLineItemfromCart,
@@ -9,6 +10,7 @@ import {
   setShippingMethodToCart,
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import AddressForm from '../forms/billing-addres-form/AddressForm';
 import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
 import ProductPrice from '../product-card/product-price/ProductPrice';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
@@ -33,6 +35,7 @@ function OrderSummary({
     lineItemsStyle,
     subTotal,
     shippingModeContainer,
+    fillShippingAdressMessage,
     paymentMethodContainer,
     deliveryTax,
     totalSum,
@@ -42,6 +45,8 @@ function OrderSummary({
     itemDelete,
     itemName,
     itemPrice,
+    modalShippingAdrStyle,
+    closeModal
   } = styles;
 
   const dispatch = useAppDispatch();
@@ -52,7 +57,11 @@ function OrderSummary({
   );
   const [payments, setPayments] = useState<Payment[]>([] as Payment[]);
   const [isOrdered, setIsOrdered] = useState<boolean>(false);
+  const [isShippingAdrModalRendered, setIsShippingAdrModalRendered] =
+    useState<boolean>(false);
+  const isShippingAddressExisted = !cart.shippingAddress?.email;
   const cartShippingMethodId = cart.shippingInfo?.shippingMethod?.id as string;
+  const shippingAdrRef = useRef<HTMLFormElement | null>(null);
   const handleDeleteLineItem = async (
     ID: string,
     version: number,
@@ -69,9 +78,9 @@ function OrderSummary({
   };
 
   useEffect(() => {
-   setIsOrdered(cart.cartState === 'Ordered');
+    setIsOrdered(cart.cartState === 'Ordered');
   }, [cart]);
-  
+
   useEffect(() => {
     const fn = async () => {
       const res = await getShippingMethodsWithCountry(country);
@@ -110,9 +119,48 @@ function OrderSummary({
       await removePaymentFromCart(cart.id, existMethodId);
     }
   };
+  const formSubmit = async (e?: BaseAddress) => {
+    if (e?.firstName) {
+      const res = await addShippingAddresToCart(cart.id, country, e);
+
+      if(res.statusCode === 200){
+        dispatch(fetchCarts());
+        setIsShippingAdrModalRendered(false);
+      } 
+    }
+  };
+  const handleSubmitForm = () => {
+    formSubmit();
+    if (shippingAdrRef.current) {
+      shippingAdrRef.current.requestSubmit();
+    }
+  };
+
+  const addressFields: (keyof BaseAddress)[][] = [
+    ['firstName'],
+    ['lastName'],
+    ['city'],
+    ['streetName'],
+    ['building'],
+    ['email'],
+    ['phone'],
+  ];
 
   return (
     <div className={orderSummaryStyle}>
+      {isShippingAdrModalRendered && (
+        <div className={modalShippingAdrStyle}>
+          <div 
+          className={closeModal}
+          onClick={() => setIsShippingAdrModalRendered(false)}
+          >close</div>
+          <AddressForm
+           formRef={shippingAdrRef}
+           addressFields={addressFields}
+           onSubmit={formSubmit} />
+          <button onClick={handleSubmitForm}>submit</button>
+        </div>
+      )}
       <div className={totalsInfo}>
         <div className={totalsInfoTitles}>
           <span>product</span>
@@ -146,6 +194,20 @@ function OrderSummary({
           Sub Total: <OriginalTotal cart={cart} />
         </div>
       </div>
+      <div
+        style={{ height: '25px' }}
+        >
+        {isShippingAddressExisted && (
+          <div
+           className={fillShippingAdressMessage}
+            onClick={() =>
+              setIsShippingAdrModalRendered(!isShippingAdrModalRendered)
+            }
+          >
+            please fill shipping details
+          </div>
+        )}
+      </div>
       <div className={shippingModeContainer}>
         {shippingMethods.map((el) => (
           <div key={el.id}>
@@ -157,7 +219,7 @@ function OrderSummary({
                 id={el.id}
                 checked={cartShippingMethodId === el.id}
                 onChange={handleChooseShippingMethod}
-                disabled={isOrdered}
+                disabled={isOrdered || isShippingAddressExisted}
               />
             </label>
           </div>
@@ -190,10 +252,14 @@ function OrderSummary({
         Total: {getMoneyValueFromCartField(cart.taxedPrice?.totalGross!)}
       </div>
       <button
-       className={checkoutBtn}
-       onClick={handlePlaceOrder}
-       disabled={isOrdered}
-       style={ isOrdered ? { backgroundColor: 'white', color: 'red' }: {} as React.CSSProperties}
+        className={checkoutBtn}
+        onClick={handlePlaceOrder}
+        disabled={isOrdered}
+        style={
+          isOrdered
+            ? { backgroundColor: 'white', color: 'red' }
+            : ({} as React.CSSProperties)
+        }
       >
         {isOrdered ? 'Card Ordered' : 'Placeorder'}
       </button>

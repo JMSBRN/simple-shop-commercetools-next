@@ -1,10 +1,18 @@
-import { BaseAddress, Cart } from '@commercetools/platform-sdk';
+import {
+  BaseAddress,
+  Cart,
+  ClientResponse,
+  Order,
+} from '@commercetools/platform-sdk';
 import React, { useRef } from 'react';
-import BillingAddressForm from '@/components/forms/billing-addres-form/BillingAddressForm';
+import {
+  addBillingAdressToOrder,
+  createOrder,
+} from '@/commercetools/utils/utilsOrders';
+import AddressForm from '@/components/forms/billing-addres-form/AddressForm';
 import { GetServerSideProps } from 'next';
 import OrderSummary from '@/components/order-summary/OrderSummary';
-import { addShippingAddresToCart } from '@/commercetools/utils/utilsCarts';
-import { createOrder } from '@/commercetools/utils/utilsOrders';
+import { getCarts } from '@/commercetools/utils/utilsCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../styles/Checkout.module.scss';
@@ -28,17 +36,22 @@ function Checkout() {
 
   const handleSubMit = async (e?: BaseAddress) => {
     if (e?.firstName) {
-      const { statusCode, body } = await addShippingAddresToCart(
+      const { version, cartState } = (await getCarts(cartId)) as Cart;
+
+      const res = (await createOrder(
         cartId,
-        country,
-        e
-      );
+        version,
+        cartState
+      )) as ClientResponse<Order>;
+      const { id } = res.body;
 
-      if (statusCode === 200) {
-        const { version, cartState } = body;
-
-        const res = await createOrder(body.id, version, cartState);
-        const { id, orderState } = res?.body!;
+      if (id) {
+        const orderResp = (await addBillingAdressToOrder(
+          id,
+          country,
+          e
+        )) as ClientResponse<Order>;
+        const { orderState } = orderResp.body;
 
         if (orderState === 'Open') {
           push(`/ordered/${id}`);
@@ -53,6 +66,16 @@ function Checkout() {
     }
   };
 
+  const addressFields: (keyof BaseAddress)[][] = [
+    ['firstName', 'lastName'],
+    ['postalCode', 'city'],
+    ['streetName', 'streetNumber'],
+    ['additionalStreetInfo'],
+    ['building', 'apartment'],
+    ['company', 'department'],
+    ['email', 'phone'],
+  ];
+
   return (
     <div className={checkoutMainContainer}>
       <div className={mainTitle}>
@@ -61,7 +84,10 @@ function Checkout() {
       <div className={checkoutContainer}>
         <div className={billingDetailsContainer}>
           <div className={formTitle}>billingDetails</div>
-          <BillingAddressForm formRef={formRef} onSubmit={handleSubMit} />
+          <AddressForm
+           formRef={formRef}
+           addressFields={addressFields}
+           onSubmit={handleSubMit} />
         </div>
         <div className={orderSummaryContainer}>
           <div className={formTitle}>orderSummary</div>

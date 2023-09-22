@@ -1,11 +1,13 @@
 import {
   Cart,
+  Payment,
   TaxedPrice,
   TypedMoney,
   _BaseAddress,
 } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
 import { getCurrencySymbol } from './utilsCommercTools';
+import { getPayments } from './utilsPayment';
 import { getPriceValue } from '@/components/product-card/utilsProductCard';
 import { getPricesFromProduct } from './utilsShoppingList';
 import { getShippingMethodsWithCountry } from './utilsShippingMethods';
@@ -67,7 +69,7 @@ export const createCartWithProductId = async (
     const shippingMethodId = (
       await getShippingMethodsWithCountry(country)
     ).find((el) => el.id)?.id;
-    
+
     if (shippingMethodId) {
       const res = await apiRoot
         .carts()
@@ -91,8 +93,12 @@ export const createCartWithProductId = async (
           },
         })
         .execute();
+        
+        const { id } = res.body;
 
-      return res.body;
+        const payments = await getPayments() as Payment[];
+    
+     return (await addPaymentToCart(id, payments.find(el => el.id)?.id!)).body;
     }
   }
 };

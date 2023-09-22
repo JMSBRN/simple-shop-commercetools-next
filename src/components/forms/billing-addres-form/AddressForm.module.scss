@@ -1,10 +1,10 @@
 @import 'mixins';
-.billingFormContainer{
+.formContainer{
  
 form {
     max-width: 700px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
   }
 
   div {
@@ -19,6 +19,7 @@ form {
     input[type="email"],
     textarea {
       width: 100%;
+      min-width: 300px;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
@@ -31,7 +32,7 @@ form {
       
       .inputContainer {
         width: calc(50% - 5px);
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         
         label {
           display: block;

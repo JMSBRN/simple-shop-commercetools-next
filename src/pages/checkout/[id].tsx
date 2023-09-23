@@ -9,7 +9,7 @@ import {
   addBillingAdressToOrder,
   createOrder,
 } from '@/commercetools/utils/utilsOrders';
-import AddressForm from '@/components/forms/billing-addres-form/AddressForm';
+import AddressForm from '@/components/forms/addres-form/AddressForm';
 import { GetServerSideProps } from 'next';
 import OrderSummary from '@/components/order-summary/OrderSummary';
 import { getCarts } from '@/commercetools/utils/utilsCarts';
@@ -85,9 +85,10 @@ function Checkout() {
         <div className={billingDetailsContainer}>
           <div className={formTitle}>billingDetails</div>
           <AddressForm
-           formRef={formRef}
-           addressFields={addressFields}
-           onSubmit={handleSubMit} />
+            formRef={formRef}
+            addressFields={addressFields}
+            onSubmit={handleSubMit}
+          />
         </div>
         <div className={orderSummaryContainer}>
           <div className={formTitle}>orderSummary</div>

@@ -11,6 +11,7 @@ import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import shoppingBasketIcon from '../../../public/icons/shopping_busket.png';
 import styles from './Header.module.scss';
+import { useRouter } from 'next/router';
 
 function Header() {
   const {
@@ -19,12 +20,14 @@ function Header() {
     categoriesContainer,
     shoppingBasketContainer,
     countShoppingLists,
+    authContainer
   } = styles;
 
   const [isModalRendered, setIsModalRendered] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { carts } = useAppSelector(selectCommerceTools);
   const cart = carts?.find((el) => el.id) as Cart;
+  const { push } = useRouter();
 
   useEffect(() => {
     const fn = async () => {
@@ -58,6 +61,9 @@ function Header() {
           src={shoppingBasketIcon}
           alt="shopping basket"
         />
+      </div>
+      <div className={authContainer}>
+        <div onClick={() => push('/auth/login')}>Login</div>
       </div>
       {isModalRendered && (
         <MiniCartModal onClick={() => setIsModalRendered(false)} />

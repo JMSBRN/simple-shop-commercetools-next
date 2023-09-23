@@ -25,8 +25,8 @@ function AddressForm({
     }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     onSubmit(formData);
   };
 

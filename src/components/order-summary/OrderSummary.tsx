@@ -1,4 +1,9 @@
-import { BaseAddress, Cart, Payment, ShippingMethod } from '@commercetools/platform-sdk';
+import {
+  BaseAddress,
+  Cart,
+  Payment,
+  ShippingMethod,
+} from '@commercetools/platform-sdk';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   addPaymentToCart,
@@ -10,7 +15,7 @@ import {
   setShippingMethodToCart,
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
-import AddressForm from '../forms/billing-addres-form/AddressForm';
+import AddressForm from '../forms/addres-form/AddressForm';
 import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
 import ProductPrice from '../product-card/product-price/ProductPrice';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
@@ -46,7 +51,7 @@ function OrderSummary({
     itemName,
     itemPrice,
     modalShippingAdrStyle,
-    closeModal
+    closeModal,
   } = styles;
 
   const dispatch = useAppDispatch();
@@ -123,10 +128,10 @@ function OrderSummary({
     if (e?.firstName) {
       const res = await addShippingAddresToCart(cart.id, country, e);
 
-      if(res.statusCode === 200){
+      if (res.statusCode === 200) {
         dispatch(fetchCarts());
         setIsShippingAdrModalRendered(false);
-      } 
+      }
     }
   };
   const handleSubmitForm = () => {
@@ -150,14 +155,17 @@ function OrderSummary({
     <div className={orderSummaryStyle}>
       {isShippingAdrModalRendered && (
         <div className={modalShippingAdrStyle}>
-          <div 
-          className={closeModal}
-          onClick={() => setIsShippingAdrModalRendered(false)}
-          >close</div>
+          <div
+            className={closeModal}
+            onClick={() => setIsShippingAdrModalRendered(false)}
+          >
+            close
+          </div>
           <AddressForm
-           formRef={shippingAdrRef}
-           addressFields={addressFields}
-           onSubmit={formSubmit} />
+            formRef={shippingAdrRef}
+            addressFields={addressFields}
+            onSubmit={formSubmit}
+          />
           <button onClick={handleSubmitForm}>submit</button>
         </div>
       )}
@@ -194,12 +202,10 @@ function OrderSummary({
           Sub Total: <OriginalTotal cart={cart} />
         </div>
       </div>
-      <div
-        style={{ height: '25px' }}
-        >
+      <div style={{ height: '25px' }}>
         {isShippingAddressExisted && (
           <div
-           className={fillShippingAdressMessage}
+            className={fillShippingAdressMessage}
             onClick={() =>
               setIsShippingAdrModalRendered(!isShippingAdrModalRendered)
             }

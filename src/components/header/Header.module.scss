@@ -29,6 +29,17 @@
   width: 30%;
   min-width: 300px;
 }
+.authContainer {
+  width: 100px;
+  height: 40px;
+  @include flex();
+  div {
+    cursor: pointer;
+    &:active {
+      color: rgb(255, 255, 255);
+    }
+  }
+}
 .shoppingBasketContainer {
   width: 40px;
   height: auto;

@@ -8,10 +8,10 @@ import {
 import { apiRoot } from '../BuildClient';
 import { getCurrencySymbol } from './utilsCommercTools';
 import { getPayments } from './utilsPayment';
-import { getPriceValue } from '@/components/product-card/utilsProductCard';
+import { getPriceValue } from '@/commercetools/utils/utilsProductCard';
 import { getPricesFromProduct } from './utilsShoppingList';
 import { getShippingMethodsWithCountry } from './utilsShippingMethods';
-import { setCurrency } from '@/utils/utilsApp';
+import { setCurrency } from '@/commercetools/utils/utilsApp';
 
 export const getCarts = async (ID?: string) => {
   if (ID) {

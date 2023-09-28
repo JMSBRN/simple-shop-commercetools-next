@@ -6,7 +6,7 @@ import {
 import { fetchCategories } from '@/features/thunks/FetchCategories';
 import { setLanguage } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './LanguagesSelect.module.scss';
-import { toggleServerSideLaguage } from '@/utils/utilsApp';
+import { toggleServerSideLaguage } from '@/commercetools/utils/utilsApp';
 import { useAppDispatch } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 

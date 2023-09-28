@@ -1,5 +1,6 @@
-import { Order, OrderPagedQueryResponse } from '@commercetools/platform-sdk';
-import React, { useEffect, useState } from 'react';
+import { Customer, Order, OrderPagedQueryResponse } from '@commercetools/platform-sdk';
+import React, { useCallback, useEffect, useState } from 'react';
+import { deleteCustomerWithId, getCustomers } from '@/commercetools/utils/utilsCustomers';
 import { deleteOrder, getOrders } from '@/commercetools/utils/utilsOrders';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
@@ -12,6 +13,7 @@ function WelcomePage() {
   const { carts } = useAppSelector(selectCommerceTools);
   const dispatch = useAppDispatch();
   const [orders, setOrders] = useState<Order[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   
   const fetchOrders = async () => {
     const { body } = await getOrders() as ClientResponse<OrderPagedQueryResponse>;
@@ -19,11 +21,17 @@ function WelcomePage() {
     
     if(results) setOrders(results);
   };
+  const fetchCustomers = useCallback( async () => {
+    const res = await getCustomers() as Customer[];
+
+    setCustomers(res);
+  }, []);
 
   useEffect(() => {
     fetchOrders();
+    fetchCustomers();
     dispatch(fetchCarts());
-  }, [dispatch]);
+  }, [dispatch, fetchCustomers]);
   
   return (
     <div className={styles.welcomePageContainer}>welcome page in develop mode
@@ -43,6 +51,28 @@ function WelcomePage() {
              <div className="">{el.cartState}</div>
              <div className="">{el.createdBy?.clientId}</div>
              <div className=""> payment id: {el.paymentInfo?.payments[0].id}</div>
+            </div>
+          ))
+         }
+       </div>
+       <div>
+        customers for delete 
+         {
+          customers.map(el => (
+            <div
+            key={el.id}
+            onClick={ async () => {
+             const { id } =  await deleteCustomerWithId(el.id, el.version) as Customer;
+
+             if(id) fetchCustomers();
+            }}
+            style={{ cursor: 'pointer' }}
+            >{el.id}
+            ------------
+             <div >First Name: {el.firstName}</div>
+             <div >Last Name: {el.lastName}</div>
+             <div >Email: {el.email}</div>
+            ------------
             </div>
           ))
          }

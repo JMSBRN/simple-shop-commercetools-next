@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Price } from '@commercetools/platform-sdk';
-import { formatValue } from '../utilsProductCard';
+import { formatValue } from '../../../commercetools/utils/utilsProductCard';
 import { getCurrencySymbol } from '@/commercetools/utils/utilsCommercTools';
 import { getPricesFromProduct } from '@/commercetools/utils/utilsShoppingList';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';

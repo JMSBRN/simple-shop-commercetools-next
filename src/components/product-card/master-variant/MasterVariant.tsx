@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ProductVariant } from '@commercetools/platform-sdk';
 import React from 'react';
-import { formatValue } from '../utilsProductCard';
+import { formatValue } from '../../../commercetools/utils/utilsProductCard';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MasterVariant.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';

@@ -3,7 +3,7 @@ import {
   TaxCategory,
   TaxCategoryReference,
 } from '@commercetools/platform-sdk';
-import { PriceValue } from './interfacesProductCard';
+import { PriceValue } from '../../components/product-card/interfacesProductCard';
 import { apiRoot } from '@/commercetools/BuildClient';
 import { getProducts } from '@/commercetools/utils/utilsCommercTools';
 

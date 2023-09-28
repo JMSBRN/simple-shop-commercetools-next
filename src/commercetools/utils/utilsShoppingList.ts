@@ -4,7 +4,7 @@ import {
   ShoppingList,
 } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
-import { getPriceValue } from '@/components/product-card/utilsProductCard';
+import { getPriceValue } from '@/commercetools/utils/utilsProductCard';
 import { getProducts } from './utilsCommercTools';
 
 export const getShoppingLists = async (ID?: string) => {

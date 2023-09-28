@@ -1,13 +1,17 @@
-import React, { useRef } from 'react';
+import { LoginMe, RegistrationMe } from '@/commercetools/utils/utilsMe';
+import React, { useRef, useState } from 'react';
 import { AuthCustomerDraftFields } from '@/components/forms/formsInterfaces';
 import AuthForm from '@/components/forms/auth-form/AuthForm';
 import { GetServerSideProps } from 'next';
+import Link from 'next/link';
 import { ParsedUrlQuery } from 'querystring';
-import { login } from '@/utils/utilsCustomers';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
 
-function AuthPage( { params }: { params: ParsedUrlQuery }) {
+function AuthPage({ params }: { params: ParsedUrlQuery }) {
   const formRef = useRef<HTMLFormElement | null>(null);
+  const { push } = useRouter();
+  const [error, setError] = useState('');
   const loginFormFields: (keyof AuthCustomerDraftFields)[][] = [
     ['email'],
     ['password'],
@@ -20,43 +24,80 @@ function AuthPage( { params }: { params: ParsedUrlQuery }) {
   const { authMode } = params;
 
   const onSubmitForm = async (e?: AuthCustomerDraftFields) => {
-    if(e?.email) {
-      const { email, password } = e;
+    setError('');
+    if (e?.email) {
+      const { email, password, firstName, lastName } = e;
 
-      await login(email, password);  
+      switch (authMode) {
+        case 'login':
+          const res = await LoginMe(email, password);
 
+          if (typeof res === 'string') {
+            setError(res);
+          } else if (res.statusCode === 200) {
+            push('/');
+          }
+          return;
+        case 'registration':
+          const result = await RegistrationMe({
+            email,
+            password,
+            firstName,
+            lastName,
+          });
+
+          if (typeof result === 'string') {
+            setError(result);
+          } else if (result.statusCode === 201) {
+            push('/auth/login');
+          }
+          return;
+        default:
+          return;
+      }
     }
+  };
+  const handleClickSubmitBtn = () => {
+    onSubmitForm();
     if (formRef.current) {
       formRef.current.requestSubmit();
     }
   };
- const handleClickSubmitBtn = () => {
-   onSubmitForm();
- };
 
   return (
     <div>
-      { authMode === 'login' ? 'login': 'Register'}
+      {authMode === 'login' ? 'login' : 'Register'}
       <br />
       <br />
       <br />
       <AuthForm
         formRef={formRef}
         onSubmit={onSubmitForm}
-        formFields={
-          authMode === 'login' ?
-          loginFormFields : signOutFormFields }
+        formFields={authMode === 'login' ? loginFormFields : signOutFormFields}
       />
       <button onClick={handleClickSubmitBtn}>submit</button>
+      <div className="error" style={{ color: 'red' }}>
+        {error}
+        <br />
+        <br />
+        {authMode === 'login' && (
+          <Link href={'/auth/registration'} onClick={() => setError('')}>
+            Go to registration
+          </Link>
+        )}
+      </div>
     </div>
   );
 }
 
 export default AuthPage;
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, params }) => ({
+export const getServerSideProps: GetServerSideProps = async ({
+  locale,
+  params,
+}) => ({
   props: {
-      params,
+    params,
     ...(await serverSideTranslations(locale || 'en', [
       'translation',
       'common',

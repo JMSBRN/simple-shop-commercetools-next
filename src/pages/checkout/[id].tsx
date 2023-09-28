@@ -44,7 +44,7 @@ function Checkout() {
         cartState
       )) as ClientResponse<Order>;
       const { id } = res.body;
-
+      
       if (id) {
         const orderResp = (await addBillingAdressToOrder(
           id,

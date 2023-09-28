@@ -3,7 +3,7 @@ import { Product } from '@commercetools/platform-sdk';
 import ProductCardVariant from './prduct-variant/ProductCardVariant';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
-import { setDynamicArray } from './utilsProductCard';
+import { setDynamicArray } from '../../commercetools/utils/utilsProductCard';
 import styles from './ProductCard.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
 

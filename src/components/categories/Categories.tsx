@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import { Category } from '@commercetools/platform-sdk';
 import Loader from '../loader/Loader';
 import { fetchCategories } from '@/features/thunks/FetchCategories';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
@@ -16,12 +17,22 @@ function Categories() {
  useEffect(() => {
   dispatch(fetchCategories()); 
  }, [dispatch]);
+
+ const  handleClickOnCategories = async (category: Category) => {
+  const { id, parent } = category;
+
+  if(parent?.id) {
+    push(`/categories/${id}`, undefined, { locale });
+  }
+  push(`/products/${id}`);
+
+ };
  
   return (
     <div className={categoriesContainer}>
      { status === 'loading' && <Loader />}
       {categories.filter((el) => el.parent === undefined).map((el) => (
-        <div key={el.id} onClick={() => push(`/categories/${el.id}`, undefined, { locale })}>
+        <div key={el.id} onClick={() => handleClickOnCategories(el)}>
           <p>{filterObjectAndReturnValue(el.name, language)}</p>
         </div>
       ))}

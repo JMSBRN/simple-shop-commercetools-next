@@ -18,7 +18,7 @@ export default OrderedPage;
 export const getServerSideProps: GetServerSideProps = async ({ locale, params }) => ({
     props: {
         params,
-      ...(await serverSideTranslations(locale || 'en', [
+      ...(await serverSideTranslations(locale || 'en-GB', [
         'translation',
         'common',
       ])),

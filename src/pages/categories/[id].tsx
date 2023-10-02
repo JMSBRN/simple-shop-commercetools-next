@@ -37,12 +37,15 @@ function Subcategories({
   };
 
   const fetchFn = useCallback(async () => {
-    const id = subCategories[0].ancestors[0].id;
-    const res = await getCategoryNameWithId(id, language);
+    if(subCategories.length) {
+      const id = subCategories[0].ancestors[0].id;
+      const res = await getCategoryNameWithId(id, language);
+      
+      if (res !== parentCategoryName) {
+        setMainCategoryName(res);
+      } 
+    }
 
-    if (res !== parentCategoryName) {
-      setMainCategoryName(res);
-    } 
   }, [language, parentCategoryName, subCategories]);
 
   useEffect(() => {

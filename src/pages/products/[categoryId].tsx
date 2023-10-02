@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 
 function Products({ products }: { products: Product[] }) {
   const { push, query } = useRouter();
-  const { id } = query;
+  const { categoryId } = query;
   const {
     productsContainer,
     parentCategoryNameStyle,
@@ -25,10 +25,10 @@ function Products({ products }: { products: Product[] }) {
   const [parentCategoryName, setParentCategoryName] = useState<string>('');
   const { language } = useAppSelector(selectCommerceTools);
   const fetchFn = useCallback(async () => {
-    const res = await getCategoryNameWithId(id as string, language);
+    const res = await getCategoryNameWithId(categoryId as string, language);
 
     setParentCategoryName(res);
-  }, [id, language]);
+  }, [categoryId, language]);
 
   useEffect(() => {
     fetchFn();
@@ -58,7 +58,7 @@ export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
   const paths = categories.flatMap((el) =>
     locales?.map((locale) => ({
       params: {
-        id: el.id,
+        categoryId: el.id,
       },
       locale,
     }))
@@ -71,7 +71,7 @@ export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const products = await getProductsByCategoryId(params?.id as string);
+  const products = await getProductsByCategoryId(params?.categoryId as string);
 
   return {
     props: {

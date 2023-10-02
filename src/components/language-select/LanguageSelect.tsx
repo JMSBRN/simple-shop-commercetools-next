@@ -18,10 +18,10 @@ function LanguageSelect() {
 
  const fetchFunction = useCallback(async function (){
     const res = await getLanguages();
-    const currentLanguage = JSON.parse(window.localStorage.getItem('lang') || '"en"');
+    const currentLanguage = JSON.parse(window.localStorage.getItem('lang') || '"en-GB"');
 
     dispatch(setLanguage(currentLanguage));
-    if (res) setLanguages(moveLanguageToFirstPosition(res, currentLanguage));
+    if (res.length) setLanguages(moveLanguageToFirstPosition(res, currentLanguage));
   },[dispatch]);
 
   useEffect(() => {

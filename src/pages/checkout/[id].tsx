@@ -103,7 +103,7 @@ export default Checkout;
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
   props: {
-    ...(await serverSideTranslations(locale || 'en', [
+    ...(await serverSideTranslations(locale || 'en-GB', [
       'translation',
       'common',
     ])),

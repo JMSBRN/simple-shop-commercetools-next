@@ -34,6 +34,7 @@ function AddToCard({
       const newCart = await createCartWithProductId(
         country,
         productId,
+        variantId,
         quantity
       );
 

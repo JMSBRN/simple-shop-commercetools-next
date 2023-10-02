@@ -23,6 +23,7 @@ function Atributes({ atributes }: { atributes: Attribute[] }) {
     }
     return value;
   }
+  
   return (
     <div className={atributesContainer}>
       {atributes.map((el, idx) => (
@@ -36,9 +37,7 @@ function Atributes({ atributes }: { atributes: Attribute[] }) {
                 alt="acon for atribute"
               />
               <div className={atributeValueStyle}>
-                {Object.keys(el.value).includes('label')
-                  ? el.value['label']
-                  : setAttributeValue(el.value, language)}
+                {setAttributeValue(el.value.label, language)}
               </div>
             </>
           )}

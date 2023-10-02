@@ -23,7 +23,9 @@ function ProductInfo({ product }: { product: Product }) {
   const productName = filterObjectAndReturnValue(name, language);
   const [currentVariants, setCurrentVariants] =
     useState<ProductVariant[]>(variants);
+
   const handleSelectVariant = (id: number) => {
+    
     setSelectedIdVariant(id);
     if (id !== 1) {
       setCurrentVariants([...variants, masterVariant]);
@@ -55,7 +57,7 @@ function ProductInfo({ product }: { product: Product }) {
       <div className={addToCardContainerStyle}>
         <AddToCard
           productId={product.id}
-          variantId={masterVariant.id}
+          variantId={selectedIdVariant}
         />
       </div>
       <div className={variantsStyle}>

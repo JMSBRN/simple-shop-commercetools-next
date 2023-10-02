@@ -127,12 +127,12 @@ export function moveLanguageToFirstPosition(
 
   export   function setIconSrcForAtribute(atribute: Attribute) {
     const { name } = atribute;
-  
-     if(name.includes('Color')) {
+
+     if(name.includes('color')) {
       return colorIcon;
-     } else if (name.includes('Weight')){
+     } else if (name.includes('weight')){
       return weightIcon;
-     } else if (name.includes('Size')) {
+     } else if (name.includes('size')) {
       return sizeIcon;
      }
      return null;

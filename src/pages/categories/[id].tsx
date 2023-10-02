@@ -32,7 +32,7 @@ function Subcategories({
     if (products.length) {
       push(`/products/${el.id}`);
     } else {
-      push('/no-product');
+      push(`/categories/${el.id}`);
     }
   };
 

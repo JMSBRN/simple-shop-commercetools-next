@@ -61,7 +61,8 @@ export const removeLineItemfromCart = async (
 
 export const createCartWithProductId = async (
   country: string,
-  productId?: string,
+  productId: string,
+  variantId: number,
   quantity?: number
 ) => {
   if (country) {
@@ -81,6 +82,7 @@ export const createCartWithProductId = async (
               {
                 productId,
                 quantity,
+                variantId
               },
             ],
             shippingMethod: {

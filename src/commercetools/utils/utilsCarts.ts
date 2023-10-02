@@ -5,9 +5,9 @@ import {
   TypedMoney,
   _BaseAddress,
 } from '@commercetools/platform-sdk';
+import { createPayment, getPayments } from './utilsPayment';
 import { apiRoot } from '../BuildClient';
 import { getCurrencySymbol } from './utilsCommercTools';
-import { getPayments } from './utilsPayment';
 import { getPriceValue } from '@/commercetools/utils/utilsProductCard';
 import { getPricesFromProduct } from './utilsShoppingList';
 import { getShippingMethodsWithCountry } from './utilsShippingMethods';
@@ -97,8 +97,14 @@ export const createCartWithProductId = async (
         const { id } = res.body;
 
         const payments = await getPayments() as Payment[];
-    
-     return (await addPaymentToCart(id, payments.find(el => el.id)?.id!)).body;
+
+        if(payments.length) {
+          return (await addPaymentToCart(id, payments.find(el => el.id)?.id!)).body;
+        } else {
+          const resPayment = await createPayment(currency);
+
+          if(resPayment.statusCode === 201) return res.body;
+        }
     }
   }
 };

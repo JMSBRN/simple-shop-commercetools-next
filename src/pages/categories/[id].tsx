@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   filterObjectAndReturnValue,
-  getCategories,
   getCategoryNameWithId,
+  getMainParentId,
   getProductsByCategoryId,
 } from '@/commercetools/utils/utilsCommercTools';
 import { Category } from '@commercetools/platform-sdk';
-import { type GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../styles/Categories.module.scss';
@@ -14,59 +14,58 @@ import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
 function Subcategories({
-  subCategories,
-  parentCategoryName,
+  parentCatName,
 }: {
-  subCategories: Category[];
-  parentCategoryName: string;
+  mainCatName: string;
+  parentCatName: string;
 }) {
-  const { language } = useAppSelector(selectCommerceTools);
-  const { push } = useRouter();
+  const { language, categories } = useAppSelector(selectCommerceTools);
+  const { push, query } = useRouter();
   const { subCategoriesContainer, subCategoriesNames, mainCategoryNameStyle } =
     styles;
-  const [mainCategoryName, setMainCategoryName] = useState<string>('');
+  const [subCategories, setSubCategories] = useState<Category[]>([]);
+  const [mainCatName, setMainCatName] = useState<string>('');
 
   const handleClick = async (el: Category) => {
     const products = await getProductsByCategoryId(el.id);
 
-    if (products.length) {
+    if (el.id && products.length) {
       push(`/products/${el.id}`);
     } else {
-      push(`/categories/${el.id}`);
+      if (el.ancestors.length) {
+        push(`/categories/${el.id}`);
+      }
     }
   };
 
-  const fetchFn = useCallback(async () => {
-    if(subCategories.length) {
-      const id = subCategories[0].ancestors[0].id;
-      const res = await getCategoryNameWithId(id, language);
-      
-      if (res !== parentCategoryName) {
-        setMainCategoryName(res);
-      } 
-    }
-
-  }, [language, parentCategoryName, subCategories]);
-
   useEffect(() => {
-    fetchFn();
-    return () => {
-      setMainCategoryName('');
+    const fn = async () => {
+      const id = await getMainParentId(query.id as string);
+
+      if (id) {
+        const catName = await getCategoryNameWithId(id, language);
+
+        setMainCatName(catName);
+      }
     };
-  }, [fetchFn]);
+
+    fn();
+
+    setSubCategories(categories.filter((c) => c.parent?.id === query.id));
+
+    return () => {
+      setMainCatName('');
+    };
+  }, [categories, language, query.id]);
 
   return (
     <div className={subCategoriesContainer}>
-      <div className={mainCategoryNameStyle}>
-        {mainCategoryName}
-      </div>
-      <h2>{parentCategoryName}</h2>
+      <div className={mainCategoryNameStyle}>{mainCatName}</div>
+      <h2>{parentCatName}</h2>
       <div className={subCategoriesNames}>
         {subCategories.map((el) => (
           <div key={el.id} onClick={() => handleClick(el)}>
-            <div>
-              {filterObjectAndReturnValue(el.name, language)}
-            </div>
+            <div>{filterObjectAndReturnValue(el.name, language)}</div>
           </div>
         ))}
       </div>
@@ -76,37 +75,17 @@ function Subcategories({
 
 export default Subcategories;
 
-export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
-  const categories = (await getCategories()) as Category[];
-
-  const paths = categories
-    .filter((el) => el.parent !== undefined)
-    .flatMap((el) =>
-      locales?.map((locale: string) => ({
-        params: {
-          id: el.parent?.id,
-        },
-        locale,
-      }))
-    );
-
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const id = params?.id as string;
-  const categories = (await getCategories()) as Category[];
-  const parentCategoryName = await getCategoryNameWithId(id, locale!);
-  const subCategories = categories.filter((el) => el.parent?.id === id);
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  locale,
+}) => {
+  const cartId = params?.id as string;
+  const parentCatName = await getCategoryNameWithId(cartId, locale!);
 
   return {
     props: {
-      subCategories,
-      parentCategoryName,
-      ...(await serverSideTranslations(locale || 'en', [
+      parentCatName,
+      ...(await serverSideTranslations(locale || 'en-GB', [
         'translation',
         'common',
       ])),

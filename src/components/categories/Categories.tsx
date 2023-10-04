@@ -19,14 +19,7 @@ function Categories() {
  }, [dispatch]);
 
  const  handleClickOnCategories = async (category: Category) => {
-  const { id, parent } = category;
-
-   console.log(parent);
-  if(!parent?.id) {
-    push(`/categories/${id}`, undefined, { locale });
-  }
-  push(`/products/${id}`);
-
+    push(`/categories/${category.id}`, undefined, { locale });
  };
  
   return (

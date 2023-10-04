@@ -51,8 +51,8 @@ export  async function getCategoryNameWithId (id: string, language: string) {
 
 export async function getMainParentId(id: string) {
   const res = await getCategories(id as string) as Category;
-  
-  return res.ancestors[0].id;
+
+  return res.ancestors[0]?.id;
 }
 
 export async function getLanguages() {

@@ -1,45 +1,27 @@
-import { Category, Product } from '@commercetools/platform-sdk';
-import React, { useCallback, useEffect, useState } from 'react';
 import {
-  getCategories,
   getCategoryNameWithId,
   getProductsByCategoryId,
 } from '@/commercetools/utils/utilsCommercTools';
-import { GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
+import { Product } from '@commercetools/platform-sdk';
 import ProductCard from '@/components/product-card/ProductCard';
-import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
+import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../styles/Products.module.scss';
-import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
-function Products({ products }: { products: Product[] }) {
-  const { push, query } = useRouter();
-  const { categoryId } = query;
+function Products({ parentCatName, products }: { parentCatName: string; products: Product[] }) {
+  const { push } = useRouter();
   const {
     productsContainer,
     parentCategoryNameStyle,
     productWrapper,
     productInfoStyle
   } = styles;
-  const [parentCategoryName, setParentCategoryName] = useState<string>('');
-  const { language } = useAppSelector(selectCommerceTools);
-  const fetchFn = useCallback(async () => {
-    const res = await getCategoryNameWithId(categoryId as string, language);
-
-    setParentCategoryName(res);
-  }, [categoryId, language]);
-
-  useEffect(() => {
-    fetchFn();
-    return () => {
-      setParentCategoryName('');
-    };
-  }, [fetchFn]);
-
+  
   return (
     <>
-      <div className={parentCategoryNameStyle}>{parentCategoryName}</div>
+      <div className={parentCategoryNameStyle}>{parentCatName}</div>
       <div className={productsContainer}>
           {products.map((el) => (
             <div key={el.id} className={productWrapper}>
@@ -53,30 +35,16 @@ function Products({ products }: { products: Product[] }) {
 }
 export default Products;
 
-export const getStaticPaths = async ({ locales }: { locales: string[] }) => {
-  const categories = (await getCategories()) as Category[];
-  const paths = categories.flatMap((el) =>
-    locales?.map((locale) => ({
-      params: {
-        categoryId: el.id,
-      },
-      locale,
-    }))
-  );
-
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const products = await getProductsByCategoryId(params?.categoryId as string);
+export const getServerSideProps: GetServerSideProps = async ({ params, locale }) => {
+  const catId = params?.categoryId as string;
+  const parentCatName = await getCategoryNameWithId(catId, locale!);
+  const products = await getProductsByCategoryId(catId);
 
   return {
     props: {
+      parentCatName,
       products,
-      ...(await serverSideTranslations(locale || 'en', [
+      ...(await serverSideTranslations(locale || 'en-GB', [
         'translation',
         'common',
       ])),

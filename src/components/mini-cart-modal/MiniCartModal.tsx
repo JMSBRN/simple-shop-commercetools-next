@@ -30,9 +30,9 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     total,
     subTotal
   } = styles;
-  const { push } = useRouter();
   const dispatch = useAppDispatch();
-  const { carts } = useAppSelector(selectCommerceTools);
+  const { carts, language } = useAppSelector(selectCommerceTools);
+  const { push } = useRouter();
   const [cart, setCart] = useState<Cart>();
 
   useEffect(() => {
@@ -46,6 +46,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     version: number,
     lineitemId: string
   ) => {
+
     const res = await removeLineItemfromCart(ID, version, lineitemId);
 
     if (res.statusCode === 200) {
@@ -89,7 +90,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
                     <ProductImages productId={item.productId} />
                   </div>
                   <div className={itemName}>
-                    {filterObjectAndReturnValue(item.name, 'en') ||
+                    {filterObjectAndReturnValue(item.name, language) ||
                       'no product name'}
                   </div>
                   <div className={itemPrice}>

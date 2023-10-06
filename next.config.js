@@ -19,6 +19,7 @@ const nextConfig = {
     AUTH_URL: process.env.AUTH_URL,
     API_URL: process.env.API_URL,
     SCOPES: process.env.SCOPES,
+    ANONIMOUS_ID: process.env.ANONIMOUS_ID,
   },
 };
 

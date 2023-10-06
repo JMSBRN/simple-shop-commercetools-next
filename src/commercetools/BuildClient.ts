@@ -1,7 +1,7 @@
 import {
-    type AuthMiddlewareOptions,
-    ClientBuilder,
-    type HttpMiddlewareOptions,
+  type AuthMiddlewareOptions,
+  ClientBuilder,
+  type HttpMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import dotenv from 'dotenv';
@@ -30,11 +30,33 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 };
 
 export const ctpClient = new ClientBuilder()
-  .withProjectKey(projectKey) 
+  .withProjectKey(projectKey)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withClientCredentialsFlow(authMiddlewareOptions)
   .build();
 
-export const apiRoot = 
-createApiBuilderFromCtpClient(ctpClient).withProjectKey({ projectKey });
+export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+  projectKey,
+});
 
+export const getApiRootWithPasswordFlow = (email: string, password: string) => {
+  const client = new ClientBuilder()
+    .withProjectKey(projectKey)
+    .withHttpMiddleware(httpMiddlewareOptions)
+    .withPasswordFlow({
+      host: authUrl,
+      projectKey,
+      credentials: {
+        clientId,
+        clientSecret,
+        user: {
+          username: email,
+          password,
+        },
+      },
+      scopes,
+    })
+    .build();
+
+  return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
+};

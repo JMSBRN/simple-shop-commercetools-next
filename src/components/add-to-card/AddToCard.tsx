@@ -22,6 +22,7 @@ function AddToCard({
   const { carts, country } = useAppSelector(selectCommerceTools);
   const [quantity, setQuantity] = useState<number>(0);
   const [cart, setCart] = useState<Cart>({} as Cart);
+  const anonimouseId = process.env.ANONIMOUS_ID!;
 
   useEffect(() => {
     carts.forEach(el => {
@@ -35,7 +36,8 @@ function AddToCard({
         country,
         productId,
         variantId,
-        quantity
+        quantity,
+        anonimouseId
       );
 
       if (newCart?.id) {

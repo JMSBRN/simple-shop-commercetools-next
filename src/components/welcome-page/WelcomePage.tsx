@@ -51,6 +51,7 @@ function WelcomePage() {
              <div className="">{el.cartState}</div>
              <div className="">{el.createdBy?.clientId}</div>
              <div className=""> payment id: {el.paymentInfo?.payments[0].id}</div>
+             <div className=""> anonymousId: {el.anonymousId}</div>
             </div>
           ))
          }

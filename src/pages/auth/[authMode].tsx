@@ -1,10 +1,12 @@
-import { LoginMe, RegistrationMe } from '@/commercetools/utils/utilsMe';
+import { Login, RegistrationMe } from '@/commercetools/utils/utilsMe';
 import React, { useRef, useState } from 'react';
 import { AuthCustomerDraftFields } from '@/components/forms/formsInterfaces';
 import AuthForm from '@/components/forms/auth-form/AuthForm';
+import { Cart } from '@commercetools/platform-sdk';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { ParsedUrlQuery } from 'querystring';
+import { getCarts } from '@/commercetools/utils/utilsCarts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 
@@ -30,13 +32,21 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
 
       switch (authMode) {
         case 'login':
-          const res = await LoginMe(email, password);
+          const carts = (await getCarts()) as Cart[];
+          const cartWithAnId = carts.find((c) => c.anonymousId);
+          const res = await Login(email, password);
 
-          if (typeof res === 'string') {
-            setError(res);
-          } else if (res.statusCode === 200) {
-            push('/');
+          if (res.statusCode === 200) {
+            const { customer } = res.body;
+
+            if (customer.id !== cartWithAnId?.customerId) {
+              const res = await Login(email, password, cartWithAnId?.id);
+
+              if (res.statusCode === 200) push('/user/dashboard');
+            }
+            push('/user/dashboard');
           }
+
           return;
         case 'registration':
           const result = await RegistrationMe({
@@ -46,9 +56,7 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
             lastName,
           });
 
-          if (typeof result === 'string') {
-            setError(result);
-          } else if (result.statusCode === 201) {
+          if (result.statusCode === 201) {
             push('/auth/login');
           }
           return;

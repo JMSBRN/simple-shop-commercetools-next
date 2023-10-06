@@ -1,7 +1,28 @@
-import { ErrorResponse, MyCustomerDraft } from '@commercetools/platform-sdk';
-import { apiRoot } from '../BuildClient';
+import { apiRoot, getApiRootWithPasswordFlow } from '../BuildClient';
+import { MyCustomerDraft } from '@commercetools/platform-sdk';
 
-export const LoginMe = async (email: string, password: string) => {
+export const Login = async (
+  email: string,
+  password: string,
+  anonimousCartId?: string
+) => {
+  if (anonimousCartId) {
+    return await apiRoot
+      .login()
+      .post({
+        body: {
+          email,
+          password,
+          anonymousCart: {
+            typeId: 'cart',
+            id: anonimousCartId,
+          },
+          anonymousCartSignInMode: 'MergeWithExistingCustomerCart',
+          updateProductData: true,
+        },
+      })
+      .execute();
+  }
   return await apiRoot
     .me()
     .login()
@@ -11,14 +32,9 @@ export const LoginMe = async (email: string, password: string) => {
         password,
       },
     })
-    .execute()
-    .then((d) => {
-      return d;
-    })
-    .catch((e: ErrorResponse) => {
-      return e.message;
-    });
+    .execute();
 };
+
 export const RegistrationMe = async (args: MyCustomerDraft) => {
   const { email, firstName, lastName, password } = args;
 
@@ -33,11 +49,18 @@ export const RegistrationMe = async (args: MyCustomerDraft) => {
         password,
       },
     })
-    .execute()
-    .then((d) => {
-      return d;
-    })
-    .catch((e: ErrorResponse) => {
-      return e.message;
-    });
+    .execute();
+};
+
+export const getMyCarts = async (
+  email: string,
+  password: string,
+  ID?: string
+) => {
+  const apiRootWithPass = getApiRootWithPasswordFlow(email, password);
+
+  if (ID)
+    return (await apiRootWithPass.me().carts().withId({ ID }).get().execute())
+      .body;
+  return (await apiRootWithPass.me().carts().get().execute()).body.results;
 };

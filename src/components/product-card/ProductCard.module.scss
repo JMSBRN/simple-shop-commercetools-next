@@ -3,10 +3,11 @@
 .productCardContainer {
     width: 100%;
     min-width: 310px;
+    max-width: 310px;
     height: 100%;
     min-height: 400px;
     max-height: 400px;
-    padding: 10px 0;
+    padding: 10px;
     @include flex(center, center, column);
 }
 .productNameStyle {

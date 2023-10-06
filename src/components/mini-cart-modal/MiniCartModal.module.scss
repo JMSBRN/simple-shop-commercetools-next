@@ -53,8 +53,9 @@
     }
     .listItem{
         margin: auto 0;
-        height: 40px;
-        padding: 0 6px;
+        min-height: 40px;
+        height: auto;
+        padding: 3px;
         font-size: 13px;
         display: grid;
         grid-template-columns: 0.5fr 1fr 1.5fr 1fr;

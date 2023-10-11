@@ -6,11 +6,16 @@ import { Cart } from '@commercetools/platform-sdk';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { ParsedUrlQuery } from 'querystring';
+import { UserData } from '@/interfaces';
 import { getCarts } from '@/commercetools/utils/utilsCarts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { setEncryptedDataToCookie } from '@/commercetools/utils/secureCookiesUtils';
+import { setUserName } from '@/features/commerceTools/CommerceToolsSlice';
+import { useAppDispatch } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
 function AuthPage({ params }: { params: ParsedUrlQuery }) {
+  const dispatch = useAppDispatch();
   const formRef = useRef<HTMLFormElement | null>(null);
   const { push } = useRouter();
   const [error, setError] = useState('');
@@ -32,18 +37,22 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
 
       switch (authMode) {
         case 'login':
-          const carts = (await getCarts()) as Cart[];
-          const cartWithAnId = carts.find((c) => c.anonymousId);
-          const res = await Login(email, password);
+          const carts = await getCarts() as Cart[];
+          const anonimousCartId = carts.find(c => c.anonymousId)?.id;
 
-          if (res.statusCode === 200) {
-            const { customer } = res.body;
+          const resLogin = await Login(email, password, anonimousCartId);
+          
+          if (resLogin.statusCode === 200) {
+            const { customer } = resLogin.body;
+            const { firstName } = customer;
+            
+            if(firstName) {
+            const userData: UserData = { firstName, email, password };
 
-            if (customer.id !== cartWithAnId?.customerId) {
-              const res = await Login(email, password, cartWithAnId?.id);
-
-              if (res.statusCode === 200) push('/user/dashboard');
-            }
+            dispatch(setUserName(firstName));
+            setEncryptedDataToCookie('userData', userData);
+          }
+             
             push('/user/dashboard');
           }
 
@@ -112,3 +121,4 @@ export const getServerSideProps: GetServerSideProps = async ({
     ])),
   },
 });
+

@@ -9,27 +9,35 @@ import styles from './Categories.module.scss';
 import { useRouter } from 'next/router';
 
 function Categories() {
-  const { categoriesContainer } = styles;
-  const { categories, status, language } = useAppSelector(selectCommerceTools);
+  const { categoriesContainer, dashBoardLInk } = styles;
+  const { categories, status, language, userName } =
+    useAppSelector(selectCommerceTools);
   const { push, locale } = useRouter();
   const dispatch = useAppDispatch();
 
- useEffect(() => {
-  dispatch(fetchCategories()); 
- }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
- const  handleClickOnCategories = async (category: Category) => {
+  const handleClickOnCategories = async (category: Category) => {
     push(`/categories/${category.id}`, undefined, { locale });
- };
- 
+  };
+
   return (
     <div className={categoriesContainer}>
-     { status === 'loading' && <Loader />}
-      {categories.filter((el) => el.parent === undefined).map((el) => (
-        <div key={el.id} onClick={() => handleClickOnCategories(el)}>
-          <p>{filterObjectAndReturnValue(el.name, language)}</p>
+      {status === 'loading' && <Loader />}
+      {categories
+        .filter((el) => el.parent === undefined)
+        .map((el) => (
+          <div key={el.id} onClick={() => handleClickOnCategories(el)}>
+            <p>{filterObjectAndReturnValue(el.name, language)}</p>
+          </div>
+        ))}
+      {userName && (
+        <div className={dashBoardLInk} onClick={() => push('/user/dashboard')}>
+          DashBoard
         </div>
-      ))}
+      )}
     </div>
   );
 }

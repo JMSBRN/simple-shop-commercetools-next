@@ -17,6 +17,7 @@ interface InitialState {
   shoppingLists: ShoppingList[];
   cart: Cart;
   carts: Cart[];
+  userName: string;
 }
 const initialState: InitialState = {
   language: '',
@@ -27,6 +28,7 @@ const initialState: InitialState = {
   shoppingLists: [],
   cart: {} as Cart,
   carts: [] as Cart[],
+  userName: ''
 };
 const commerceToolseSlice = createSlice({
   name: 'commercetools',
@@ -49,6 +51,9 @@ const commerceToolseSlice = createSlice({
     },
     setCarts: (state, action: PayloadAction<Cart[]>) => {
       state.carts = action.payload;
+    },
+    setUserName: (state, action: PayloadAction<string>) => {
+      state.userName = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -85,6 +90,7 @@ export const {
   setCountry,
   setShoppingLists,
   setCarts,
+  setUserName
 } = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;
 export default commerceToolseSlice.reducer;

@@ -43,7 +43,7 @@ function WelcomePage() {
             <div
             key={el.id}
             onClick={ async () => {
-              await deleteCart(el.id, el.version);
+              await deleteCart(el.id);
               dispatch(fetchCarts());
             }}
             style={{ cursor: 'pointer' }}

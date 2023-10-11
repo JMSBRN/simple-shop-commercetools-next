@@ -19,10 +19,11 @@ export const getCarts = async (ID?: string) => {
   }
   return (await apiRoot.carts().get().execute()).body.results;
 };
-export const deleteCart = async (ID: string, version: number) => {
+export const deleteCart = async (ID: string) => {
   if (ID) {
-    return (
-      await apiRoot
+    const { version } = await getCarts(ID) as Cart;
+
+  return  (await apiRoot
         .carts()
         .withId({ ID })
         .delete({
@@ -30,8 +31,8 @@ export const deleteCart = async (ID: string, version: number) => {
             version,
           },
         })
-        .execute()
-    ).body;
+        .execute());
+
   }
 };
 

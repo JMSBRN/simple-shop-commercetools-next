@@ -1,16 +1,17 @@
+import { Cart, Order } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
-import { Cart } from '@commercetools/platform-sdk';
+import { getMyCarts, getMyOrders } from '@/commercetools/utils/utilsMe';
 import { GetServerSideProps } from 'next';
 import { UserData } from '@/interfaces';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
-import { getMyCarts } from '@/commercetools/utils/utilsMe';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 
 function DashBoard() {
   const { locale } = useRouter();
   const [myCarts, setMyCarts] = useState<Cart[]>([]);
+  const [myOrders, setMyOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     const fn = async () => {
@@ -21,9 +22,13 @@ function DashBoard() {
       if (userDataFromLocal?.email) {
         const { email, password } = userDataFromLocal;
         const resMycarts = (await getMyCarts(email, password!)) as Cart[];
+        const resMyOrders = (await getMyOrders(email, password!)) as Order[];
 
         if (resMycarts.length) {
           setMyCarts(resMycarts);
+        }
+        if (resMyOrders.length) {
+          setMyOrders(resMyOrders);
         }
       }
     };
@@ -32,18 +37,42 @@ function DashBoard() {
   }, []);
 
   return (
-    <div>
+    <div style={{ width: '800px', display: 'flex', justifyContent: 'space-between' }}>
       <div className="carts">
+        CARTS
         {myCarts.map((c) => (
           <div key={c.id}>
             -------
             {c.id}
+            <br />
+            <br />
+            {c.cartState}
+            <br />
+            <br />
             {c.lineItems.map((l) => (
               <div key={l.id}>
                 {filterObjectAndReturnValue(l.name, locale as string)}
               </div>
             ))}
-            {c.id}
+          </div>
+        ))}
+      </div>
+      <div className="orders">
+        ORDERS
+        {myOrders.map((o) => (
+          <div key={o.id}>
+            -------
+            {o.id}
+            <br />
+            <br />
+            {o.orderState}
+            <br />
+            <br />
+            {o.lineItems.map((l) => (
+              <div key={l.id}>
+                {filterObjectAndReturnValue(l.name, locale as string)}
+              </div>
+            ))}
           </div>
         ))}
       </div>

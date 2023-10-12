@@ -1,17 +1,13 @@
 import {
   BaseAddress,
   Cart,
-  Payment,
   ShippingMethod,
 } from '@commercetools/platform-sdk';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  addPaymentToCart,
   addShippingAddresToCart,
-  getCarts,
   getMoneyValueFromCartField,
   removeLineItemfromCart,
-  removePaymentFromCart,
   setShippingMethodToCart,
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
@@ -20,7 +16,6 @@ import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
 import ProductPrice from '../product-card/product-price/ProductPrice';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
-import { getPayments } from '@/commercetools/utils/utilsPayment';
 import { getShippingMethodsWithCountry } from '@/commercetools/utils/utilsShippingMethods';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './OrderSummary.module.scss';
@@ -60,7 +55,6 @@ function OrderSummary({
   const [shippingMethods, setShippingMethods] = useState<ShippingMethod[]>(
     [] as ShippingMethod[]
   );
-  const [payments, setPayments] = useState<Payment[]>([] as Payment[]);
   const [isOrdered, setIsOrdered] = useState<boolean>(false);
   const [isShippingAdrModalRendered, setIsShippingAdrModalRendered] =
     useState<boolean>(false);
@@ -91,10 +85,6 @@ function OrderSummary({
       const res = await getShippingMethodsWithCountry(country);
 
       if (res.length) setShippingMethods(res);
-
-      const payments = (await getPayments()) as Payment[];
-
-      if (payments.length) setPayments(payments);
     };
 
     fn();
@@ -110,20 +100,7 @@ function OrderSummary({
 
     if (statusCode === 200) dispatch(fetchCarts());
   };
-  const handleChoosePaymentMethod = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.currentTarget.id;
-    const { paymentInfo } = (await getCarts(cart.id)) as Cart;
-    const existMethodId = paymentInfo?.payments.find(
-      (el) => el.id !== value
-    )?.id;
-
-    await addPaymentToCart(cart.id, value);
-    if (existMethodId) {
-      await removePaymentFromCart(cart.id, existMethodId);
-    }
-  };
+  
   const formSubmit = async (e?: BaseAddress) => {
     if (e?.firstName) {
       const res = await addShippingAddresToCart(cart.id, country, e);
@@ -236,23 +213,7 @@ function OrderSummary({
         {getMoneyValueFromCartField(cart.shippingInfo?.taxedPrice?.totalGross!)}
       </div>
       <div className={paymentMethodContainer}>
-        {payments.map((el) => (
-          <div key={el.id}>
-            <label>
-              {filterObjectAndReturnValue(el.paymentMethodInfo.name!, 'en')}
-              <input
-                type="radio"
-                name="payment"
-                id={el.id}
-                defaultChecked={
-                  !!cart.paymentInfo?.payments.find((p) => p.id === el.id)?.id
-                }
-                onChange={handleChoosePaymentMethod}
-                disabled={isOrdered}
-              />
-            </label>
-          </div>
-        ))}
+       
       </div>
       <div className={totalSum}>
         Total: {getMoneyValueFromCartField(cart.taxedPrice?.totalGross!)}

@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   addLineItemToCart,
   createCartWithProductId,
   getCarts,
 } from '@/commercetools/utils/utilsCarts';
+import {
+  getDecryptedDataFromCookie,
+  setEncryptedDataToCookie,
+} from '@/commercetools/utils/secureCookiesUtils';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
 import { UserData } from '@/interfaces';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
-import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './AddToCard.module.scss';
 
@@ -21,39 +24,50 @@ function AddToCard({
 }) {
   const { addToCardContiner, quantityContainer } = styles;
   const dispatch = useAppDispatch();
-  const { carts, country } = useAppSelector(selectCommerceTools);
+  const { country } = useAppSelector(selectCommerceTools);
   const [quantity, setQuantity] = useState<number>(0);
-  const [cart, setCart] = useState<Cart>({} as Cart);
   const anonimouseId = process.env.ANONIMOUS_ID!;
 
-  useEffect(() => {
-    carts.forEach(el => {
-     setCart(el);
-    });
-   }, [carts]);
+  const userData = JSON.parse(getDecryptedDataFromCookie('userData')) as
+    | UserData
+    | undefined;
 
-   const { customerId } = JSON.parse(getDecryptedDataFromCookie('userData')!) as UserData;
-  
+  console.log(userData);
+
   const handleCreateCard = async () => {
-    if (quantity && !cart.id) {
-      const newCart = await createCartWithProductId(
+    const currentCartId = JSON.parse(
+      getDecryptedDataFromCookie('currentCartId')
+    ) as string | undefined;
+
+    if (quantity && !currentCartId) {
+      const resNewCart = await createCartWithProductId(
         country,
         productId,
         variantId,
         quantity,
-        customerId ? undefined : anonimouseId,
-        customerId
+        anonimouseId,
+        userData?.customerId
       );
+      const newCart = resNewCart?.body as Cart;
+
+      console.log(newCart);
 
       if (newCart?.id) {
+        setEncryptedDataToCookie('currentCartId', newCart.id);
         dispatch(fetchCarts());
       }
     }
 
-    if (quantity && cart.id) {
-      const { version } = (await getCarts(cart.id)) as Cart;
+    if (quantity && currentCartId) {
+      const { version } = (await getCarts(currentCartId)) as Cart;
 
-      await addLineItemToCart(cart.id, version, productId, quantity, variantId);
+      await addLineItemToCart(
+        currentCartId,
+        version,
+        productId,
+        quantity,
+        variantId
+      );
       dispatch(fetchCarts());
     }
   };

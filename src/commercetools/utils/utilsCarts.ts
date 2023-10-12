@@ -1,12 +1,11 @@
 import {
   Cart,
-  Payment,
   TaxedPrice,
   TypedMoney,
   _BaseAddress,
 } from '@commercetools/platform-sdk';
-import { createPayment, getPayments } from './utilsPayment';
 import { apiRoot } from '../BuildClient';
+import { createPayment } from './utilsPayment';
 import { getCurrencySymbol } from './utilsCommercTools';
 import { getPriceValue } from '@/commercetools/utils/utilsProductCard';
 import { getPricesFromProduct } from './utilsShoppingList';
@@ -21,18 +20,17 @@ export const getCarts = async (ID?: string) => {
 };
 export const deleteCart = async (ID: string) => {
   if (ID) {
-    const { version } = await getCarts(ID) as Cart;
+    const { version } = (await getCarts(ID)) as Cart;
 
-  return  (await apiRoot
-        .carts()
-        .withId({ ID })
-        .delete({
-          queryArgs: {
-            version,
-          },
-        })
-        .execute());
-
+    return await apiRoot
+      .carts()
+      .withId({ ID })
+      .delete({
+        queryArgs: {
+          version,
+        },
+      })
+      .execute();
   }
 };
 
@@ -75,7 +73,7 @@ export const createCartWithProductId = async (
     ).find((el) => el.id)?.id;
 
     if (shippingMethodId) {
-      const res = await apiRoot
+      const resCreateCart = await apiRoot
         .carts()
         .post({
           body: {
@@ -87,7 +85,7 @@ export const createCartWithProductId = async (
               {
                 productId,
                 quantity,
-                variantId
+                variantId,
               },
             ],
             shippingMethod: {
@@ -100,17 +98,17 @@ export const createCartWithProductId = async (
           },
         })
         .execute();
-        
-        const { id } = res.body;
 
-        const payments = await getPayments() as Payment[];
+        if(resCreateCart.statusCode === 201) {
+          const resCreatePayment = await createPayment(currency, customerId);
 
-        if(payments.length) {
-          return (await addPaymentToCart(id, payments.find(el => el.id)?.id!)).body;
-        } else {
-          const resPayment = await createPayment(currency);
+          if(resCreatePayment.statusCode === 201) {
+            const createdCart = resCreateCart.body;
+            const createdPayment = resCreatePayment.body;
+            const res = await addPaymentToCart(createdCart.id, createdPayment.id );
 
-          if(resPayment.statusCode === 201) return res.body;
+            return res;
+          }
         }
     }
   }
@@ -205,7 +203,7 @@ export const updateCartLineitemQuantity = async (
   lineItemId: string,
   quantity: number
 ) => {
-return (await apiRoot
+  return await apiRoot
     .carts()
     .withId({ ID })
     .post({
@@ -220,7 +218,7 @@ return (await apiRoot
         ],
       },
     })
-    .execute());
+    .execute();
 };
 
 export const getLineItemsFromCarts = async (carts: Cart[]) => {
@@ -317,7 +315,7 @@ export const getTotalSumFromCart = async (cart: Cart, country: string) => {
 export const getOriginalSubTotal = (
   taxedPrice: TaxedPrice,
   taxedShippingPrice: TaxedPrice
-) =>  {
+) => {
   const originalSubTotal =
     taxedPrice.totalNet.centAmount +
     taxedPrice.totalTax?.centAmount! -
@@ -326,9 +324,7 @@ export const getOriginalSubTotal = (
   return originalSubTotal;
 };
 
-export const getMoneyValueFromCartField = (
-  value: TypedMoney,
-) => {
+export const getMoneyValueFromCartField = (value: TypedMoney) => {
   const { centAmount, currencyCode, fractionDigits } = value;
 
   const amount = centAmount / Math.pow(10, fractionDigits);
@@ -339,57 +335,84 @@ export const getMoneyValueFromCartField = (
 
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-  return `${parts.join('.')} ${getCurrencySymbol(currencyCode, value.currencyCode)}`;
+  return `${parts.join('.')} ${getCurrencySymbol(
+    currencyCode,
+    value.currencyCode
+  )}`;
 };
 
-export const setShippingMethodToCart =async (cartId: string, methodId: string) => {
+export const setShippingMethodToCart = async (
+  cartId: string,
+  methodId: string
+) => {
   const cart = (await getCarts(cartId)) as Cart;
   const { version } = cart;
 
-  return  (await apiRoot.carts().withId({ ID: cartId }).post({
-    body: {
-      version,
-      actions: [{
-        action: 'setShippingMethod',
-        shippingMethod: {
-          typeId: 'shipping-method',
-          id: methodId,
-        }
-      }]
-    }
-  }).execute());
+  return await apiRoot
+    .carts()
+    .withId({ ID: cartId })
+    .post({
+      body: {
+        version,
+        actions: [
+          {
+            action: 'setShippingMethod',
+            shippingMethod: {
+              typeId: 'shipping-method',
+              id: methodId,
+            },
+          },
+        ],
+      },
+    })
+    .execute();
 };
 
 export const addPaymentToCart = async (cartId: string, payMentId: string) => {
-   const { version } = await getCarts(cartId) as Cart;
+  const { version } = (await getCarts(cartId)) as Cart;
 
-  return (await apiRoot.carts().withId({ ID: cartId }).post({
-    body: {
-      version,
-      actions: [{
-        action: 'addPayment',
-        payment: {
-          typeId: 'payment',
-          id: payMentId,
-        }
-      }]
-    }
-  }).execute());
-};
-export const removePaymentFromCart = async (cartId: string, payMentId: string) => {
-   const { version } = await getCarts(cartId) as Cart;
-
-  return (await apiRoot.carts().withId({ ID: cartId }).post({
-    body: {
-      version,
-      actions: [{
-        action: 'removePayment',
-        payment: {
-          typeId: 'payment',
-          id: payMentId,
-        }
-      }]
-    }
-  }).execute());
+  return await apiRoot
+    .carts()
+    .withId({ ID: cartId })
+    .post({
+      body: {
+        version,
+        actions: [
+          {
+            action: 'addPayment',
+            payment: {
+              typeId: 'payment',
+              id: payMentId,
+            },
+          },
+        ],
+      },
+    })
+    .execute();
 };
 
+export const removePaymentFromCart = async (
+  cartId: string,
+  payMentId: string
+) => {
+  const { version } = (await getCarts(cartId)) as Cart;
+
+  return await apiRoot
+    .carts()
+    .withId({ ID: cartId })
+    .post({
+      body: {
+        version,
+        actions: [
+          {
+            action: 'removePayment',
+            payment: {
+              typeId: 'payment',
+              id: payMentId,
+            },
+          },
+        ],
+      },
+    })
+    .execute();
+};

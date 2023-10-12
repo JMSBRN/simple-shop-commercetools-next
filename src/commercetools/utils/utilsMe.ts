@@ -64,3 +64,15 @@ export const getMyCarts = async (
       .body;
   return (await apiRootWithPass.me().carts().get().execute()).body.results;
 };
+export const getMyOrders = async (
+  email: string,
+  password: string,
+  ID?: string
+) => {
+  const apiRootWithPass = getApiRootWithPasswordFlow(email, password);
+
+  if (ID)
+    return (await apiRootWithPass.me().orders().withId({ ID }).get().execute())
+      .body;
+  return (await apiRootWithPass.me().orders().get().execute()).body.results;
+};

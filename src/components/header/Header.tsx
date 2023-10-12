@@ -56,6 +56,7 @@ function Header() {
   const handleLogout = async () => {
     dispatch(setUserName(''));
     deleteCookieFromLocal('userData');
+    deleteCookieFromLocal('currentCartId');
     if(cart?.id) {
       const res = await deleteCart(cart.id);
 

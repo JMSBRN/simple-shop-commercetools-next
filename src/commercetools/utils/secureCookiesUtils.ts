@@ -27,8 +27,9 @@ export const getDecryptedDataFromCookie = (key: string) => {
       CryptoJS.enc.Utf8
     );
   }
-  return null;
+  return '""';
 };
+
 export const deleteCookieFromLocal = (key: string) => {
  deleteCookie(key);
 };

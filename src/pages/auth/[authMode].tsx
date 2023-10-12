@@ -44,10 +44,10 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
           
           if (resLogin.statusCode === 200) {
             const { customer } = resLogin.body;
-            const { firstName } = customer;
+            const { id, firstName } = customer;
             
             if(firstName) {
-            const userData: UserData = { firstName, email, password };
+            const userData: UserData = { customerId: id, firstName, email, password };
 
             dispatch(setUserName(firstName));
             setEncryptedDataToCookie('userData', userData);

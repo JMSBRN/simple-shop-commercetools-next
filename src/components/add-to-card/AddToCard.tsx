@@ -6,7 +6,9 @@ import {
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
+import { UserData } from '@/interfaces';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
+import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './AddToCard.module.scss';
 
@@ -29,7 +31,9 @@ function AddToCard({
      setCart(el);
     });
    }, [carts]);
-   
+
+   const { customerId } = JSON.parse(getDecryptedDataFromCookie('userData')!) as UserData;
+  
   const handleCreateCard = async () => {
     if (quantity && !cart.id) {
       const newCart = await createCartWithProductId(
@@ -37,7 +41,8 @@ function AddToCard({
         productId,
         variantId,
         quantity,
-        anonimouseId
+        customerId ? undefined : anonimouseId,
+        customerId
       );
 
       if (newCart?.id) {

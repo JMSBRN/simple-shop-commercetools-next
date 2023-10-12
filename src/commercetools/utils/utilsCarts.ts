@@ -65,7 +65,8 @@ export const createCartWithProductId = async (
   productId: string,
   variantId: number,
   quantity?: number,
-  anonymousId?: string
+  anonymousId?: string,
+  customerId?: string
 ) => {
   if (country) {
     const currency = setCurrency(country);
@@ -81,6 +82,7 @@ export const createCartWithProductId = async (
             currency,
             country,
             anonymousId,
+            customerId,
             lineItems: [
               {
                 productId,

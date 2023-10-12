@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  deleteCookieFromLocal, getDecryptedDataFromCookie,
+  deleteCookieFromLocal,
+  getDecryptedDataFromCookie,
 } from '@/commercetools/utils/secureCookiesUtils';
-import { selectCommerceTools, setUserName } from '@/features/commerceTools/CommerceToolsSlice';
+import {
+  selectCommerceTools,
+  setUserName,
+} from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
 import Categories from '../categories/Categories';
@@ -43,24 +47,25 @@ function Header() {
     };
 
     fn();
-    const userdataFromLocal = JSON.parse(getDecryptedDataFromCookie('userData')!) as UserData;
+    const userdataFromLocal = JSON.parse(
+      getDecryptedDataFromCookie('userData')!
+    ) as UserData;
 
-    if(userdataFromLocal?.firstName) {
+    if (userdataFromLocal?.firstName) {
       const { firstName } = userdataFromLocal;
 
-      if(firstName) dispatch(setUserName(firstName));
+      if (firstName) dispatch(setUserName(firstName));
     }
-
   }, [dispatch]);
 
   const handleLogout = async () => {
     dispatch(setUserName(''));
     deleteCookieFromLocal('userData');
     deleteCookieFromLocal('currentCartId');
-    if(cart?.id) {
+    if (cart?.id) {
       const res = await deleteCart(cart.id);
 
-      if(res?.statusCode === 200)   push('/');
+      if (res?.statusCode === 200) push('/');
     }
     push('/');
   };
@@ -92,11 +97,18 @@ function Header() {
       </div>
       <div className={authContainer}>
         {!userName ? (
-          <div className={loginBtnStyle} onClick={() => push('/auth/login')}>Log In</div>
+          <div className={loginBtnStyle} onClick={() => push('/auth/login')}>
+            Log In
+          </div>
         ) : (
           <div className={userNameStyle}>
             <div>{userName}</div>
-            <Image src={logoutIcon} alt='logout icon' width={25}  onClick={handleLogout}/>
+            <Image
+              src={logoutIcon}
+              alt="logout icon"
+              width={25}
+              onClick={handleLogout}
+            />
           </div>
         )}
       </div>

@@ -4,7 +4,7 @@ import {
   ClientResponse,
   Order,
 } from '@commercetools/platform-sdk';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   addBillingAdressToOrder,
   createOrder,
@@ -30,9 +30,16 @@ function Checkout() {
   } = styles;
   const formRef = useRef<HTMLFormElement | null>(null);
   const { carts, country } = useAppSelector(selectCommerceTools);
+  const [cart, setCart] = useState<Cart>();
   const { query, push } = useRouter();
   const cartId = query.id as string;
-  const cart = carts?.find((el) => el.id === cartId) as Cart;
+
+useEffect(() => {
+  carts.forEach(c => {
+    if (c.id === cartId) setCart(c);
+  });
+
+}, [cartId, carts]);
 
   const handleSubMit = async (e?: BaseAddress) => {
     if (e?.firstName) {
@@ -92,7 +99,9 @@ function Checkout() {
         </div>
         <div className={orderSummaryContainer}>
           <div className={formTitle}>orderSummary</div>
-          <OrderSummary cart={cart} handlePlaceOrder={handlePlaceOrder} />
+          {
+            cart?.id && <OrderSummary cart={cart} handlePlaceOrder={handlePlaceOrder} />
+          }
         </div>
       </div>
     </div>

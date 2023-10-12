@@ -82,9 +82,11 @@ function OrderSummary({
 
   useEffect(() => {
     const fn = async () => {
-      const res = await getShippingMethodsWithCountry(country);
-
-      if (res.length) setShippingMethods(res);
+      if(country) {
+        const res = await getShippingMethodsWithCountry(country);
+  
+        if (res.length) setShippingMethods(res);
+      }
     };
 
     fn();

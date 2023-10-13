@@ -4,3 +4,6 @@ export interface UserData {
   email: string;
   password: string;
 }
+
+export type PaymentMethods = 'CREDIT_CARD' | 'PAY_PAL';
+

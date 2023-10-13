@@ -20,3 +20,7 @@ export const toggleServerSideLaguage = (router: NextRouter, newLocale: string) =
         return 'GBP';
     }
   }; 
+
+  export const  removeUnderscores = (inputString: string) => {
+    return inputString.replace('_', ' ');
+  };

@@ -3,6 +3,7 @@ import {
   Cart,
   ClientResponse,
   Order,
+  PaymentPagedQueryResponse,
 } from '@commercetools/platform-sdk';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -14,13 +15,14 @@ import { GetServerSideProps } from 'next';
 import OrderSummary from '@/components/order-summary/OrderSummary';
 import { deleteCookieFromLocal } from '@/commercetools/utils/secureCookiesUtils';
 import { getCarts } from '@/commercetools/utils/utilsCarts';
+import { getPayments } from '@/commercetools/utils/utilsPayment';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../styles/Checkout.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
-function Checkout() {
+function Checkout({ paymentMethod }: { paymentMethod: string | undefined }) {
   const {
     checkoutMainContainer,
     mainTitle,
@@ -102,7 +104,10 @@ useEffect(() => {
         <div className={orderSummaryContainer}>
           <div className={formTitle}>orderSummary</div>
           {
-            cart?.id && <OrderSummary cart={cart} handlePlaceOrder={handlePlaceOrder} />
+            cart?.id && <OrderSummary
+             cart={cart} 
+             paymentMethod={paymentMethod}
+             handlePlaceOrder={handlePlaceOrder} />
           }
         </div>
       </div>
@@ -112,11 +117,31 @@ useEffect(() => {
 
 export default Checkout;
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => ({
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  
+  const res = (await getPayments()) as ClientResponse<PaymentPagedQueryResponse>;
+
+    const { results } = res.body;
+
+  const paymentMethod = results.map((p) => {
+      if (p.paymentMethodInfo) {
+        const { method } = p.paymentMethodInfo;
+
+        if(method) {
+           return method;
+        }
+      }
+    }).find(e => typeof e === 'string');
+  
+  return {
+  
   props: {
+    paymentMethod,
     ...(await serverSideTranslations(locale || 'en-GB', [
       'translation',
       'common',
     ])),
   },
-});
+};
+
+};

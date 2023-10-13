@@ -1,4 +1,8 @@
-import { BaseAddress, Cart, ShippingMethod } from '@commercetools/platform-sdk';
+import {
+  BaseAddress,
+  Cart,
+  ShippingMethod,
+} from '@commercetools/platform-sdk';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   addPaymentToCart,
@@ -15,19 +19,23 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import AddressForm from '../forms/addres-form/AddressForm';
 import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
+import { PaymentMethods } from '@/interfaces';
 import ProductPrice from '../product-card/product-price/ProductPrice';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { getShippingMethodsWithCountry } from '@/commercetools/utils/utilsShippingMethods';
+import { removeUnderscores } from '@/commercetools/utils/utilsApp';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './OrderSummary.module.scss';
 import { useRouter } from 'next/router';
 
 function OrderSummary({
   cart,
+  paymentMethod,
   handlePlaceOrder,
 }: {
   cart: Cart;
+  paymentMethod: string | undefined;
   handlePlaceOrder: () => void;
 }) {
   const {
@@ -72,7 +80,7 @@ function OrderSummary({
     ['email'],
     ['phone'],
   ];
-  const paymantsFields: string[] = ['Credit Card', 'PayPal'];
+  const paymantsFields: PaymentMethods[] = ['CREDIT_CARD', 'PAY_PAL'];
 
   const handleChangePaymentMethod = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -81,11 +89,9 @@ function OrderSummary({
     const curencyCode = lineItems.find((l) => l.totalPrice.currencyCode)
       ?.totalPrice.currencyCode!;
 
-    switch (e.currentTarget.id) {
-      case 'Credit Card':
-        const deletedAllCreditCard = await deleteAlPaymentsFromCart(
-          cart?.id
-        );
+    switch (e.currentTarget.id as PaymentMethods) {
+      case 'CREDIT_CARD':
+        const deletedAllCreditCard = await deleteAlPaymentsFromCart(cart?.id);
 
         if (deletedAllCreditCard) {
           try {
@@ -99,17 +105,17 @@ function OrderSummary({
 
               const resAddPayment = await addPaymentToCart(cart.id, id);
 
-              if(resAddPayment.statusCode === 201) return;
-            };
+              if (resAddPayment.statusCode === 201) return;
+            }
           } catch (error) {
             console.error(error);
           }
         }
         break;
 
-      case 'PayPal':
+      case 'PAY_PAL':
         const deletedAllForPayPal = await deleteAlPaymentsFromCart(cart?.id);
-        
+
         if (deletedAllForPayPal) {
           try {
             const resPayPal = await createPayPalPayment(
@@ -121,8 +127,8 @@ function OrderSummary({
               const { id } = resPayPal.body;
               const resAddPayment = await addPaymentToCart(cart.id, id);
 
-              if(resAddPayment.statusCode === 201) return;
-            };
+              if (resAddPayment.statusCode === 201) return;
+            }
           } catch (error) {
             console.error(error);
           }
@@ -278,14 +284,15 @@ function OrderSummary({
         {getMoneyValueFromCartField(cart.shippingInfo?.taxedPrice?.totalGross!)}
       </div>
       <div className={paymentMethodContainer}>
-        {paymantsFields.map((el, idx) => (
+        { paymantsFields.map((el, idx) => (
           <label key={idx}>
-            {el}
+            {removeUnderscores(el)}
             <input
               id={el}
               type="radio"
               name="payment"
               onChange={handleChangePaymentMethod}
+              defaultChecked={paymentMethod === el}
             />
           </label>
         ))}

@@ -15,6 +15,7 @@ import { deletePayment, getPayments } from '@/commercetools/utils/utilsPayment';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { deleteCart } from '@/commercetools/utils/utilsCarts';
+import { deleteCookieFromLocal } from '@/commercetools/utils/secureCookiesUtils';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './WelcomePage.module.scss';
@@ -64,6 +65,7 @@ function WelcomePage() {
             onClick={async () => {
               await deleteCart(el.id);
               dispatch(fetchCarts());
+              deleteCookieFromLocal('currentCartId');
             }}
             style={{ cursor: 'pointer' }}
           >
@@ -90,6 +92,7 @@ function WelcomePage() {
               )) as Customer;
 
               if (id) fetchCustomers();
+              deleteCookieFromLocal('userData');
             }}
             style={{ cursor: 'pointer' }}
           >

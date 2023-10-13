@@ -38,7 +38,11 @@ function Header() {
   const [isModalRendered, setIsModalRendered] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { carts, userName } = useAppSelector(selectCommerceTools);
-  const cart = carts?.find((el) => el.id) as Cart;
+  const currnetCartId = JSON.parse(
+    getDecryptedDataFromCookie('currentCartId')!
+  ) as string | undefined;
+
+  const cart = carts?.find((el) => el.id === currnetCartId!) as Cart;
   const { push } = useRouter();
 
   useEffect(() => {
@@ -85,7 +89,7 @@ function Header() {
       <LanguageSelect />
       <div className={shoppingBasketContainer}>
         <div className={countShoppingLists}>
-          {cart ? cart.totalLineItemQuantity : ''}
+          {cart?.cartState === 'Active' ? cart.totalLineItemQuantity : ''}
         </div>
         <Image
           onClick={() => setIsModalRendered(true)}

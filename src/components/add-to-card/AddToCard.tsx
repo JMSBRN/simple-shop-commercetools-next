@@ -26,13 +26,9 @@ function AddToCard({
   const dispatch = useAppDispatch();
   const { country } = useAppSelector(selectCommerceTools);
   const [quantity, setQuantity] = useState<number>(0);
-  const anonimouseId = process.env.ANONIMOUS_ID!;
+  const anonimouseId = process.env.ANONIMOUS_ID;
 
-  const userData = JSON.parse(getDecryptedDataFromCookie('userData')) as
-    | UserData
-    | undefined;
-
-  console.log(userData);
+  const userData = JSON.parse(getDecryptedDataFromCookie('userData')) as UserData | undefined;
 
   const handleCreateCard = async () => {
     const currentCartId = JSON.parse(
@@ -45,12 +41,10 @@ function AddToCard({
         productId,
         variantId,
         quantity,
-        anonimouseId,
+        userData?.customerId ?  undefined : anonimouseId,
         userData?.customerId
       );
       const newCart = resNewCart?.body as Cart;
-
-      console.log(newCart);
 
       if (newCart?.id) {
         setEncryptedDataToCookie('currentCartId', newCart.id);

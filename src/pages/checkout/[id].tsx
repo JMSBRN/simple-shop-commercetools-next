@@ -12,6 +12,7 @@ import {
 import AddressForm from '@/components/forms/addres-form/AddressForm';
 import { GetServerSideProps } from 'next';
 import OrderSummary from '@/components/order-summary/OrderSummary';
+import { deleteCookieFromLocal } from '@/commercetools/utils/secureCookiesUtils';
 import { getCarts } from '@/commercetools/utils/utilsCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -61,6 +62,7 @@ useEffect(() => {
         const { orderState } = orderResp.body;
 
         if (orderState === 'Open') {
+          deleteCookieFromLocal('currentCartId');
           push(`/ordered/${id}`);
         }
       }

@@ -11,6 +11,7 @@ import { fetchCarts } from '@/features/thunks/FetchCarts';
 import {
   filterObjectAndReturnValue,
 } from '@/commercetools/utils/utilsCommercTools';
+import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';
 import { useRouter } from 'next/router';
@@ -34,12 +35,17 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
   const { carts, language } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
   const [cart, setCart] = useState<Cart>();
+  const currentCartId = JSON.parse(
+    getDecryptedDataFromCookie('currentCartId')!
+  ) as string | undefined;
 
   useEffect(() => {
-    carts.forEach((el) => {
-      setCart(el);
-    });
-  }, [carts]);
+    if(currentCartId) {
+      const cart = carts.find(c => c.id === currentCartId);
+
+      if(cart?.id) setCart(cart);
+    }
+  }, [cart, carts, currentCartId]);
 
   const handleDeleteLineItem = async (
     ID: string,
@@ -72,7 +78,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
         close
       </div>
       <div className={titleStyle}>Mini Cart</div>
-      {cart?.lineItems.length ? (
+      {cart?.lineItems.length && cart?.cartState === 'Active' ? (
         <>
           <div className={shoppingListsStyle}>
             {cart?.id &&

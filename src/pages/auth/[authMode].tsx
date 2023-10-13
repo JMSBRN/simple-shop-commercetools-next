@@ -37,22 +37,29 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
 
       switch (authMode) {
         case 'login':
-          const carts = await getCarts() as Cart[];
-          const anonimousCartId = carts.find(c => c.anonymousId)?.id;
+          const carts = (await getCarts()) as Cart[];
+          const anonimousCartId = carts
+            .filter((c) => c.cartState === 'Active')
+            .find((c) => c.anonymousId)?.id;
 
           const resLogin = await Login(email, password, anonimousCartId);
-          
+
           if (resLogin.statusCode === 200) {
             const { customer } = resLogin.body;
             const { id, firstName } = customer;
-            
-            if(firstName) {
-            const userData: UserData = { customerId: id, firstName, email, password };
 
-            dispatch(setUserName(firstName));
-            setEncryptedDataToCookie('userData', userData);
-          }
-             
+            if (firstName) {
+              const userData: UserData = {
+                customerId: id,
+                firstName,
+                email,
+                password,
+              };
+
+              dispatch(setUserName(firstName));
+              setEncryptedDataToCookie('userData', userData);
+            }
+
             push('/user/dashboard');
           }
 
@@ -121,4 +128,3 @@ export const getServerSideProps: GetServerSideProps = async ({
     ])),
   },
 });
-

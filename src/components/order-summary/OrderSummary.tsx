@@ -1,15 +1,17 @@
-import {
-  BaseAddress,
-  Cart,
-  ShippingMethod,
-} from '@commercetools/platform-sdk';
+import { BaseAddress, Cart, ShippingMethod } from '@commercetools/platform-sdk';
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  addPaymentToCart,
   addShippingAddresToCart,
   getMoneyValueFromCartField,
   removeLineItemfromCart,
   setShippingMethodToCart,
 } from '@/commercetools/utils/utilsCarts';
+import {
+  createCreditCardPayment,
+  createPayPalPayment,
+  deleteAlPaymentsFromCart,
+} from '@/commercetools/utils/utilsPayment';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import AddressForm from '../forms/addres-form/AddressForm';
 import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
@@ -61,6 +63,77 @@ function OrderSummary({
   const isShippingAddressExisted = !cart.shippingAddress?.email;
   const cartShippingMethodId = cart.shippingInfo?.shippingMethod?.id as string;
   const shippingAdrRef = useRef<HTMLFormElement | null>(null);
+  const addressFields: (keyof BaseAddress)[][] = [
+    ['firstName'],
+    ['lastName'],
+    ['city'],
+    ['streetName'],
+    ['building'],
+    ['email'],
+    ['phone'],
+  ];
+  const paymantsFields: string[] = ['Credit Card', 'PayPal'];
+
+  const handleChangePaymentMethod = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { lineItems, customerId } = cart!;
+    const curencyCode = lineItems.find((l) => l.totalPrice.currencyCode)
+      ?.totalPrice.currencyCode!;
+
+    switch (e.currentTarget.id) {
+      case 'Credit Card':
+        const deletedAllCreditCard = await deleteAlPaymentsFromCart(
+          cart?.id
+        );
+
+        if (deletedAllCreditCard) {
+          try {
+            const resCreditCardPayment = await createCreditCardPayment(
+              curencyCode,
+              customerId
+            );
+
+            if (resCreditCardPayment.statusCode === 201) {
+              const { id } = resCreditCardPayment.body;
+
+              const resAddPayment = await addPaymentToCart(cart.id, id);
+
+              if(resAddPayment.statusCode === 201) return;
+            };
+          } catch (error) {
+            console.error(error);
+          }
+        }
+        break;
+
+      case 'PayPal':
+        const deletedAllForPayPal = await deleteAlPaymentsFromCart(cart?.id);
+        
+        if (deletedAllForPayPal) {
+          try {
+            const resPayPal = await createPayPalPayment(
+              curencyCode,
+              customerId
+            );
+
+            if (resPayPal.statusCode === 201) {
+              const { id } = resPayPal.body;
+              const resAddPayment = await addPaymentToCart(cart.id, id);
+
+              if(resAddPayment.statusCode === 201) return;
+            };
+          } catch (error) {
+            console.error(error);
+          }
+        }
+        break;
+
+      default:
+        return;
+    }
+  };
+
   const handleDeleteLineItem = async (
     ID: string,
     version: number,
@@ -82,9 +155,9 @@ function OrderSummary({
 
   useEffect(() => {
     const fn = async () => {
-      if(country) {
+      if (country) {
         const res = await getShippingMethodsWithCountry(country);
-  
+
         if (res.length) setShippingMethods(res);
       }
     };
@@ -102,7 +175,7 @@ function OrderSummary({
 
     if (statusCode === 200) dispatch(fetchCarts());
   };
-  
+
   const formSubmit = async (e?: BaseAddress) => {
     if (e?.firstName) {
       const res = await addShippingAddresToCart(cart.id, country, e);
@@ -119,16 +192,6 @@ function OrderSummary({
       shippingAdrRef.current.requestSubmit();
     }
   };
-
-  const addressFields: (keyof BaseAddress)[][] = [
-    ['firstName'],
-    ['lastName'],
-    ['city'],
-    ['streetName'],
-    ['building'],
-    ['email'],
-    ['phone'],
-  ];
 
   return (
     <div className={orderSummaryStyle}>
@@ -215,7 +278,17 @@ function OrderSummary({
         {getMoneyValueFromCartField(cart.shippingInfo?.taxedPrice?.totalGross!)}
       </div>
       <div className={paymentMethodContainer}>
-       
+        {paymantsFields.map((el, idx) => (
+          <label key={idx}>
+            {el}
+            <input
+              id={el}
+              type="radio"
+              name="payment"
+              onChange={handleChangePaymentMethod}
+            />
+          </label>
+        ))}
       </div>
       <div className={totalSum}>
         Total: {getMoneyValueFromCartField(cart.taxedPrice?.totalGross!)}

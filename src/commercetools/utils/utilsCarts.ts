@@ -5,7 +5,7 @@ import {
   _BaseAddress,
 } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
-import { createPayment } from './utilsPayment';
+import { createCreditCardPayment } from './utilsPayment';
 import { getCurrencySymbol } from './utilsCommercTools';
 import { getPriceValue } from '@/commercetools/utils/utilsProductCard';
 import { getPricesFromProduct } from './utilsShoppingList';
@@ -100,7 +100,7 @@ export const createCartWithProductId = async (
         .execute();
 
         if(resCreateCart.statusCode === 201) {
-          const resCreatePayment = await createPayment(currency, customerId);
+          const resCreatePayment = await createCreditCardPayment(currency, customerId);
 
           if(resCreatePayment.statusCode === 201) {
             const createdCart = resCreateCart.body;

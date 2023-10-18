@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { BaseAddress } from '@commercetools/platform-sdk';
+import InputField from '../input-field/InputField';
+import TextArea from '../textarea/Textarea';
 import styles from './AddressForm.module.scss';
 
 function AddressForm({
@@ -33,38 +35,27 @@ function AddressForm({
   const renderInputField = (
     fieldName: keyof BaseAddress,
     fieldType?: string,
-    required: boolean = true
-  ) => (
-    <div key={fieldName}>
-      <label>
-        {fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
-        {required && <span >*</span>}
-        <input
-          type={fieldType || 'text'}
-          name={fieldName}
-          value={formData[fieldName] || ''}
-          onChange={handleChange}
-          required={required}
-        />
-      </label>
-    </div>
-  );
+  ) => {
+    return (
+      <InputField
+        fieldName={fieldName}
+        fieldType={fieldType}
+        formData={formData}
+        handleChange={handleChange}
+      />
+    );
+  };
+
   const renderTextAreaField = (
     fieldName: keyof BaseAddress,
-    required: boolean = true
+    isNotRequired?: boolean
   ) => (
-    <div key={fieldName}>
-      <label>
-        {fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
-        {required && <span >*</span>}
-        <textarea
-          name={fieldName}
-          value={formData[fieldName] || ''}
-          onChange={handleChange}
-          required={required}
-        />
-      </label>
-    </div>
+    <TextArea
+      fieldName={fieldName}
+      formData={formData}
+      handleChange={handleChange}
+      isNotRequired={isNotRequired}
+    />
   );
 
   return (
@@ -74,9 +65,11 @@ function AddressForm({
           <div className={inputRow} key={idx}>
             {pair.map((el, idx) => (
               <div className={inputContainer} key={idx}>
-                {(el === 'additionalStreetInfo') ? renderTextAreaField(el, false) : (
-                 el === 'email' ? renderInputField(el, 'email') : renderInputField(el) 
-                )}
+                {el === 'additionalStreetInfo'
+                  ? renderTextAreaField(el, true)
+                  : el === 'email'
+                  ? renderInputField(el, 'email')
+                  : renderInputField(el)}
               </div>
             ))}
           </div>

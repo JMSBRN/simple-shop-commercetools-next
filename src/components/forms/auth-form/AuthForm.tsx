@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { HTMLInputTypeAttribute, useState } from 'react';
 import { AuthCustomerDraftFields } from '../formsInterfaces';
+import InputField from '../input-field/InputField';
 
 function AuthForm({
   formFields,
   onSubmit,
-  formRef
+  formRef,
 }: {
   formFields: (keyof AuthCustomerDraftFields)[][];
   onSubmit: (updatedFormData: AuthCustomerDraftFields) => void;
@@ -22,29 +23,23 @@ function AuthForm({
     });
   };
 
-  const renderInputField = (
-    fieldName: keyof AuthCustomerDraftFields,
-    fieldType?: string,
-    required: boolean = true
-  ) => (
-    <div key={fieldName}>
-      <label>
-        {fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
-        {required && <span>*</span>}
-        <input
-          type={fieldType || 'text'}
-          name={fieldName}
-          value={formData[fieldName] || ''}
-          onChange={handleChange}
-          required={required}
-        />
-      </label>
-    </div>
-  );
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit(formData);
+  };
+
+  const renderInputField = (
+    fieldName: keyof AuthCustomerDraftFields,
+    fieldType?: HTMLInputTypeAttribute | undefined
+  ) => {
+    return (
+      <InputField
+        fieldName={fieldName}
+        formData={formData}
+        fieldType={fieldType}
+        handleChange={handleChange}
+      />
+    );
   };
 
   return (
@@ -54,10 +49,10 @@ function AuthForm({
           {pair.map((el) => (
             <div className="" key={el}>
               {el === 'email'
-                ? renderInputField(el, 'email', true)
+                ? renderInputField(el, 'email')
                 : el === 'password'
-                ? renderInputField(el, 'password', true)
-                : renderInputField(el, 'text', true)}
+                ? renderInputField(el, 'password')
+                : renderInputField(el)}
             </div>
           ))}
         </div>

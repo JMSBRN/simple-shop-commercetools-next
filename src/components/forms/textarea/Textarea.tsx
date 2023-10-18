@@ -1,4 +1,5 @@
 import { BaseAddress } from '@commercetools/platform-sdk';
+import styles from './Textarea.module.scss';
 
 function TextArea({
   fieldName,
@@ -14,7 +15,7 @@ function TextArea({
       isNotRequired?: boolean;
 }) {
   return (
-    <div key={fieldName}>
+    <div key={fieldName} className={styles.textareaContainer}>
       <label>
         {fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
         {!isNotRequired && <span>*</span>}

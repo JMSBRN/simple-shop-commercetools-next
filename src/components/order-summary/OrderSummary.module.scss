@@ -129,11 +129,10 @@
 
 .modalShippingAdrStyle {
     position: absolute;
-    top: 20px;
+    top: 120px;
     right: 0;
-    width: 450px;
-    height: 830px;
-    padding-left: 6cqh;
+    width: 300px;
+    height: 750px;
     padding-bottom: 20px;
     border: 0.2px solid rgb(120, 92, 92, 0.3);
     background-color: rgb(255, 255, 255);
@@ -148,9 +147,9 @@
 }
 
 .closeModal {
-    position: relative;
+    position: absolute;
     top: 15px;
-    left: -15px;
+    right: 25px;
     width: 23px;
     height: 14px;
     color: grey;

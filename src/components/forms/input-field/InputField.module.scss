@@ -1,0 +1,56 @@
+@import 'variables';
+
+.inputContainer {
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        width: 100%;
+        padding: $input-padding;
+        font-size: $input-font-size;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        transition: border-color 0.3s;
+
+        &:focus {
+            border-color: $primary-color;
+            outline: none;
+        }
+
+        &::placeholder {
+            color: #888;
+        }
+    }
+
+    label {
+        display: block;
+        text-transform: uppercase;
+        text-align: start;
+        color:gray;
+        font-size: $input-font-size;
+        margin-bottom: 6px;
+        span {
+            color: rgb(255, 0, 0, 0.6);
+        }
+    }
+
+    @keyframes ripple {
+        to {
+            transform: scale(1.2);
+            opacity: 0;
+        }
+    }
+
+    input:focus::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        pointer-events: none;
+        border-radius: inherit;
+        animation: ripple 0.5s linear;
+        background: rgba($primary-color, 0.2);
+    }
+
+}

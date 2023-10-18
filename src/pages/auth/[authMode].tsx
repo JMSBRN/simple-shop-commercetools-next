@@ -11,6 +11,7 @@ import { getCarts } from '@/commercetools/utils/utilsCarts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { setEncryptedDataToCookie } from '@/commercetools/utils/secureCookiesUtils';
 import { setUserName } from '@/features/commerceTools/CommerceToolsSlice';
+import styles from '../../styles/AuthPage.module.scss';
 import { useAppDispatch } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
@@ -89,11 +90,8 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
   };
 
   return (
-    <div>
-      {authMode === 'login' ? 'login' : 'Register'}
-      <br />
-      <br />
-      <br />
+    <div className={styles.authPageContainer}>
+      <h3>{authMode === 'login' ? 'login' : 'Register'}</h3>
       <AuthForm
         formRef={formRef}
         onSubmit={onSubmitForm}

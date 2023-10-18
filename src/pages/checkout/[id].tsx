@@ -37,12 +37,11 @@ function Checkout({ paymentMethod }: { paymentMethod: string | undefined }) {
   const { query, push } = useRouter();
   const cartId = query.id as string;
 
-useEffect(() => {
-  carts.forEach(c => {
-    if (c.id === cartId) setCart(c);
-  });
-
-}, [cartId, carts]);
+  useEffect(() => {
+    carts.forEach((c) => {
+      if (c.id === cartId) setCart(c);
+    });
+  }, [cartId, carts]);
 
   const handleSubMit = async (e?: BaseAddress) => {
     if (e?.firstName) {
@@ -54,7 +53,7 @@ useEffect(() => {
         cartState
       )) as ClientResponse<Order>;
       const { id } = res.body;
-      
+
       if (id) {
         const orderResp = (await addBillingAdressToOrder(
           id,
@@ -99,16 +98,18 @@ useEffect(() => {
             formRef={formRef}
             addressFields={addressFields}
             onSubmit={handleSubMit}
+            inputWithCalcWidth={true}
           />
         </div>
         <div className={orderSummaryContainer}>
           <div className={formTitle}>orderSummary</div>
-          {
-            cart?.id && <OrderSummary
-             cart={cart} 
-             paymentMethod={paymentMethod}
-             handlePlaceOrder={handlePlaceOrder} />
-          }
+          {cart?.id && (
+            <OrderSummary
+              cart={cart}
+              paymentMethod={paymentMethod}
+              handlePlaceOrder={handlePlaceOrder}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -118,30 +119,30 @@ useEffect(() => {
 export default Checkout;
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  
-  const res = (await getPayments()) as ClientResponse<PaymentPagedQueryResponse>;
+  const res =
+    (await getPayments()) as ClientResponse<PaymentPagedQueryResponse>;
 
-    const { results } = res.body;
+  const { results } = res.body;
 
-  const paymentMethod = results.map((p) => {
+  const paymentMethod = results
+    .map((p) => {
       if (p.paymentMethodInfo) {
         const { method } = p.paymentMethodInfo;
 
-        if(method) {
-           return method;
+        if (method) {
+          return method;
         }
       }
-    }).find(e => typeof e === 'string');
-  
-  return {
-  
-  props: {
-    paymentMethod,
-    ...(await serverSideTranslations(locale || 'en-GB', [
-      'translation',
-      'common',
-    ])),
-  },
-};
+    })
+    .find((e) => typeof e === 'string');
 
+  return {
+    props: {
+      paymentMethod,
+      ...(await serverSideTranslations(locale || 'en-GB', [
+        'translation',
+        'common',
+      ])),
+    },
+  };
 };

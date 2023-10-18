@@ -8,12 +8,19 @@ function AddressForm({
   formRef,
   addressFields,
   onSubmit,
+  inputWithCalcWidth,
 }: {
   formRef: React.LegacyRef<HTMLFormElement> | undefined;
   addressFields: (keyof BaseAddress)[][];
   onSubmit: (updatedAddress: BaseAddress) => void;
+  inputWithCalcWidth?: boolean;
 }) {
-  const { formContainer, inputRow, inputContainer } = styles;
+  const {
+    formContainer,
+    inputRow,
+    inputContainer,
+    inputContainerWithCalcWidth,
+  } = styles;
   const [formData, setFormData] = useState<BaseAddress>({} as BaseAddress);
 
   const handleChange = (
@@ -34,7 +41,7 @@ function AddressForm({
 
   const renderInputField = (
     fieldName: keyof BaseAddress,
-    fieldType?: string,
+    fieldType?: string
   ) => {
     return (
       <InputField
@@ -64,7 +71,14 @@ function AddressForm({
         {addressFields.map((pair, idx) => (
           <div className={inputRow} key={idx}>
             {pair.map((el, idx) => (
-              <div className={inputContainer} key={idx}>
+              <div
+                className={
+                  inputWithCalcWidth
+                    ? inputContainerWithCalcWidth
+                    : inputContainer
+                }
+                key={idx}
+              >
                 {el === 'additionalStreetInfo'
                   ? renderTextAreaField(el, true)
                   : el === 'email'

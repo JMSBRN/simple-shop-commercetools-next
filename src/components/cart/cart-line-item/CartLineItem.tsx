@@ -110,7 +110,7 @@ function CartLineItem({
       </div>
       <div className={currentQuantityStyle}>
       {!isQuantityButtonsExisted && <div className="">*</div>}
-        {currentQuantity}
+        {quantity}
       </div>
       {isQuantityButtonsExisted && (
         <div className={quantityStyle}>

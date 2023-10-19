@@ -18,10 +18,14 @@ function CartLineItem({
   cartId,
   version,
   lineItem,
+  isQuantityButtonsExisted,
+  isTotlaSummExisted
 }: {
   cartId: string;
   version: number;
   lineItem: LineItem;
+  isQuantityButtonsExisted?: boolean;
+  isTotlaSummExisted?: boolean;
 }) {
   const {
     lineItemStyle,
@@ -30,6 +34,7 @@ function CartLineItem({
     priceStyle,
     saleBage,
     quantityStyle,
+    currentQuantityStyle,
     total,
   } = styles;
   const dispatch = useAppDispatch();
@@ -103,7 +108,11 @@ function CartLineItem({
         {getMoneyValueFromCartField(price.value)}
         {false && <div className={saleBage}>Sale</div>}
       </div>
-      {false && (
+      <div className={currentQuantityStyle}>
+      {!isQuantityButtonsExisted && <div className="">*</div>}
+        {currentQuantity}
+      </div>
+      {isQuantityButtonsExisted && (
         <div className={quantityStyle}>
           <button type="button" onClick={handlePlusQuantity}>
             +
@@ -114,11 +123,12 @@ function CartLineItem({
           </button>
         </div>
       )}
-        <div>* {currentQuantity} </div>
-      <div className={total}>
-        {lineItem.taxedPrice &&
-          getMoneyValueFromCartField(lineItem.taxedPrice?.totalGross)}
-      </div>
+      {isTotlaSummExisted && (
+        <div className={total}>
+          {lineItem.taxedPrice &&
+            getMoneyValueFromCartField(lineItem.taxedPrice?.totalGross!)}
+        </div>
+      )}
     </div>
   );
 }

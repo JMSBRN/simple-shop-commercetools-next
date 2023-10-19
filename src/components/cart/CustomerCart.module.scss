@@ -46,10 +46,11 @@
 .lineItemsStyle {
     width: 80%;
     height: auto;
-    min-height: 200px;
-    max-height: 400px;
-    overflow-x: auto;
+    max-height: 300px;
 
+    padding: 10px;
+    overflow-x: auto;
+    background-color: rgb(231, 231, 231);
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -90,7 +91,7 @@
         border-bottom: 1px solid rgb(125, 125, 125, 0.4);
         color: rgb(136, 136, 136);
         &::-webkit-input-placeholder {
-            color: rgb(219, 255, 148);
+            color: rgb(73, 90, 38);
         }
 
     }

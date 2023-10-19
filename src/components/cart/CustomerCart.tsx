@@ -58,6 +58,8 @@ function CustomerCart({ cart }: { cart: Cart }) {
                 version={cart.version}
                 key={el.id}
                 lineItem={el}
+                isQuantityButtonsExisted={true}
+                isTotlaSummExisted={true}
               />
             ))}
           </div>

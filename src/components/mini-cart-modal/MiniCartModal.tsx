@@ -1,19 +1,14 @@
-import {
-  getMoneyValueFromCartField,
-  removeLineItemfromCart,
-} from '@/commercetools/utils/utilsCarts';
-import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { useEffect, useState } from 'react';
 import { Cart } from '@commercetools/platform-sdk';
+import CartLineItem from '../cart/cart-line-item/CartLineItem';
 import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
-import ProductImages from '../product-card/product-images/ProductImages';
-import { fetchCarts } from '@/features/thunks/FetchCarts';
-import {
-  filterObjectAndReturnValue,
-} from '@/commercetools/utils/utilsCommercTools';
 import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
+import {
+  getMoneyValueFromCartField,
+} from '@/commercetools/utils/utilsCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';
+import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
 function MiniCartModal({ onClick }: { onClick: () => void }) {
@@ -21,18 +16,12 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     miniModalConTainer,
     miniModalClose,
     titleStyle,
-    shoppingListsStyle,
+    cartLineItemsStyle,
     buttonsContiner,
-    listItem,
-    itemDelete,
-    ItemImages,
-    itemName,
-    itemPrice,
     total,
     subTotal
   } = styles;
-  const dispatch = useAppDispatch();
-  const { carts, language } = useAppSelector(selectCommerceTools);
+  const { carts } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
   const [cart, setCart] = useState<Cart>();
   const currentCartId = JSON.parse(
@@ -47,18 +36,6 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     }
   }, [cart, carts, currentCartId]);
 
-  const handleDeleteLineItem = async (
-    ID: string,
-    version: number,
-    lineitemId: string
-  ) => {
-
-    const res = await removeLineItemfromCart(ID, version, lineitemId);
-
-    if (res.statusCode === 200) {
-      dispatch(fetchCarts());
-    }
-  };
   const handleRedirectToCartPage = async () => {
     if (cart?.id && cart?.lineItems.length) {
       onClick();
@@ -80,31 +57,15 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
       <div className={titleStyle}>Mini Cart</div>
       {cart?.lineItems.length && cart?.cartState === 'Active' ? (
         <>
-          <div className={shoppingListsStyle}>
+          <div className={cartLineItemsStyle}>
             {cart?.id &&
               cart?.lineItems.map((item) => (
-                <div className={listItem} key={item.id}>
-                  <div
-                    className={itemDelete}
-                    onClick={() =>
-                      handleDeleteLineItem(cart.id, cart.version, item.id)
-                    }
-                  >
-                    delete
-                  </div>
-                  <div className={ItemImages}>
-                    <ProductImages productId={item.productId} />
-                  </div>
-                  <div className={itemName}>
-                    {filterObjectAndReturnValue(item.name, language) ||
-                      'no product name'}
-                  </div>
-                  <div className={itemPrice}>
-                    {`${item.quantity} * ${getMoneyValueFromCartField(
-                      item.price.value
-                    )}`}
-                  </div>
-                </div>
+                <CartLineItem
+                 key={cart?.id}
+                 cartId={cart?.id}
+                 lineItem={item}
+                 version={cart?.version}
+                 />
               ))}
           </div>
           <div className={subTotal}>

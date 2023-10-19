@@ -6,10 +6,11 @@ $base-width: 100%;
     width: $base-width;
     min-width: 400px;
     height: auto;
-    padding: 0.3em;
+    padding: 0.5em;
     @include flex (center, space-around);
-    border: 1px solid rgb(125, 125, 125, 0.4);
     font-size: calc($base-width * 0.85);
+    background-color: white;
+    border: 1px solid rgb(125, 125, 125, 0.4);
     div {
         color: grey;
         font-size: 0.9em;
@@ -17,6 +18,7 @@ $base-width: 100%;
     img {
         margin: 0 0.5em;
         width: 1.6em;
+        min-width: 30px;
         height: auto;
     }
 }
@@ -31,7 +33,7 @@ $base-width: 100%;
 
 .description {
     margin: 0 1em;
-    min-width: 60px;
+    min-width: 120px;
     max-width: 120px;
     height: auto;
     max-height: 50px;
@@ -61,9 +63,10 @@ $base-width: 100%;
 }
 
 .priceStyle {
-    min-width: 50px;
+    width: auto;
+    min-width: 55px;
     padding: 0.3em;
-    text-align: center;
+    text-align: start;
     text-transform: uppercase;
 }
 .saleBage{
@@ -74,10 +77,10 @@ $base-width: 100%;
 .quantityStyle {
     width: auto;
     height: auto;
-    display: grid;
-    grid-template-columns: 1fr 30px 1fr;
-    align-items: center;
+    @include flex(center, space-between);
     div {
+        width: auto;
+        min-width: 20px;
         text-align: center;
         font-size: 1em;
     }
@@ -92,8 +95,14 @@ $base-width: 100%;
         }
     }
 }
+.currentQuantityStyle {
+    margin-right: 20px;
+    width: auto;
+    min-width: 30px;
+    @include flex (center, space-around);
+}
 
 .total {
-    text-align: center;
-    min-width: 40px;
+    text-align: start;
+    min-width: 60px;
 }

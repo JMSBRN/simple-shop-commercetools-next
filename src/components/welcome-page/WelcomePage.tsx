@@ -13,6 +13,7 @@ import {
 import { deleteOrder, getOrders } from '@/commercetools/utils/utilsOrders';
 import { deletePayment, getPayments } from '@/commercetools/utils/utilsPayment';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import CartLineItem from '../cart/cart-line-item/CartLineItem';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { deleteCart } from '@/commercetools/utils/utilsCarts';
 import { deleteCookieFromLocal } from '@/commercetools/utils/secureCookiesUtils';
@@ -62,21 +63,30 @@ function WelcomePage() {
         {carts.map((el) => (
           <div
             key={el.id}
-            onClick={async () => {
-              await deleteCart(el.id);
-              dispatch(fetchCarts());
-              deleteCookieFromLocal('currentCartId');
-            }}
             style={{ cursor: 'pointer' }}
           >
             {el.id}
-            <div className="">{el.cartState}</div>
+            <div 
+               onClick={async () => {
+                await deleteCart(el.id);
+                dispatch(fetchCarts());
+                deleteCookieFromLocal('currentCartId');
+              }}
+            >{el.cartState}</div>
             <div className="">{el.createdBy?.clientId}</div>
             <div className="">
               {' '}
               payment id: {el.paymentInfo?.payments[0].id}
             </div>
             <div className=""> anonymousId: {el.anonymousId}</div>
+            {
+              el.lineItems.map(l => (
+                <div key={l.id}>
+                  <CartLineItem cartId={el.id} version={el.version} lineItem={l}  />
+                </div>
+              ))
+            }
+
           </div>
         ))}
       </div>

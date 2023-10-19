@@ -27,7 +27,6 @@ function CartLineItem({
     lineItemStyle,
     deleteLineItem,
     description,
-    descriptionInfoContainer,
     priceStyle,
     saleBage,
     quantityStyle,
@@ -36,7 +35,7 @@ function CartLineItem({
   const dispatch = useAppDispatch();
   const { language } = useAppSelector(selectCommerceTools);
   const { id, variant, name, quantity, price } = lineItem;
-  const { images, sku } = variant;
+  const { images } = variant;
   const [currentQuantity, setCurrentQuantity] = useState<number>(quantity);
   const { push } = useRouter();
   const upDateQuantityLineItem = async (cartId: string, quantity: number) => {
@@ -45,12 +44,7 @@ function CartLineItem({
     if (cart.id) {
       const { version } = cart;
 
-      await updateCartLineitemQuantity(
-        cart.id,
-        version,
-        id,
-        quantity
-      );
+      await updateCartLineitemQuantity(cart.id, version, id, quantity);
     }
   };
 
@@ -66,7 +60,7 @@ function CartLineItem({
       await upDateQuantityLineItem(cartId, currentQuantity - 1);
       dispatch(fetchCarts());
     }
-    if(currentQuantity === 1) {
+    if (currentQuantity === 1) {
       await upDateQuantityLineItem(cartId, 0);
       push('/');
     }
@@ -89,36 +83,38 @@ function CartLineItem({
 
   return (
     <div className={lineItemStyle}>
-      <div className={deleteLineItem} onClick={() => handleDeleteLineItem(cartId, version, id )}>
+      <div
+        className={deleteLineItem}
+        onClick={() => handleDeleteLineItem(cartId, version, id)}
+      >
         delete
       </div>
+      <Image
+        priority
+        src={images?.find((el) => el.url)?.url!}
+        width={100}
+        height={160}
+        alt="product image"
+      />
       <div className={description}>
-        <Image
-          priority
-          src={images?.find((el) => el.url)?.url!}
-          width={100}
-          height={160}
-          alt="product image"
-          style={{ width: '60%', height: 'auto' }}
-        />
-        <div className={descriptionInfoContainer}>
-          <div>{filterObjectAndReturnValue(name, language)}</div>
-          <div>{sku}</div>
-        </div>
+        <div>{filterObjectAndReturnValue(name, language)}</div>
       </div>
       <div className={priceStyle}>
         {getMoneyValueFromCartField(price.value)}
         {false && <div className={saleBage}>Sale</div>}
       </div>
-      <div className={quantityStyle}>
-        <button type="button" onClick={handlePlusQuantity}>
-          +
-        </button>
-        <div>{currentQuantity}</div>
-        <button type="button" onClick={handleMinusQuantity}>
-          -
-        </button>
-      </div>
+      {false && (
+        <div className={quantityStyle}>
+          <button type="button" onClick={handlePlusQuantity}>
+            +
+          </button>
+          <div>{currentQuantity}</div>
+          <button type="button" onClick={handleMinusQuantity}>
+            -
+          </button>
+        </div>
+      )}
+        <div>* {currentQuantity} </div>
       <div className={total}>
         {lineItem.taxedPrice &&
           getMoneyValueFromCartField(lineItem.taxedPrice?.totalGross)}

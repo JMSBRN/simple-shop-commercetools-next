@@ -1,15 +1,25 @@
 import { Cart, Order } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
 import { getMyCarts, getMyOrders } from '@/commercetools/utils/utilsMe';
+import CartLineItem from '@/components/cart/cart-line-item/CartLineItem';
 import { GetServerSideProps } from 'next';
+import { OriginalTotal } from '@/components/cart/original-sub-total/OriginalSubTotal';
 import { UserData } from '@/interfaces';
-import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
+import { getMoneyValueFromCartField } from '@/commercetools/utils/utilsCarts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useRouter } from 'next/router';
+import styles from '../../../styles/DashBoardPage.module.scss';
 
 function DashBoard() {
-  const { locale } = useRouter();
+  const {
+    dashboardContainer,
+    myCartsStyle,
+    myCartStyle,
+    cartLineItems,
+    cartSubTotal,
+    cartTotal,
+    myOrdersStyle,
+  } = styles;
   const [myCarts, setMyCarts] = useState<Cart[]>([]);
   const [myOrders, setMyOrders] = useState<Order[]>([]);
 
@@ -37,43 +47,39 @@ function DashBoard() {
   }, []);
 
   return (
-    <div style={{ width: '800px', display: 'flex', justifyContent: 'space-between' }}>
-      <div className="carts">
-        CARTS
+    <div className={dashboardContainer}>
+      <div className={myCartsStyle}>
+        <h3>Active Carts</h3>
         {myCarts.map((c) => (
-          <div key={c.id}>
-            -------
-            {c.id}
-            <br />
-            <br />
-            {c.cartState}
-            <br />
-            <br />
-            {c.lineItems.map((l) => (
-              <div key={l.id}>
-                {filterObjectAndReturnValue(l.name, locale as string)}
-              </div>
-            ))}
+          <div className={myCartStyle} key={c.id}>
+            <div>{c.cartState}</div>
+            <div className={cartLineItems}>
+              {c.lineItems.map((l) => (
+                <CartLineItem
+                  cartId={c.id}
+                  lineItem={l}
+                  version={c.version}
+                  key={l.id}
+                  isQuantityButtonsExisted={true}
+                  isTotlaSummExisted={true}
+                />
+              ))}
+            </div>
+            <div className={cartSubTotal}>
+              Sub Total: <OriginalTotal cart={c} />
+            </div>
+            <div className={cartTotal}>
+              Total:
+              {c.taxedPrice &&
+                getMoneyValueFromCartField(c.taxedPrice.totalGross)}
+            </div>
           </div>
         ))}
       </div>
-      <div className="orders">
-        ORDERS
+      <div className={myOrdersStyle}>
+        <h3>Orders</h3>
         {myOrders.map((o) => (
-          <div key={o.id}>
-            -------
-            {o.id}
-            <br />
-            <br />
-            {o.orderState}
-            <br />
-            <br />
-            {o.lineItems.map((l) => (
-              <div key={l.id}>
-                {filterObjectAndReturnValue(l.name, locale as string)}
-              </div>
-            ))}
-          </div>
+          <div key={o.id}></div>
         ))}
       </div>
     </div>

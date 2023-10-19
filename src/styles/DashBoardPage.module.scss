@@ -1,0 +1,36 @@
+@import 'mixins';
+
+.dashboardContainer{
+    margin:  100px auto;
+    width: 100%;
+    max-width: 1300px;
+    height: 100vh;
+    @include flex(flex-start, space-around);
+    
+}
+.myCartsStyle, .myOrdersStyle {
+    width: 100%;
+    max-width: 600px;
+    min-width: 450px;
+    height: auto;
+    min-height: 600px;
+    padding: 10px;
+    @include flex(center, flex-start, column);
+    border: 1px solid rgb(128, 128, 128, 0.4);
+    h3 {
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        color: rgb(128, 128, 128, 0.5);
+    }
+}
+.myCartStyle {
+    width: 90%;
+    min-width: 400px;
+    height: auto;
+    padding: 10px;
+    border: 1px solid rgb(128, 128, 128, 0.4);
+    color: rgb(128, 128, 128, 0.5);
+}
+.cartLineItems{}
+.cartSubTota{}
+.cartTotal{}

@@ -3,9 +3,7 @@ import { Cart } from '@commercetools/platform-sdk';
 import CartLineItem from '../cart/cart-line-item/CartLineItem';
 import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
 import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
-import {
-  getMoneyValueFromCartField,
-} from '@/commercetools/utils/utilsCarts';
+import { getMoneyValueFromCartField } from '@/commercetools/utils/utilsCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
@@ -19,7 +17,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     cartLineItemsStyle,
     buttonsContiner,
     total,
-    subTotal
+    subTotal,
   } = styles;
   const { carts } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
@@ -29,10 +27,10 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
   ) as string | undefined;
 
   useEffect(() => {
-    if(currentCartId) {
-      const cart = carts.find(c => c.id === currentCartId);
+    if (currentCartId) {
+      const cart = carts.find((c) => c.id === currentCartId);
 
-      if(cart?.id) setCart(cart);
+      if (cart?.id) setCart(cart);
     }
   }, [cart, carts, currentCartId]);
 
@@ -61,15 +59,15 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
             {cart?.id &&
               cart?.lineItems.map((item) => (
                 <CartLineItem
-                 key={cart?.id}
-                 cartId={cart?.id}
-                 lineItem={item}
-                 version={cart?.version}
-                 />
+                  key={cart?.id}
+                  cartId={cart?.id}
+                  lineItem={item}
+                  version={cart?.version}
+                />
               ))}
           </div>
           <div className={subTotal}>
-            Sub Total:  <OriginalTotal cart={cart} />
+            Sub Total: <OriginalTotal cart={cart} />
           </div>
           <div className={total}>
             Total:
@@ -93,4 +91,3 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
 }
 
 export default MiniCartModal;
-

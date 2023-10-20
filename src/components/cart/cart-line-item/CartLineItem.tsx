@@ -19,7 +19,7 @@ function CartLineItem({
   version,
   lineItem,
   isQuantityButtonsExisted,
-  isTotlaSummExisted
+  isTotlaSummExisted,
 }: {
   cartId: string;
   version: number;
@@ -48,14 +48,25 @@ function CartLineItem({
 
     if (cart.id) {
       const { version } = cart;
+      const res = await updateCartLineitemQuantity(
+        cart.id,
+        version,
+        id,
+        quantity
+      );
+      const { lineItems } = res.body;
+      const updatedlineItem = lineItems.find(
+        (item) => item.id === lineItem.id
+      )!;
 
-      await updateCartLineitemQuantity(cart.id, version, id, quantity);
+      setCurrentQuantity(updatedlineItem.quantity);
     }
   };
 
   const handlePlusQuantity = async () => {
     setCurrentQuantity(currentQuantity + 1);
     await upDateQuantityLineItem(cartId, currentQuantity + 1);
+
     dispatch(fetchCarts());
   };
 
@@ -109,10 +120,8 @@ function CartLineItem({
         {false && <div className={saleBage}>Sale</div>}
       </div>
       <div className={currentQuantityStyle}>
-      {!isQuantityButtonsExisted && <div className="">*</div>}
-        {quantity}
       </div>
-      {isQuantityButtonsExisted && (
+      {isQuantityButtonsExisted ? (
         <div className={quantityStyle}>
           <button type="button" onClick={handlePlusQuantity}>
             +
@@ -122,6 +131,11 @@ function CartLineItem({
             -
           </button>
         </div>
+      ) :  (
+        <>
+          <div>*</div>
+          <div>{quantity}</div>
+        </>
       )}
       {isTotlaSummExisted && (
         <div className={total}>

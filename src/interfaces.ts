@@ -7,7 +7,7 @@ export interface UserData {
 
 export type PaymentMethods = 'CREDIT_CARD' | 'PAY_PAL';
 
-export interface CredentialsForMyCarts {
+export interface CredentialsForMyApiCall {
   email: string;
   password: string;
 }

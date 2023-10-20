@@ -1,10 +1,11 @@
-import { Cart, Category, Product, ShoppingList } from '@commercetools/platform-sdk';
+import { Cart, Category, Order, Product, ShoppingList } from '@commercetools/platform-sdk';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/store/store';
 import { fetchCarts } from '../thunks/FetchCarts';
 import {
   fetchCategories,
 } from '../thunks/FetchCategories';
+import { fetchOrders } from '../thunks/FetchOrders';
 import { fetchProducts } from '../thunks/FetchProducts';
 import { fetchShoppingLists } from '../thunks/FetchShoppingLists';
 
@@ -13,6 +14,7 @@ interface InitialState {
   country: string;
   categories: Category[];
   products: Product[];
+  orders: Order[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   shoppingLists: ShoppingList[];
   cart: Cart;
@@ -24,6 +26,7 @@ const initialState: InitialState = {
   country: '',
   categories: [],
   products: [],
+  orders: [] as Order[],
   status: 'idle',
   shoppingLists: [],
   cart: {} as Cart,
@@ -52,6 +55,9 @@ const commerceToolseSlice = createSlice({
     setCarts: (state, action: PayloadAction<Cart[]>) => {
       state.carts = action.payload;
     },
+    setOrders: (state, action: PayloadAction<Order[]>) => {
+      state.orders = action.payload;
+    },
     setUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
     }
@@ -68,6 +74,10 @@ const commerceToolseSlice = createSlice({
       .addCase(fetchCarts.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.carts = action.payload;
+      })
+      .addCase(fetchOrders.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.orders = action.payload;
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.status = 'succeeded';
@@ -86,6 +96,7 @@ const commerceToolseSlice = createSlice({
 export const {
   setCategories,
   setProducts,
+  setOrders,
   setLanguage,
   setCountry,
   setShoppingLists,

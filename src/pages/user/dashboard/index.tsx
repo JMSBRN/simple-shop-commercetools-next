@@ -19,6 +19,7 @@ import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../../styles/DashBoardPage.module.scss';
 import { useRouter } from 'next/router';
+import { fetchOrders } from '@/features/thunks/FetchOrders';
 
 function DashBoard() {
   const {
@@ -31,9 +32,8 @@ function DashBoard() {
     myOrdersStyle,
     topButtonsStyle,
   } = styles;
-  const [myOrders, setMyOrders] = useState<Order[]>([]);
   const dispatch = useAppDispatch();
-  const { carts } = useAppSelector(selectCommerceTools);
+  const { carts, orders } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
   const userDataFromLocal = JSON.parse(
     getDecryptedDataFromCookie('userData')!
@@ -44,13 +44,11 @@ function DashBoard() {
       if (userDataFromLocal?.email) {
         const { email, password } = userDataFromLocal;
 
-        if (email && password) dispatch(fetchCarts({ email, password }));
-
-        const resMyOrders = (await getMyOrders(email, password!)) as Order[];
-
-        if (resMyOrders.length) {
-          setMyOrders(resMyOrders);
+        if (email && password) {
+          //dispatch(fetchCarts({ email, password }));
+          dispatch(fetchOrders({ email, password }));
         }
+
       }
     };
 
@@ -108,8 +106,11 @@ function DashBoard() {
       </div>
       <div className={myOrdersStyle}>
         <h3>Orders</h3>
-        {myOrders.map((o) => (
-          <div key={o.id}></div>
+        {orders.map((o) => (
+          <div key={o.id}>
+            <div className="">{o.id}</div>
+            <div className="">{o.orderState}</div>
+          </div>
         ))}
       </div>
     </div>

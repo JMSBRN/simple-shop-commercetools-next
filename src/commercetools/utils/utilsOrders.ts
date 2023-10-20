@@ -3,7 +3,7 @@ import { apiRoot } from '../BuildClient';
 
 export const getOrders = async (ID?: string) => {
   if (ID) return await apiRoot.orders().withId({ ID }).get().execute();
-  return await apiRoot.orders().get().execute();
+  return (await apiRoot.orders().get().execute()).body.results;
 };
 
 export const deleteOrder = async (ID: string, version: number) => {

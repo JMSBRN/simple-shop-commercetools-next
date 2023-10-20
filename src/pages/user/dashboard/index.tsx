@@ -1,14 +1,24 @@
-import { Cart, Order } from '@commercetools/platform-sdk';
 import React, { useEffect, useState } from 'react';
-import { getMyCarts, getMyOrders } from '@/commercetools/utils/utilsMe';
+import {
+  deleteCart,
+  getMoneyValueFromCartField,
+} from '@/commercetools/utils/utilsCarts';
+import {
+  deleteCookieFromLocal,
+  getDecryptedDataFromCookie,
+} from '@/commercetools/utils/secureCookiesUtils';
+import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import CartLineItem from '@/components/cart/cart-line-item/CartLineItem';
 import { GetServerSideProps } from 'next';
+import { Order } from '@commercetools/platform-sdk';
 import { OriginalTotal } from '@/components/cart/original-sub-total/OriginalSubTotal';
 import { UserData } from '@/interfaces';
-import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
-import { getMoneyValueFromCartField } from '@/commercetools/utils/utilsCarts';
+import { fetchCarts } from '@/features/thunks/FetchCarts';
+import { getMyOrders } from '@/commercetools/utils/utilsMe';
+import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../../styles/DashBoardPage.module.scss';
+import { useRouter } from 'next/router';
 
 function DashBoard() {
   const {
@@ -19,24 +29,25 @@ function DashBoard() {
     cartSubTotal,
     cartTotal,
     myOrdersStyle,
+    topButtonsStyle,
   } = styles;
-  const [myCarts, setMyCarts] = useState<Cart[]>([]);
   const [myOrders, setMyOrders] = useState<Order[]>([]);
+  const dispatch = useAppDispatch();
+  const { carts } = useAppSelector(selectCommerceTools);
+  const { push } = useRouter();
+  const userDataFromLocal = JSON.parse(
+    getDecryptedDataFromCookie('userData')!
+  ) as UserData;
 
   useEffect(() => {
     const fn = async () => {
-      const userDataFromLocal = JSON.parse(
-        getDecryptedDataFromCookie('userData')!
-      ) as UserData;
-
       if (userDataFromLocal?.email) {
         const { email, password } = userDataFromLocal;
-        const resMycarts = (await getMyCarts(email, password!)) as Cart[];
+
+        if (email && password) dispatch(fetchCarts({ email, password }));
+
         const resMyOrders = (await getMyOrders(email, password!)) as Order[];
 
-        if (resMycarts.length) {
-          setMyCarts(resMycarts);
-        }
         if (resMyOrders.length) {
           setMyOrders(resMyOrders);
         }
@@ -44,15 +55,34 @@ function DashBoard() {
     };
 
     fn();
-  }, []);
+  }, [dispatch, userDataFromLocal]);
+
+  const handleDeleteMyCart = async (cartId: string) => {
+    const res = await deleteCart(cartId);
+
+    if (res?.statusCode === 200) {
+      dispatch(fetchCarts(userDataFromLocal));
+      deleteCookieFromLocal('currentCartId');
+    }
+  };
+  const handleCheckoutMyCart = async (cartId: string) => {
+    push(`/checkout/${cartId}`);
+  };
+  const handleViewMyCart = async (cartId: string) => {
+    push(`/cart/${cartId}`);
+  };
 
   return (
     <div className={dashboardContainer}>
       <div className={myCartsStyle}>
         <h3>Active Carts</h3>
-        {myCarts.map((c) => (
+        {carts.filter(c => c.cartState === 'Active').map((c) => (
           <div className={myCartStyle} key={c.id}>
-            <div>{c.cartState}</div>
+            <div className={topButtonsStyle}>
+              <div onClick={() => handleDeleteMyCart(c.id)}>delete</div>
+              <div onClick={() => handleCheckoutMyCart(c.id)}>checkout</div>
+              <div onClick={() => handleViewMyCart(c.id)}>view</div>
+            </div>
             <div className={cartLineItems}>
               {c.lineItems.map((l) => (
                 <CartLineItem

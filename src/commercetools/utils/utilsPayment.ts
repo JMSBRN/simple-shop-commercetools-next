@@ -25,27 +25,25 @@ export const deletePayment = async function name(ID: string, version: number) {
     })
     .execute();
 };
-export const deleteAlPaymentsFromCart = async (
-  cartId: string
-) => {
-  const  { paymentInfo } = await getCarts(cartId) as Cart;
+export const deleteAlPaymentsFromCart = async (cartId: string) => {
+  const { paymentInfo } = (await getCarts(cartId)) as Cart;
 
-  if(paymentInfo) {
+  if (paymentInfo) {
     const res = Promise.all(
       paymentInfo.payments?.map(async (p) => {
-        const resPayment = await getPayments(p.id) as ClientResponse<Payment>;
+        const resPayment = (await getPayments(p.id)) as ClientResponse<Payment>;
         const { version } = resPayment.body;
 
         if (p.id) {
-         const res =  await removePaymentFromCart(cartId, p.id);
+          const res = await removePaymentFromCart(cartId, p.id);
 
-         if(res.statusCode === 200) {
-          return await deletePayment(p.id, version);
-         }
-        } 
+          if (res.statusCode === 200) {
+            return await deletePayment(p.id, version);
+          }
+        }
       })
     );
-  
+
     return (await res).every((res) => res !== undefined);
   }
 };

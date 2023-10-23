@@ -1,10 +1,14 @@
-import { Cart, Category, Order, Product, ShoppingList } from '@commercetools/platform-sdk';
+import {
+  Cart,
+  Category,
+  Order,
+  Product,
+  ShoppingList,
+} from '@commercetools/platform-sdk';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/store/store';
 import { fetchCarts } from '../thunks/FetchCarts';
-import {
-  fetchCategories,
-} from '../thunks/FetchCategories';
+import { fetchCategories } from '../thunks/FetchCategories';
 import { fetchOrders } from '../thunks/FetchOrders';
 import { fetchProducts } from '../thunks/FetchProducts';
 import { fetchShoppingLists } from '../thunks/FetchShoppingLists';
@@ -31,7 +35,7 @@ const initialState: InitialState = {
   shoppingLists: [],
   cart: {} as Cart,
   carts: [] as Cart[],
-  userName: ''
+  userName: '',
 };
 const commerceToolseSlice = createSlice({
   name: 'commercetools',
@@ -60,7 +64,7 @@ const commerceToolseSlice = createSlice({
     },
     setUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -101,7 +105,7 @@ export const {
   setCountry,
   setShoppingLists,
   setCarts,
-  setUserName
+  setUserName,
 } = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;
 export default commerceToolseSlice.reducer;

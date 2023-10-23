@@ -18,12 +18,14 @@ function CartLineItem({
   cartId,
   version,
   lineItem,
+  isDeleteBtnNotExisted,
   isQuantityButtonsExisted,
   isTotlaSummExisted,
 }: {
   cartId: string;
   version: number;
   lineItem: LineItem;
+  isDeleteBtnNotExisted?: boolean;
   isQuantityButtonsExisted?: boolean;
   isTotlaSummExisted?: boolean;
 }) {
@@ -99,12 +101,12 @@ function CartLineItem({
 
   return (
     <div className={lineItemStyle}>
-      <div
+      {!isDeleteBtnNotExisted && <div
         className={deleteLineItem}
         onClick={() => handleDeleteLineItem(cartId, version, id)}
       >
         delete
-      </div>
+      </div>}
       <Image
         priority
         src={images?.find((el) => el.url)?.url!}

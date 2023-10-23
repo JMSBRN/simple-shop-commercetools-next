@@ -1,7 +1,6 @@
 import {
   Customer,
   Order,
-  OrderPagedQueryResponse,
   Payment,
   PaymentPagedQueryResponse,
 } from '@commercetools/platform-sdk';
@@ -24,16 +23,14 @@ import styles from './WelcomePage.module.scss';
 function WelcomePage() {
   const { carts } = useAppSelector(selectCommerceTools);
   const dispatch = useAppDispatch();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[]>([] as Order[]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
 
   const fetchOrders = async () => {
-    const { body } =
-      (await getOrders()) as ClientResponse<OrderPagedQueryResponse>;
-    const { results } = body!;
+    const res = (await getOrders()) as Order[];
 
-    if (results) setOrders(results);
+    if (res.length) setOrders(res);
   };
   const fetchPayments = async () => {
     const { body } =
@@ -61,32 +58,32 @@ function WelcomePage() {
       <div>
         cards for delete
         {carts.map((el) => (
-          <div
-            key={el.id}
-            style={{ cursor: 'pointer' }}
-          >
+          <div key={el.id} style={{ cursor: 'pointer' }}>
             {el.id}
-            <div 
-               onClick={async () => {
+            <div
+              onClick={async () => {
                 await deleteCart(el.id);
                 dispatch(fetchCarts());
                 deleteCookieFromLocal('currentCartId');
               }}
-            >{el.cartState}</div>
+            >
+              {el.cartState}
+            </div>
             <div className="">{el.createdBy?.clientId}</div>
             <div className="">
               {' '}
               payment id: {el.paymentInfo?.payments[0].id}
             </div>
             <div className=""> anonymousId: {el.anonymousId}</div>
-            {
-              el.lineItems.map(l => (
-                <div key={l.id}>
-                  <CartLineItem cartId={el.id} version={el.version} lineItem={l}  />
-                </div>
-              ))
-            }
-
+            {el.lineItems.map((l) => (
+              <div key={l.id}>
+                <CartLineItem
+                  cartId={el.id}
+                  version={el.version}
+                  lineItem={l}
+                />
+              </div>
+            ))}
           </div>
         ))}
       </div>
@@ -129,6 +126,18 @@ function WelcomePage() {
             {el.id}
             <div className="">{el.orderState}</div>
             <div className="">{el.createdBy?.clientId}</div>
+            <div className="">
+              {' '}
+              {el.lineItems.map((l) => (
+                <div key={l.id}>
+                  <CartLineItem
+                    cartId={el.id}
+                    version={el.version}
+                    lineItem={l}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>

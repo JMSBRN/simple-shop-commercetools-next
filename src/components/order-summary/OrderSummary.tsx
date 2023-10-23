@@ -1,8 +1,4 @@
-import {
-  BaseAddress,
-  Cart,
-  ShippingMethod,
-} from '@commercetools/platform-sdk';
+import { BaseAddress, Cart, ShippingMethod } from '@commercetools/platform-sdk';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   addPaymentToCart,
@@ -284,7 +280,7 @@ function OrderSummary({
         {getMoneyValueFromCartField(cart.shippingInfo?.taxedPrice?.totalGross!)}
       </div>
       <div className={paymentMethodContainer}>
-        { paymantsFields.map((el, idx) => (
+        {paymantsFields.map((el, idx) => (
           <label key={idx}>
             {removeUnderscores(el)}
             <input

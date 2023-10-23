@@ -7,7 +7,7 @@ import { getOrders } from '@/commercetools/utils/utilsOrders';
 export const fetchOrders = createAsyncThunk<
   Order[],
   CredentialsForMyApiCall | undefined
->('carts/fetchCarts', async (args) => {
+>('orders/fetchOrders', async (args) => {
   const { email, password } = args || {};
 
   try {

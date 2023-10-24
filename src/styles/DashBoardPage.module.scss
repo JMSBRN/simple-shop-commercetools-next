@@ -1,4 +1,5 @@
 @import 'mixins';
+@import 'variables';
 
 .dashboardContainer {
     margin: 100px auto;
@@ -18,7 +19,7 @@
     min-height: 600px;
     padding: 10px;
     @include flex(center, flex-start, column);
-    border: 1px solid rgb(128, 128, 128, 0.4);
+    border: $border;
 
     h3 {
         margin-bottom: 20px;
@@ -32,7 +33,7 @@
     min-width: 400px;
     height: auto;
     padding: 10px;
-    border: 1px solid rgb(128, 128, 128, 0.4);
+    border: $border;
     color: rgb(128, 128, 128, 0.5);
 }
 
@@ -73,7 +74,23 @@
 
 .cartTotal {}
 
+.orderContainer {
+    position: relative;
+    width: 95%;
+    padding: 10px;
+    height: auto;
+    border:$border;
+    color: grey;
+}
+.deleteOrderStyle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: rgb(255, 73, 73);
+}
+
 .orderUserDataStyle {
+    margin: 10px auto;
     width: 100%;
     height: auto;
     @include flex(flex-start, center);

@@ -10,10 +10,12 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import CartLineItem from '@/components/cart/cart-line-item/CartLineItem';
 import { GetServerSideProps } from 'next';
+import { Order } from '@commercetools/platform-sdk';
 import { OriginalTotal } from '@/components/cart/original-sub-total/OriginalSubTotal';
 import PaymentInfo from '@/components/payment-info/PaymentInfo';
 import { UserData } from '@/interfaces';
 import { deleteOrder } from '@/commercetools/utils/utilsOrders';
+import { deletePayment } from '@/commercetools/utils/utilsPayment';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { fetchOrders } from '@/features/thunks/FetchOrders';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
@@ -31,8 +33,11 @@ function DashBoard() {
     cartTotal,
     myOrdersStyle,
     topButtonsStyle,
+    orderContainer,
     orderUserDataStyle,
+    deleteOrderStyle,
   } = styles;
+
   const dispatch = useAppDispatch();
   const { carts, orders } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
@@ -68,6 +73,18 @@ function DashBoard() {
   };
   const handleViewMyCart = async (cartId: string) => {
     push(`/cart/${cartId}`);
+  };
+
+  const handleDeleteOrder = async (order: Order) => {
+    const { id, version, paymentInfo, cart, } = order;
+    const paymentId = paymentInfo?.payments.find((p) => p.id)?.id!;
+
+    await deleteOrder(id, version);
+    await deleteCart(cart?.id!);
+    await deletePayment(paymentId);
+    dispatch(fetchOrders());
+    dispatch(fetchCarts());
+    deleteCookieFromLocal('currentCartId');
   };
 
   return (
@@ -109,22 +126,14 @@ function DashBoard() {
       <div className={myOrdersStyle}>
         <h3>Orders</h3>
         {orders.map((o) => (
-          <div key={o.id}>
-            <div>Order Status : {o.orderState}</div>
+          <div className={orderContainer} key={o.id}>
             <div
-              className="deleteOrderStyle"
-              onClick={async () => {
-                await deleteOrder(o.id, o.version);
-                await deleteCart(o.cart?.id!);
-                dispatch(fetchOrders());
-                dispatch(fetchCarts());
-                deleteCookieFromLocal('currentCartId');
-              }}
+              className={deleteOrderStyle}
+              onClick={() => handleDeleteOrder(o)}
             >
-              {' '}
-              delete Order
+              delete
             </div>
-            <br />
+            <div>Order Status : {o.orderState}</div>
             <div className={orderUserDataStyle}>
               <div>
                 <h4>Billing Data</h4>

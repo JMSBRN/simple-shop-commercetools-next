@@ -14,7 +14,10 @@ export const getPayments = async function name(ID?: string) {
   return await apiRoot.payments().get().execute();
 };
 
-export const deletePayment = async function name(ID: string, version: number) {
+export const deletePayment = async function name(ID: string) {
+  const { body } = await getPayments(ID) as ClientResponse<Payment>;
+  const { version } = body;
+
   return await apiRoot
     .payments()
     .withId({ ID })
@@ -31,14 +34,12 @@ export const deleteAlPaymentsFromCart = async (cartId: string) => {
   if (paymentInfo) {
     const res = Promise.all(
       paymentInfo.payments?.map(async (p) => {
-        const resPayment = (await getPayments(p.id)) as ClientResponse<Payment>;
-        const { version } = resPayment.body;
 
         if (p.id) {
           const res = await removePaymentFromCart(cartId, p.id);
 
           if (res.statusCode === 200) {
-            return await deletePayment(p.id, version);
+            return await deletePayment(p.id);
           }
         }
       })

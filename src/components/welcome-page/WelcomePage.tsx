@@ -147,7 +147,7 @@ function WelcomePage() {
           <div
             key={el.id}
             onClick={async () => {
-              await deletePayment(el.id, el.version);
+              await deletePayment(el.id);
               fetchPayments();
             }}
             style={{ cursor: 'pointer' }}

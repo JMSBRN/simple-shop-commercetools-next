@@ -21,6 +21,6 @@ export const fetchOrders = createAsyncThunk<
       return res as Order[];
     }
   } catch (error) {
-    throw new Error(`Error fetching carts from commercetools: ${error}`);
+    throw new Error(`Error fetching orders from commercetools: ${error}`);
   }
 });

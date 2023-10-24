@@ -51,6 +51,11 @@ export const RegistrationMe = async (args: MyCustomerDraft) => {
     })
     .execute();
 };
+export const getMyDetails = async (email: string, password: string) => {
+  const apiRootWithPass = getApiRootWithPasswordFlow(email, password);
+
+  return (await apiRootWithPass.me().get().execute());
+};
 
 export const getMyCarts = async (
   email: string,

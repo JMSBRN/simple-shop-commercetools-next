@@ -6,7 +6,7 @@ import {
 } from '@commercetools/platform-sdk';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  deleteCustomerWithId,
+  deleteCustomer,
   getCustomers,
 } from '@/commercetools/utils/utilsCustomers';
 import { deleteOrder, getOrders } from '@/commercetools/utils/utilsOrders';
@@ -93,7 +93,7 @@ function WelcomePage() {
           <div
             key={el.id}
             onClick={async () => {
-              const { id } = (await deleteCustomerWithId(
+              const { id } = (await deleteCustomer(
                 el.id,
                 el.version
               )) as Customer;

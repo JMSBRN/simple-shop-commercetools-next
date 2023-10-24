@@ -11,3 +11,13 @@ export interface CredentialsForMyApiCall {
   email: string;
   password: string;
 }
+
+export interface CustomerInfo {
+  salutation?: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  dateOfBirth?: string;
+  email: string;
+  companyName?: string;
+} 

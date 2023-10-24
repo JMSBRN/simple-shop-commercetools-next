@@ -1,6 +1,7 @@
 import React, { HTMLInputTypeAttribute } from 'react';
 import { AuthCustomerDraftFields } from '../formsInterfaces';
 import { BaseAddress } from '@commercetools/platform-sdk';
+import { CustomerInfo } from '@/interfaces';
 import styles from './InputField.module.scss';
 
 function InputField({
@@ -10,7 +11,7 @@ function InputField({
   formData,
   handleChange,
 }: {
-  fieldName: keyof AuthCustomerDraftFields | keyof BaseAddress ;
+  fieldName: keyof AuthCustomerDraftFields | keyof BaseAddress | keyof CustomerInfo | string ;
   formData: any;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   fieldType?: HTMLInputTypeAttribute | undefined;

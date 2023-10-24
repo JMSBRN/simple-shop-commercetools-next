@@ -1,0 +1,48 @@
+@import 'mixins';
+@import 'variables';
+
+.customerContainer {
+    width: 100%;
+    height: auto;
+}
+
+.customerInfoContainer {
+    width: 100%;
+    height: auto;
+    min-height: 300px;
+    @include flex(flex-start, space-around);
+    color: grey;
+}
+.customerInfoStyle,
+.customerAddressStyle
+{
+    height: auto;
+    min-height: 200px;
+    @include flex(flex-start, flex-start, column);
+    h4 {
+        margin-bottom: 20px;
+    }
+    div {
+        margin-bottom: 5px;
+    }
+}
+
+.customerBtnsContainer  {
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+    @include flex(center, space-around);
+    button {
+        padding: 3px 9px;
+        text-transform: uppercase;
+        font-size: 16px;
+        border: $border;
+        color: grey;
+        cursor: pointer;
+        &:hover  {
+            background-color: white;
+            color: grey;
+        }
+    }
+}
+

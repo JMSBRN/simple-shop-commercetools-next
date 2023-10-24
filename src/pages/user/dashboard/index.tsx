@@ -10,6 +10,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import CartLineItem from '@/components/cart/cart-line-item/CartLineItem';
 import { GetServerSideProps } from 'next';
+import MyCustomer from '@/components/my-customer/MyCustomer';
 import { Order } from '@commercetools/platform-sdk';
 import { OriginalTotal } from '@/components/cart/original-sub-total/OriginalSubTotal';
 import PaymentInfo from '@/components/payment-info/PaymentInfo';
@@ -26,6 +27,7 @@ import { useRouter } from 'next/router';
 function DashBoard() {
   const {
     dashboardContainer,
+    myInfoStyle,
     myCartsStyle,
     myCartStyle,
     cartLineItems,
@@ -89,6 +91,9 @@ function DashBoard() {
 
   return (
     <div className={dashboardContainer}>
+      <div className={myInfoStyle}>
+        <MyCustomer email={userDataFromLocal.email} password={userDataFromLocal.password}/>
+      </div>
       <div className={myCartsStyle}>
         <h3>Active Carts</h3>
         {carts

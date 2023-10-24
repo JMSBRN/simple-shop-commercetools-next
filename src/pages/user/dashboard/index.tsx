@@ -76,7 +76,7 @@ function DashBoard() {
   };
 
   const handleDeleteOrder = async (order: Order) => {
-    const { id, version, paymentInfo, cart, } = order;
+    const { id, version, paymentInfo, cart } = order;
     const paymentId = paymentInfo?.payments.find((p) => p.id)?.id!;
 
     await deleteOrder(id, version);
@@ -173,6 +173,11 @@ function DashBoard() {
                 <div key={p.id}>
                   <div>
                     <PaymentInfo paymentId={p.id} />
+                    <div> Delivery : {o.shippingInfo?.shippingMethodName}</div>
+                    <div>
+                      {' '}
+                      Sum Total : {getMoneyValueFromCartField(o.totalPrice)}
+                    </div>
                   </div>
                 </div>
               ))}

@@ -18,6 +18,5 @@ export interface CustomerInfo {
   middleName?: string;
   lastName?: string;
   dateOfBirth?: string;
-  email: string;
   companyName?: string;
 } 

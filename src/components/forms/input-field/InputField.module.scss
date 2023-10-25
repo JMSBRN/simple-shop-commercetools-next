@@ -1,14 +1,17 @@
 @import 'variables';
 
 .inputContainer {
+
     input[type="text"],
     input[type="password"],
+    input[type="date"],
     input[type="email"] {
         width: 100%;
         padding: $input-padding;
         font-size: $input-font-size;
         border: none;
         border-bottom: 2px solid #ccc;
+        background-color: white;
         transition: border-color 0.3s;
 
         &:focus {
@@ -25,9 +28,10 @@
         display: block;
         text-transform: uppercase;
         text-align: start;
-        color:gray;
+        color: gray;
         font-size: $input-font-size;
         margin-bottom: 6px;
+
         span {
             color: rgb(255, 0, 0, 0.6);
         }

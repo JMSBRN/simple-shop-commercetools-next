@@ -7,27 +7,30 @@ import styles from './InputField.module.scss';
 function InputField({
   fieldName,
   fieldType,
-  isNotRequired,
+  isRequired,
   formData,
   handleChange,
+  defaultValue,
 }: {
   fieldName: keyof AuthCustomerDraftFields | keyof BaseAddress | keyof CustomerInfo | string ;
   formData: any;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   fieldType?: HTMLInputTypeAttribute | undefined;
-  isNotRequired?: boolean;
+  isRequired?: boolean;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  defaultValue?: string | number | readonly string[];
 }) {
   return (
     <div key={fieldName} className={styles.inputContainer}>
       <label>
         {fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
-        {!isNotRequired && <span>*</span>}
+        {(isRequired === undefined) && <span>*</span>}
         <input
           type={fieldType || 'text'}
           name={fieldName}
-          value={formData[fieldName] || ''}
+          value={formData[fieldName] || defaultValue || ''}
           onChange={handleChange}
-          required={isNotRequired || true}
+          required={isRequired === undefined ? true : isRequired}
+
         />
       </label>
     </div>

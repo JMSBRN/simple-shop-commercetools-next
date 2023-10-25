@@ -60,7 +60,8 @@ function DashBoard() {
     };
 
     fn();
-  }, [dispatch, userDataFromLocal]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   const handleDeleteMyCart = async (cartId: string) => {
     const res = await deleteCart(cartId);
@@ -92,7 +93,10 @@ function DashBoard() {
   return (
     <div className={dashboardContainer}>
       <div className={myInfoStyle}>
-        <MyCustomer email={userDataFromLocal.email} password={userDataFromLocal.password}/>
+        <MyCustomer
+          email={userDataFromLocal.email}
+          password={userDataFromLocal.password}
+        />
       </div>
       <div className={myCartsStyle}>
         <h3>Active Carts</h3>

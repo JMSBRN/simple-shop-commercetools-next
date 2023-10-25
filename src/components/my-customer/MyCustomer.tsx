@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { getMyDetails, updateMyDetails } from '@/commercetools/utils/utilsMe';
 import { Address } from 'cluster';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Customer } from '@commercetools/platform-sdk';
 import { CustomerInfo } from '@/interfaces';
 import InputField from '../forms/input-field/InputField';
-import { getMyDetails } from '@/commercetools/utils/utilsMe';
+import { getCustomers } from '@/commercetools/utils/utilsCustomers';
 import styles from './MyCustomer.module.scss';
 
 function MyCustomer({ email, password }: { email: string; password: string }) {
@@ -13,25 +15,27 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
     customerInfoStyle,
     customerAddressStyle,
     customerBtnsContainer,
+    updateUserInfoModal,
   } = styles;
   const [customer, setCustomer] = useState<Customer>({} as Customer);
-  // const [isAddresFormRendered, setIsAddresFormRendered] =
-  //   useState<boolean>(false);
+  const [isAddresFormRendered, setIsAddresFormRendered] =
+    useState<boolean>(false);
   const [formData, setFormData] = useState<CustomerInfo>({} as CustomerInfo);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const fetchMyDetails = useCallback(async () => {
+    if (email && password) {
+      const res = await getMyDetails(email, password);
+
+      if (res.statusCode === 200) {
+        setCustomer(res.body);
+      }
+    }
+  }, [email, password]);
 
   useEffect(() => {
-    const fn = async () => {
-      if(email && password) {
-        const res = await getMyDetails(email, password);
-  
-        if (res.statusCode === 200) {
-          setCustomer(res.body);
-        }
-      }
-    };
-
-    fn();
-  }, [email, password]);
+    fetchMyDetails();
+  }, [email, fetchMyDetails, password]);
 
   if (customer.id) {
     const {
@@ -40,7 +44,6 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
       middleName,
       lastName,
       dateOfBirth,
-      email,
       companyName,
       addresses,
     } = customer;
@@ -50,15 +53,45 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
       middleName,
       lastName,
       dateOfBirth,
-      email,
       companyName,
     };
-    const handeSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
-      const value = e.target;
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (formRef.current) {
+        const formDataObject: Record<string, any> = {};
 
-       console.log(value);
-       
+        const formElements = Array.from(
+          formRef.current.elements
+        ) as HTMLInputElement[];
+
+        formElements.forEach((element) => {
+          if (element.name) {
+            formDataObject[element.name] = element.value;
+          }
+        });
+        const newFormData = formDataObject as CustomerInfo;
+
+        console.log(newFormData);
+
+        const { body } = (await getCustomers(
+          customer.id
+        )) as ClientResponse<Customer>;
+        const { version } = body!;
+
+        const res = await updateMyDetails(
+          email,
+          password,
+          newFormData,
+          version
+        );
+
+        if (res?.statusCode === 200) {
+          setIsAddresFormRendered(false);
+          fetchMyDetails();
+        }
+      }
     };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
 
@@ -70,7 +103,8 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
 
     const renderInputField = (
       fieldName: keyof CustomerInfo | string,
-      fieldType?: string
+      fieldType?: string,
+      defaultValue?: string | number | readonly string[]
     ) => {
       return (
         <InputField
@@ -78,21 +112,28 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
           fieldType={fieldType}
           formData={formData}
           handleChange={handleChange}
+          defaultValue={defaultValue}
+          isRequired={false}
         />
       );
+    };
+    const handleUpdateAccount = async () => {
+      setIsAddresFormRendered(true);
     };
 
     return (
       <div className={customerContainer}>
-        {false && (
-          <div >
-            <form onSubmit={handeSubmit}>
-              {Object.keys(customerInfo).map((k) => (
-                <div key={k}>
-                  {renderInputField(k)}
-                </div>
+        {isAddresFormRendered && (
+          <div className={updateUserInfoModal}>
+            <form ref={formRef} onSubmit={handleSubmit}>
+              {Object.entries(customerInfo).map(([key, value]) => (
+                <label key={key}>
+                  {key === 'dateOfBirth'
+                    ? renderInputField(key, 'date', value)
+                    : renderInputField(key, undefined, value)}
+                </label>
               ))}
-              <input type="submit"/>
+              <input type="submit" />
             </form>
           </div>
         )}
@@ -125,7 +166,7 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
           </div>
         </div>
         <div className={customerBtnsContainer}>
-          <button>Update Account Data</button>
+          <button onClick={handleUpdateAccount}>Update Account Data</button>
           <button>Delete Account</button>
         </div>
       </div>

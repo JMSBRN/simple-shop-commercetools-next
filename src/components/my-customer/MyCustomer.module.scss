@@ -16,6 +16,7 @@
 .customerInfoStyle,
 .customerAddressStyle
 {
+    position: relative;
     height: auto;
     min-height: 200px;
     @include flex(flex-start, flex-start, column);
@@ -42,6 +43,28 @@
         &:hover  {
             background-color: white;
             color: grey;
+        }
+    }
+}
+
+.updateUserInfoModal {
+    position: absolute;
+    width: 500px;
+    height: auto;
+    padding: 10px 20px;
+    z-index: 10;
+    background-color: white;
+    form {
+        margin: 3px auto;
+        width: 90%;
+        height: auto;
+        input[type="submit"] {
+            margin-top: 10px;
+            width: 100px;
+            font-size: 16px;
+            text-transform: uppercase;
+            cursor: pointer;
+
         }
     }
 }

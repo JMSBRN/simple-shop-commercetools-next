@@ -1,4 +1,5 @@
 import { apiRoot, getApiRootWithPasswordFlow } from '../BuildClient';
+import { CustomerInfo } from '@/interfaces';
 import { MyCustomerDraft } from '@commercetools/platform-sdk';
 
 export const Login = async (
@@ -54,7 +55,62 @@ export const RegistrationMe = async (args: MyCustomerDraft) => {
 export const getMyDetails = async (email: string, password: string) => {
   const apiRootWithPass = getApiRootWithPasswordFlow(email, password);
 
-  return (await apiRootWithPass.me().get().execute());
+  return await apiRootWithPass.me().get().execute();
+};
+
+export const updateMyDetails = async (
+  email: string,
+  password: string,
+  customerInfo: CustomerInfo,
+  customerVersion: number
+) => {
+  const apiRootWithPass = getApiRootWithPasswordFlow(email, password);
+
+  if (customerInfo.firstName) {
+    const {
+      salutation,
+      firstName,
+      middleName,
+      lastName,
+      companyName,
+      dateOfBirth,
+    } = customerInfo;
+
+   return (await apiRootWithPass
+      .me()
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'setSalutation',
+              salutation,
+            },
+            {
+              action: 'setFirstName',
+              firstName,
+            },
+            {
+              action: 'setMiddleName',
+              middleName,
+            },
+            {
+              action: 'setLastName',
+              lastName,
+            },
+            {
+              action: 'setCompanyName',
+              companyName,
+            },
+            {
+              action: 'setDateOfBirth',
+              dateOfBirth,
+            },
+          ],
+        },
+      })
+      .execute());
+  }
 };
 
 export const getMyCarts = async (

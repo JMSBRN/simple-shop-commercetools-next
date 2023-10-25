@@ -1,8 +1,6 @@
 import {
   Customer,
   Order,
-  Payment,
-  PaymentPagedQueryResponse,
 } from '@commercetools/platform-sdk';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
@@ -10,35 +8,28 @@ import {
   getCustomers,
 } from '@/commercetools/utils/utilsCustomers';
 import { deleteOrder, getOrders } from '@/commercetools/utils/utilsOrders';
-import { deletePayment, getPayments } from '@/commercetools/utils/utilsPayment';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import CartLineItem from '../cart/cart-line-item/CartLineItem';
-import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { deleteCart } from '@/commercetools/utils/utilsCarts';
 import { deleteCookieFromLocal } from '@/commercetools/utils/secureCookiesUtils';
+import { deletePayment } from '@/commercetools/utils/utilsPayment';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
+import { fetchPayments } from '@/features/thunks/FetchPayments';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './WelcomePage.module.scss';
 
 function WelcomePage() {
-  const { carts } = useAppSelector(selectCommerceTools);
+  const { carts, payments } = useAppSelector(selectCommerceTools);
   const dispatch = useAppDispatch();
   const [orders, setOrders] = useState<Order[]>([] as Order[]);
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [payments, setPayments] = useState<Payment[]>([]);
 
   const fetchOrders = async () => {
     const res = (await getOrders()) as Order[];
 
     if (res.length) setOrders(res);
   };
-  const fetchPayments = async () => {
-    const { body } =
-      (await getPayments()) as ClientResponse<PaymentPagedQueryResponse>;
-    const { results } = body!;
 
-    if (results) setPayments(results);
-  };
   const fetchCustomers = useCallback(async () => {
     const res = (await getCustomers()) as Customer[];
 
@@ -48,8 +39,8 @@ function WelcomePage() {
   useEffect(() => {
     fetchOrders();
     fetchCustomers();
-    fetchPayments();
     dispatch(fetchCarts());
+    dispatch(fetchPayments());
   }, [dispatch, fetchCustomers]);
 
   return (

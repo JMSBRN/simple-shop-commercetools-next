@@ -7,14 +7,14 @@ import {
 import { getCarts, removePaymentFromCart } from './utilsCarts';
 import { apiRoot } from '../BuildClient';
 
-export const getPayments = async function name(ID?: string) {
+export const getPayments = async (ID?: string) =>  {
   if (ID) {
     return await apiRoot.payments().withId({ ID }).get().execute();
   }
   return await apiRoot.payments().get().execute();
 };
 
-export const deletePayment = async function name(ID: string) {
+export const deletePayment = async (ID: string) => {
   const { body } = await getPayments(ID) as ClientResponse<Payment>;
   const { version } = body;
 
@@ -28,6 +28,7 @@ export const deletePayment = async function name(ID: string) {
     })
     .execute();
 };
+
 export const deleteAlPaymentsFromCart = async (cartId: string) => {
   const { paymentInfo } = (await getCarts(cartId)) as Cart;
 

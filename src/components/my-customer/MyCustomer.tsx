@@ -21,10 +21,12 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
 
   useEffect(() => {
     const fn = async () => {
-      const res = await getMyDetails(email, password);
-
-      if (res.statusCode === 200) {
-        setCustomer(res.body);
+      if(email && password) {
+        const res = await getMyDetails(email, password);
+  
+        if (res.statusCode === 200) {
+          setCustomer(res.body);
+        }
       }
     };
 

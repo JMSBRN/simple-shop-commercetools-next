@@ -2,6 +2,7 @@ import {
   Cart,
   Category,
   Order,
+  Payment,
   Product,
   ShoppingList,
 } from '@commercetools/platform-sdk';
@@ -10,6 +11,7 @@ import { RootState } from '@/store/store';
 import { fetchCarts } from '../thunks/FetchCarts';
 import { fetchCategories } from '../thunks/FetchCategories';
 import { fetchOrders } from '../thunks/FetchOrders';
+import { fetchPayments } from '../thunks/FetchPayments';
 import { fetchProducts } from '../thunks/FetchProducts';
 import { fetchShoppingLists } from '../thunks/FetchShoppingLists';
 
@@ -23,6 +25,7 @@ interface InitialState {
   shoppingLists: ShoppingList[];
   cart: Cart;
   carts: Cart[];
+  payments: Payment[];
   userName: string;
 }
 const initialState: InitialState = {
@@ -35,6 +38,7 @@ const initialState: InitialState = {
   shoppingLists: [],
   cart: {} as Cart,
   carts: [] as Cart[],
+  payments: [] as Payment[],
   userName: '',
 };
 const commerceToolseSlice = createSlice({
@@ -62,6 +66,9 @@ const commerceToolseSlice = createSlice({
     setOrders: (state, action: PayloadAction<Order[]>) => {
       state.orders = action.payload;
     },
+    setPayments: (state, action: PayloadAction<Payment[]>) => {
+      state.payments = action.payload;
+    },
     setUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
     },
@@ -87,6 +94,10 @@ const commerceToolseSlice = createSlice({
         state.status = 'succeeded';
         state.categories = action.payload;
       })
+      .addCase(fetchPayments.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.payments = action.payload;
+      })
       .addCase(fetchProducts.pending, (state) => {
         state.status = 'loading';
       })
@@ -105,6 +116,7 @@ export const {
   setCountry,
   setShoppingLists,
   setCarts,
+  setPayments,
   setUserName,
 } = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;

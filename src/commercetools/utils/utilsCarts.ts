@@ -4,8 +4,8 @@ import {
   TypedMoney,
   _BaseAddress,
 } from '@commercetools/platform-sdk';
+import { createCreditCardPayment, deletePayment } from './utilsPayment';
 import { apiRoot } from '../BuildClient';
-import { createCreditCardPayment } from './utilsPayment';
 import { getCurrencySymbol } from './utilsCommercTools';
 import { getPriceValue } from '@/commercetools/utils/utilsProductCard';
 import { getPricesFromProduct } from './utilsShoppingList';
@@ -20,7 +20,11 @@ export const getCarts = async (ID?: string) => {
 };
 export const deleteCart = async (ID: string) => {
   if (ID) {
-    const { version } = (await getCarts(ID)) as Cart;
+    const { version, paymentInfo } = (await getCarts(ID)) as Cart;
+
+    paymentInfo?.payments.forEach(async p => {
+       if(p.id) await deletePayment(p.id);
+    });
 
     return await apiRoot
       .carts()

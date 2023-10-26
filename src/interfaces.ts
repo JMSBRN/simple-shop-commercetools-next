@@ -1,9 +1,10 @@
 export interface UserData {
   customerId?: string;
-  firstName: string;
+  firstName?: string;
   email: string;
   password: string;
 }
+export type CookiesKeys = 'userData'| 'currentCartId';
 
 export type PaymentMethods = 'CREDIT_CARD' | 'PAY_PAL';
 

@@ -1,12 +1,22 @@
+import { CustomerInfo, UserData } from '@/interfaces';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  deleteAllCookiesFromLocal,
+  setEncryptedDataToCookie,
+} from '@/commercetools/utils/secureCookiesUtils';
+import {
+  deleteCustomer,
+  getCustomers,
+} from '@/commercetools/utils/utilsCustomers';
 import { getMyDetails, updateMyDetails } from '@/commercetools/utils/utilsMe';
 import { Address } from 'cluster';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Customer } from '@commercetools/platform-sdk';
-import { CustomerInfo } from '@/interfaces';
 import InputField from '../forms/input-field/InputField';
-import { getCustomers } from '@/commercetools/utils/utilsCustomers';
+import { setUserName } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MyCustomer.module.scss';
+import { useAppDispatch } from '@/hooks/storeHooks';
+import { useRouter } from 'next/router';
 
 function MyCustomer({ email, password }: { email: string; password: string }) {
   const {
@@ -22,6 +32,8 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
     useState<boolean>(false);
   const [formData, setFormData] = useState<CustomerInfo>({} as CustomerInfo);
   const formRef = useRef<HTMLFormElement>(null);
+  const dispatch = useAppDispatch();
+  const { push } = useRouter();
 
   const fetchMyDetails = useCallback(async () => {
     if (email && password) {
@@ -69,25 +81,26 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
             formDataObject[element.name] = element.value;
           }
         });
-        const newFormData = formDataObject as CustomerInfo;
-
-        console.log(newFormData);
+        setFormData(formDataObject as CustomerInfo);
 
         const { body } = (await getCustomers(
           customer.id
         )) as ClientResponse<Customer>;
         const { version } = body!;
 
-        const res = await updateMyDetails(
-          email,
-          password,
-          newFormData,
-          version
-        );
+        const res = await updateMyDetails(email, password, formData, version);
 
         if (res?.statusCode === 200) {
           setIsAddresFormRendered(false);
           fetchMyDetails();
+          const newUserData: UserData = {
+            firstName: formData.firstName,
+            email,
+            password,
+          };
+
+          dispatch(setUserName(formData.firstName!));
+          setEncryptedDataToCookie('userData', newUserData);
         }
       }
     };
@@ -104,7 +117,8 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
     const renderInputField = (
       fieldName: keyof CustomerInfo | string,
       fieldType?: string,
-      defaultValue?: string | number | readonly string[]
+      defaultValue?: string | number | readonly string[],
+      isrRequired?: boolean
     ) => {
       return (
         <InputField
@@ -113,12 +127,22 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
           formData={formData}
           handleChange={handleChange}
           defaultValue={defaultValue}
-          isRequired={false}
+          isRequired={isrRequired || false}
         />
       );
     };
     const handleUpdateAccount = async () => {
       setIsAddresFormRendered(true);
+    };
+    const handleDeleteAccount = async () => {
+      const res = await deleteCustomer(customer.id);
+
+      if (res?.id) {
+        dispatch(setUserName(''));
+        deleteAllCookiesFromLocal(['currentCartId', 'userData']);
+        setIsAddresFormRendered(true);
+        push('/');
+      }
     };
 
     return (
@@ -129,7 +153,9 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
               {Object.entries(customerInfo).map(([key, value]) => (
                 <label key={key}>
                   {key === 'dateOfBirth'
-                    ? renderInputField(key, 'date', value)
+                    ? renderInputField(key, 'date', value, true)
+                    : ['firstName', 'companyName'].includes(key)
+                    ? renderInputField(key, undefined, value, true)
                     : renderInputField(key, undefined, value)}
                 </label>
               ))}
@@ -142,7 +168,7 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
             <h4>Customer Information</h4>
             {Object.entries(customerInfo).map(([key, value]) => (
               <div key={key}>
-                <div className="">
+                <div>
                   {key.toUpperCase()} : <span>{value || 'no data'}</span>
                 </div>
               </div>
@@ -155,7 +181,7 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
                 addresses.find((a) => a.id) || ({} as Address)
               ).map(([key, value]) => (
                 <div key={key}>
-                  <div className="">
+                  <div>
                     {key.toUpperCase()} : <span>{value || 'no data'}</span>
                   </div>
                 </div>
@@ -167,7 +193,7 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
         </div>
         <div className={customerBtnsContainer}>
           <button onClick={handleUpdateAccount}>Update Account Data</button>
-          <button>Delete Account</button>
+          <button onClick={handleDeleteAccount}>Delete Account</button>
         </div>
       </div>
     );

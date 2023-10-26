@@ -60,12 +60,12 @@ function WelcomePage() {
             >
               {el.cartState}
             </div>
-            <div className="">{el.createdBy?.clientId}</div>
-            <div className="">
+            <div>{el.createdBy?.clientId}</div>
+            <div>
               {' '}
               payment id: {el.paymentInfo?.payments[0].id}
             </div>
-            <div className=""> anonymousId: {el.anonymousId}</div>
+            <div> anonymousId: {el.anonymousId}</div>
             {el.lineItems.map((l) => (
               <div key={l.id}>
                 <CartLineItem
@@ -86,7 +86,6 @@ function WelcomePage() {
             onClick={async () => {
               const { id } = (await deleteCustomer(
                 el.id,
-                el.version
               )) as Customer;
 
               if (id) fetchCustomers();
@@ -115,9 +114,9 @@ function WelcomePage() {
             style={{ cursor: 'pointer' }}
           >
             {el.id}
-            <div className="">{el.orderState}</div>
-            <div className="">{el.createdBy?.clientId}</div>
-            <div className="">
+            <div>{el.orderState}</div>
+            <div>{el.createdBy?.clientId}</div>
+            <div>
               {' '}
               {el.lineItems.map((l) => (
                 <div key={l.id}>
@@ -144,8 +143,8 @@ function WelcomePage() {
             style={{ cursor: 'pointer' }}
           >
             {el.id}
-            <div className="">{el.paymentMethodInfo.method}</div>
-            <div className="">{el.createdBy?.clientId}</div>
+            <div>{el.paymentMethodInfo.method}</div>
+            <div>{el.createdBy?.clientId}</div>
           </div>
         ))}
       </div>

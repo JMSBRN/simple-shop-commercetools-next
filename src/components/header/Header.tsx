@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  deleteCookieFromLocal,
+  deleteAllCookiesFromLocal,
   getDecryptedDataFromCookie,
 } from '@/commercetools/utils/secureCookiesUtils';
 import {
@@ -64,8 +64,7 @@ function Header() {
 
   const handleLogout = async () => {
     dispatch(setUserName(''));
-    deleteCookieFromLocal('userData');
-    deleteCookieFromLocal('currentCartId');
+    deleteAllCookiesFromLocal(['currentCartId', 'userData']);
     if (cart?.id) {
       const res = await deleteCart(cart.id);
 

@@ -25,7 +25,7 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
     ['password'],
   ];
   const signOutFormFields: (keyof AuthCustomerDraftFields)[][] = [
-    ['firstName', 'lastName'],
+    ['firstName'],
     ['email'],
     ['password'],
   ];
@@ -34,7 +34,7 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
   const onSubmitForm = async (e?: AuthCustomerDraftFields) => {
     setError('');
     if (e?.email) {
-      const { email, password, firstName, lastName } = e;
+      const { email, password, firstName } = e;
 
       switch (authMode) {
         case 'login':
@@ -70,7 +70,6 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
             email,
             password,
             firstName,
-            lastName,
           });
 
           if (result.statusCode === 201) {

@@ -13,6 +13,7 @@
         border-bottom: 2px solid #ccc;
         background-color: white;
         transition: border-color 0.3s;
+        color: gray;
 
         &:focus {
             border-color: $primary-color;
@@ -42,19 +43,6 @@
             transform: scale(1.2);
             opacity: 0;
         }
-    }
-
-    input:focus::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        pointer-events: none;
-        border-radius: inherit;
-        animation: ripple 0.5s linear;
-        background: rgba($primary-color, 0.2);
     }
 
 }

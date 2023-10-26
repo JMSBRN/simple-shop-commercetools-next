@@ -1,12 +1,12 @@
+import { CookiesKeys, UserData } from '@/interfaces';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import CryptoJS from 'crypto-js';
-import { UserData } from '@/interfaces';
 import crypto from 'crypto-js';
 
 const secretKey = process.env.CLIENT_SECRET as string;
 
 export const setEncryptedDataToCookie = (
-  key: string,
+  key: CookiesKeys,
   data: UserData | string,
   req?: any,
   res?: any
@@ -19,7 +19,7 @@ export const setEncryptedDataToCookie = (
   setCookie(key, encryptedData, { req, res });
 };
 
-export const getDecryptedDataFromCookie = (key: string) => {
+export const getDecryptedDataFromCookie = (key: CookiesKeys) => {
   const encryptedData = getCookie(key) as string;
 
   if (encryptedData) {
@@ -30,6 +30,12 @@ export const getDecryptedDataFromCookie = (key: string) => {
   return '""';
 };
 
-export const deleteCookieFromLocal = (key: string) => {
+export const deleteCookieFromLocal = (key: CookiesKeys) => {
  deleteCookie(key);
+};
+
+export const deleteAllCookiesFromLocal = async (keys: CookiesKeys[]) => {
+  keys.forEach(k => {
+    deleteCookieFromLocal(k);
+  });
 };

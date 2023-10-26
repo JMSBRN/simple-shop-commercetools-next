@@ -65,8 +65,10 @@ function DashBoard() {
 
   const handleDeleteMyCart = async (cartId: string) => {
     const res = await deleteCart(cartId);
+    
+    if(res)   dispatch(fetchCarts());
 
-    if (res?.statusCode === 200) {
+    if (res) {
       dispatch(fetchCarts(userDataFromLocal));
       deleteCookieFromLocal('currentCartId');
     }

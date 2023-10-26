@@ -4,7 +4,7 @@ import {
   TypedMoney,
   _BaseAddress,
 } from '@commercetools/platform-sdk';
-import { createCreditCardPayment, deletePayment } from './utilsPayment';
+import { createCreditCardPayment, deleteAllPaymentsFromPaymentInfo } from './utilsPayment';
 import { apiRoot } from '../BuildClient';
 import { getCurrencySymbol } from './utilsCommercTools';
 import { getPriceValue } from '@/commercetools/utils/utilsProductCard';
@@ -22,11 +22,7 @@ export const deleteCart = async (ID: string) => {
   if (ID) {
     const { version, paymentInfo } = (await getCarts(ID)) as Cart;
 
-    paymentInfo?.payments.forEach(async p => {
-       if(p.id) await deletePayment(p.id);
-    });
-
-    return await apiRoot
+    const res = await apiRoot
       .carts()
       .withId({ ID })
       .delete({
@@ -35,7 +31,16 @@ export const deleteCart = async (ID: string) => {
         },
       })
       .execute();
+
+      if (res.statusCode === 200) {
+        if(paymentInfo) {
+          return (await deleteAllPaymentsFromPaymentInfo(paymentInfo));
+        }
+        return false;
+      }
   }
+
+  return false;
 };
 
 export const removeLineItemfromCart = async (

@@ -3,6 +3,7 @@ import {
   ClientResponse,
   Payment,
   PaymentDraft,
+  PaymentInfo,
 } from '@commercetools/platform-sdk';
 import { getCarts, removePaymentFromCart } from './utilsCarts';
 import { apiRoot } from '../BuildClient';
@@ -29,7 +30,26 @@ export const deletePayment = async (ID: string) => {
     .execute();
 };
 
-export const deleteAlPaymentsFromCart = async (cartId: string) => {
+export const deleteAllPaymentsFromPaymentInfo = async (paymentInfo: PaymentInfo) => {
+  if (!paymentInfo || !paymentInfo.payments || paymentInfo.payments.length === 0) {
+    return true;
+  }
+
+  const deletePaymentPromises = paymentInfo.payments.map(async (p) => {
+    if (p.id) {
+      const deleteResult = await deletePayment(p.id);
+      
+      return deleteResult.statusCode === 200;
+    }
+    return true;
+  });
+
+  const results = await Promise.all(deletePaymentPromises);
+
+  return !results.includes(false);
+};
+
+export const deleteAllPaymentsFromCart = async (cartId: string) => {
   const { paymentInfo } = (await getCarts(cartId)) as Cart;
 
   if (paymentInfo) {

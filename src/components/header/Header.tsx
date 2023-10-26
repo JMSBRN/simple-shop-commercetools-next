@@ -68,7 +68,7 @@ function Header() {
     if (cart?.id) {
       const res = await deleteCart(cart.id);
 
-      if (res?.statusCode === 200) push('/');
+      if (res) push('/');
     }
     push('/');
   };

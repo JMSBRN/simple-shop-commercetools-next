@@ -5,10 +5,15 @@ import {
   setEncryptedDataToCookie,
 } from '@/commercetools/utils/secureCookiesUtils';
 import {
+  deleteAllMyCarts,
+  deleteAllMyOrders,
+  getMyDetails,
+  updateMyDetails,
+} from '@/commercetools/utils/utilsMe';
+import {
   deleteCustomer,
   getCustomers,
 } from '@/commercetools/utils/utilsCustomers';
-import { getMyDetails, updateMyDetails } from '@/commercetools/utils/utilsMe';
 import { Address } from 'cluster';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Customer } from '@commercetools/platform-sdk';
@@ -135,13 +140,30 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
       setIsAddresFormRendered(true);
     };
     const handleDeleteAccount = async () => {
-      const res = await deleteCustomer(customer.id);
 
-      if (res?.id) {
-        dispatch(setUserName(''));
-        deleteAllCookiesFromLocal(['currentCartId', 'userData']);
-        setIsAddresFormRendered(true);
-        push('/');
+      if (customer.id) {
+        const isAllCartsRemoved = await deleteAllMyCarts(
+          email,
+          password,
+          customer.id
+        );
+        const isAllOrdersRemoved = await deleteAllMyOrders(
+          email,
+          password,
+          customer.id
+        );
+
+        if (isAllCartsRemoved && isAllOrdersRemoved) {
+          const res = await deleteCustomer(customer.id);
+
+          if(res?.id) {
+            dispatch(setUserName(''));
+            deleteAllCookiesFromLocal(['currentCartId', 'userData']);
+            setIsAddresFormRendered(true);
+            push('/');
+
+          }
+        }
       }
     };
 

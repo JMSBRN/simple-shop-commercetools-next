@@ -10,7 +10,7 @@ import {
 import {
   createCreditCardPayment,
   createPayPalPayment,
-  deleteAlPaymentsFromCart,
+  deleteAllPaymentsFromCart,
 } from '@/commercetools/utils/utilsPayment';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import AddressForm from '../forms/addres-form/AddressForm';
@@ -87,7 +87,7 @@ function OrderSummary({
 
     switch (e.currentTarget.id as PaymentMethods) {
       case 'CREDIT_CARD':
-        const deletedAllCreditCard = await deleteAlPaymentsFromCart(cart?.id);
+        const deletedAllCreditCard = await deleteAllPaymentsFromCart(cart?.id);
 
         if (deletedAllCreditCard) {
           try {
@@ -110,7 +110,7 @@ function OrderSummary({
         break;
 
       case 'PAY_PAL':
-        const deletedAllForPayPal = await deleteAlPaymentsFromCart(cart?.id);
+        const deletedAllForPayPal = await deleteAllPaymentsFromCart(cart?.id);
 
         if (deletedAllForPayPal) {
           try {

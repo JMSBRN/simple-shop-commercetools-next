@@ -1,6 +1,8 @@
+import { Cart, MyCustomerDraft, Order } from '@commercetools/platform-sdk';
 import { apiRoot, getApiRootWithPasswordFlow } from '../BuildClient';
 import { CustomerInfo } from '@/interfaces';
-import { MyCustomerDraft } from '@commercetools/platform-sdk';
+import { deleteAllPaymentsFromPaymentInfo } from './utilsPayment';
+import { deleteOrder } from './utilsOrders';
 
 export const Login = async (
   email: string,
@@ -76,7 +78,7 @@ export const updateMyDetails = async (
       dateOfBirth,
     } = customerInfo;
 
-   return (await apiRootWithPass
+    return await apiRootWithPass
       .me()
       .post({
         body: {
@@ -109,7 +111,7 @@ export const updateMyDetails = async (
           ],
         },
       })
-      .execute());
+      .execute();
   }
 };
 
@@ -125,6 +127,7 @@ export const getMyCarts = async (
       .body;
   return (await apiRootWithPass.me().carts().get().execute()).body.results;
 };
+
 export const getMyOrders = async (
   email: string,
   password: string,
@@ -136,4 +139,91 @@ export const getMyOrders = async (
     return (await apiRootWithPass.me().orders().withId({ ID }).get().execute())
       .body;
   return (await apiRootWithPass.me().orders().get().execute()).body.results;
+};
+
+export const deleteMyCart = async (
+  email: string,
+  password: string,
+  ID?: string
+) => {
+  const apiRootWithPass = getApiRootWithPasswordFlow(email, password);
+
+  if (ID) {
+    const { version, paymentInfo } = (await getMyCarts(
+      email,
+      password,
+      ID
+    )) as Cart;
+
+    const res = await apiRootWithPass
+      .me()
+      .carts()
+      .withId({ ID })
+      .delete({
+        queryArgs: {
+          version,
+        },
+      })
+      .execute();
+
+    if (res.statusCode === 200) {
+      if(paymentInfo) {
+        return (await deleteAllPaymentsFromPaymentInfo(paymentInfo));
+      }
+      return false;
+    }
+  }
+};
+
+export const deleteAllMyCarts = async (
+  email: string,
+  password: string,
+  customerId: string
+) => {
+  const myCarts = (await getMyCarts(email, password)) as Cart[];
+
+  const deletePromises = myCarts
+    .filter((c) => c.customerId === customerId)
+    .map(async (c) => {
+      try {
+        await deleteMyCart(email, password, c.id);
+      } catch (error) {
+        return false;
+      }
+      return true;
+    });
+
+  const results = await Promise.all(deletePromises);
+
+  if (results.includes(false)) {
+    return false;
+  }
+
+  return true;
+};
+export const deleteAllMyOrders = async (
+  email: string,
+  password: string,
+  customerId: string
+) => {
+  const myOrders = (await getMyOrders(email, password)) as Order[];
+
+  const deletePromises = myOrders
+    .filter((o) => o.customerId === customerId)
+    .map(async (o) => {
+      try {
+        await deleteOrder(o.id, o.version);
+      } catch (error) {
+        return false;
+      }
+      return true;
+    });
+
+  const results = await Promise.all(deletePromises);
+
+  if (results.includes(false)) {
+    return false;
+  }
+
+  return true;
 };

@@ -15,7 +15,7 @@ export default function Home() {
     return toggleServerSideLaguage(router, currentLanguage);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   return (
     <>
       <Head>

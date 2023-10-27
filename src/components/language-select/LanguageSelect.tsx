@@ -3,10 +3,10 @@ import {
   getLanguages,
   moveLanguageToFirstPosition,
 } from '@/commercetools/utils/utilsCommercTools';
+import { isErrorResponse, toggleServerSideLaguage } from '@/commercetools/utils/utilsApp';
 import { fetchCategories } from '@/features/thunks/FetchCategories';
 import { setLanguage } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './LanguagesSelect.module.scss';
-import { toggleServerSideLaguage } from '@/commercetools/utils/utilsApp';
 import { useAppDispatch } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
@@ -21,7 +21,7 @@ function LanguageSelect() {
     const currentLanguage = JSON.parse(window.localStorage.getItem('lang') || '"en-GB"');
 
     dispatch(setLanguage(currentLanguage));
-    if (res.length) setLanguages(moveLanguageToFirstPosition(res, currentLanguage));
+    if (!isErrorResponse(res)) setLanguages(moveLanguageToFirstPosition(res, currentLanguage));
   },[dispatch]);
 
   useEffect(() => {

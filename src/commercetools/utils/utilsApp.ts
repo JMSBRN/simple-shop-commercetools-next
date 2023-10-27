@@ -36,3 +36,10 @@ export const toggleServerSideLaguage = (router: NextRouter, newLocale: string) =
       (obj.errors === undefined || Array.isArray(obj.errors))
     );
   };
+
+  export const isInternetConnectionOnline = () => {
+    if (typeof window !== 'undefined') {
+      return window.navigator.onLine;
+    }
+    return false;
+  };

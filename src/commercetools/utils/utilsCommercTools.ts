@@ -1,4 +1,4 @@
-import { Attribute, Category } from '@commercetools/platform-sdk';
+import { Attribute, Category, ErrorResponse } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
 import colorIcon from '../../../public/svgs/colors.svg';
 import sizeIcon from '../../../public/svgs/size.svg';
@@ -56,14 +56,20 @@ export async function getMainParentId(id: string) {
 }
 
 export async function getLanguages() {
-  const res = await apiRoot.get().execute();
-  
-  return res.body.languages;
+ return (await apiRoot.get().execute().then((d) => {
+    return d.body.languages;
+  })
+  .catch((e: ErrorResponse) => {
+    return e;
+  }));
 }
 export async function getCountries() {
-  const res = await apiRoot.get().execute();
-  
-  return res.body.countries;
+  return ( await apiRoot.get().execute().then((d) => {
+    return d.body.languages;
+  })
+  .catch((e: ErrorResponse) => {
+    return e;
+  }));
 }
 
 export function filterObjectAndReturnValue(

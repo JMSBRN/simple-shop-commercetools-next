@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { selectCommerceTools, setCountry } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { getCountries } from '@/commercetools/utils/utilsCommercTools';
+import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import styles from './CountrySelect.module.scss';
 
 function CountrySelect() {
@@ -22,7 +23,7 @@ function CountrySelect() {
       setCurrentCountry(currentCountryFromLocal);
 
       dispatch(setCountry(currentCountry));
-      if (res) setCountries(res);
+      if (!isErrorResponse(res)) setCountries(res);
     },
     [currentCountry, dispatch]
   );

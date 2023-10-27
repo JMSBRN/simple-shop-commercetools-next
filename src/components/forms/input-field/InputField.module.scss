@@ -35,6 +35,13 @@
 
         span {
             color: rgb(255, 0, 0, 0.6);
+            ;
+        }
+
+        div {
+            span {
+                background-color: red;
+            }
         }
     }
 
@@ -45,4 +52,11 @@
         }
     }
 
+}
+
+.errorMessageStyle {
+    width: 300px;
+    height: 25px;
+    color: red;
+    text-transform: lowercase;
 }

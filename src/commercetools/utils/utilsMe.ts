@@ -1,4 +1,9 @@
-import { Cart, MyCustomerDraft, Order } from '@commercetools/platform-sdk';
+import {
+  Cart,
+  ErrorResponse,
+  MyCustomerDraft,
+  Order,
+} from '@commercetools/platform-sdk';
 import { apiRoot, getApiRootWithPasswordFlow } from '../BuildClient';
 import { CustomerInfo } from '@/interfaces';
 import { deleteAllPaymentsFromPaymentInfo } from './utilsPayment';
@@ -7,9 +12,9 @@ import { deleteOrder } from './utilsOrders';
 export const Login = async (
   email: string,
   password: string,
-  anonimousCartId?: string
+  anonymousCartId?: string
 ) => {
-  if (anonimousCartId) {
+  if (anonymousCartId) {
     return await apiRoot
       .login()
       .post({
@@ -18,24 +23,37 @@ export const Login = async (
           password,
           anonymousCart: {
             typeId: 'cart',
-            id: anonimousCartId,
+            id: anonymousCartId,
           },
           anonymousCartSignInMode: 'MergeWithExistingCustomerCart',
           updateProductData: true,
         },
       })
-      .execute();
+      .execute()
+      .then((d) => {
+        return d;
+      })
+      .catch((e: ErrorResponse) => {
+        return e;
+      });
+  } else {
+    return await apiRoot
+      .me()
+      .login()
+      .post({
+        body: {
+          email,
+          password,
+        },
+      })
+      .execute()
+      .then((d) => {
+        return d;
+      })
+      .catch((e: ErrorResponse) => {
+        return e;
+      });
   }
-  return await apiRoot
-    .me()
-    .login()
-    .post({
-      body: {
-        email,
-        password,
-      },
-    })
-    .execute();
 };
 
 export const RegistrationMe = async (args: MyCustomerDraft) => {
@@ -167,8 +185,8 @@ export const deleteMyCart = async (
       .execute();
 
     if (res.statusCode === 200) {
-      if(paymentInfo) {
-        return (await deleteAllPaymentsFromPaymentInfo(paymentInfo));
+      if (paymentInfo) {
+        return await deleteAllPaymentsFromPaymentInfo(paymentInfo);
       }
       return false;
     }

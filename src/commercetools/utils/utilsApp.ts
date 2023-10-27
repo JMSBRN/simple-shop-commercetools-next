@@ -1,3 +1,4 @@
+import { ErrorResponse } from '@commercetools/platform-sdk';
 import { NextRouter } from 'next/router';
 
 export const toggleServerSideLaguage = (router: NextRouter, newLocale: string) => {
@@ -23,4 +24,15 @@ export const toggleServerSideLaguage = (router: NextRouter, newLocale: string) =
 
   export const  removeUnderscores = (inputString: string) => {
     return inputString.replace('_', ' ');
+  };
+
+  export const  isErrorResponse = (obj: any): obj is ErrorResponse => {
+    return (
+      typeof obj === 'object' &&
+      'statusCode' in obj &&
+      'message' in obj &&
+      typeof obj.statusCode === 'number' &&
+      typeof obj.message === 'string' &&
+      (obj.errors === undefined || Array.isArray(obj.errors))
+    );
   };

@@ -6,10 +6,12 @@ function AuthForm({
   formFields,
   onSubmit,
   formRef,
+  errorMessage
 }: {
   formFields: (keyof AuthCustomerDraftFields)[][];
   onSubmit: (updatedFormData: AuthCustomerDraftFields) => void;
   formRef: React.LegacyRef<HTMLFormElement> | undefined;
+  errorMessage: string;
 }) {
   const [formData, setFormData] = useState<AuthCustomerDraftFields>(
     {} as AuthCustomerDraftFields
@@ -57,6 +59,12 @@ function AuthForm({
           ))}
         </div>
       ))}
+      <div style={{
+        width: '100%',
+        height: 'auto',
+        minHeight: '50px',
+        color: 'red'
+      }}>{errorMessage}</div>
     </form>
   );
 }

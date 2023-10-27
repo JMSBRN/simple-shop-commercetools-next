@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { ParsedUrlQuery } from 'querystring';
 import { UserData } from '@/interfaces';
 import { getCarts } from '@/commercetools/utils/utilsCarts';
+import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { setEncryptedDataToCookie } from '@/commercetools/utils/secureCookiesUtils';
 import { setUserName } from '@/features/commerceTools/CommerceToolsSlice';
@@ -43,26 +44,30 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
             .filter((c) => c.cartState === 'Active')
             .find((c) => c.anonymousId)?.id;
 
-          const resLogin = await Login(email, password, anonimousCartId);
+          const res = await Login(email, password, anonimousCartId);
 
-          if (resLogin.statusCode === 200) {
-            const { customer } = resLogin.body;
-            const { id, firstName } = customer;
-
-            if (firstName) {
-              const userData: UserData = {
-                customerId: id,
-                firstName,
-                email,
-                password,
-              };
-
-              dispatch(setUserName(firstName));
-              setEncryptedDataToCookie('userData', userData);
-            }
-
-            push('/user/dashboard');
-          }
+           if(isErrorResponse(res)) {
+            setError(res.message);
+           } else {
+             if (res?.statusCode === 200) {
+               const { customer } = res.body;
+               const { id, firstName } = customer;
+   
+               if (firstName) {
+                 const userData: UserData = {
+                   customerId: id,
+                   firstName,
+                   email,
+                   password,
+                 };
+   
+                 dispatch(setUserName(firstName));
+                 setEncryptedDataToCookie('userData', userData);
+               }
+   
+               push('/user/dashboard');
+             }
+           }
 
           return;
         case 'registration':
@@ -95,18 +100,14 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
         formRef={formRef}
         onSubmit={onSubmitForm}
         formFields={authMode === 'login' ? loginFormFields : signOutFormFields}
+        errorMessage={error}
       />
       <button onClick={handleClickSubmitBtn}>submit</button>
-      <div className="error" style={{ color: 'red' }}>
-        {error}
-        <br />
-        <br />
         {authMode === 'login' && (
           <Link href={'/auth/registration'} onClick={() => setError('')}>
             Go to registration
           </Link>
         )}
-      </div>
     </div>
   );
 }

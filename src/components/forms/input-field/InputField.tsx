@@ -11,6 +11,7 @@ function InputField({
   formData,
   handleChange,
   defaultValue,
+  errorMessage
 }: {
   fieldName: keyof AuthCustomerDraftFields | keyof BaseAddress | keyof CustomerInfo | string;
   formData: any;
@@ -18,7 +19,9 @@ function InputField({
   isRequired?: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   defaultValue?: string | number | readonly string[];
+  errorMessage?: string;
 }) {
+  const { inputContainer, errorMessageStyle } = styles;
   const [inputValue, setInputValue] = useState(formData[fieldName] || defaultValue || '');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +30,7 @@ function InputField({
   };
 
   return (
-    <div key={fieldName} className={styles.inputContainer}>
+    <div key={fieldName} className={inputContainer}>
       <label>
         {fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
         {isRequired !== false && <span>*</span>}
@@ -38,6 +41,7 @@ function InputField({
           onChange={handleInputChange}
           required={isRequired === undefined ? true : isRequired}
         />
+        <div className={errorMessageStyle}>{errorMessage || ''}</div>
       </label>
     </div>
   );

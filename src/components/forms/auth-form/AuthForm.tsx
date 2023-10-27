@@ -6,7 +6,7 @@ function AuthForm({
   formFields,
   onSubmit,
   formRef,
-  errorMessage
+  errorMessage,
 }: {
   formFields: (keyof AuthCustomerDraftFields)[][];
   onSubmit: (updatedFormData: AuthCustomerDraftFields) => void;
@@ -32,7 +32,8 @@ function AuthForm({
 
   const renderInputField = (
     fieldName: keyof AuthCustomerDraftFields,
-    fieldType?: HTMLInputTypeAttribute | undefined
+    fieldType?: HTMLInputTypeAttribute | undefined,
+    isPasswordConfirmMode?: boolean
   ) => {
     return (
       <InputField
@@ -40,6 +41,7 @@ function AuthForm({
         formData={formData}
         fieldType={fieldType}
         handleChange={handleChange}
+        isPasswordConfirmMode={isPasswordConfirmMode}
       />
     );
   };
@@ -49,22 +51,28 @@ function AuthForm({
       {formFields.map((pair, idx) => (
         <div key={idx}>
           {pair.map((el) => (
-            <div className="" key={el}>
+            <div key={el}>
               {el === 'email'
                 ? renderInputField(el, 'email')
                 : el === 'password'
-                ? renderInputField(el, 'password')
+                ? renderInputField(el, 'password', true)
+                : el === 'password_Confirm'
+                ? renderInputField(el, 'password', true)
                 : renderInputField(el)}
             </div>
           ))}
         </div>
       ))}
-      <div style={{
-        width: '100%',
-        height: 'auto',
-        minHeight: '50px',
-        color: 'red'
-      }}>{errorMessage}</div>
+      <div
+        style={{
+          width: '100%',
+          height: 'auto',
+          minHeight: '50px',
+          color: 'red',
+        }}
+      >
+        {errorMessage}
+      </div>
     </form>
   );
 }

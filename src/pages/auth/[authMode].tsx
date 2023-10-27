@@ -29,6 +29,7 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
     ['firstName'],
     ['email'],
     ['password'],
+    ['password_Confirm'],
   ];
   const { authMode } = params;
 
@@ -46,28 +47,28 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
 
           const res = await Login(email, password, anonimousCartId);
 
-           if(isErrorResponse(res)) {
+          if (isErrorResponse(res)) {
             setError(res.message);
-           } else {
-             if (res?.statusCode === 200) {
-               const { customer } = res.body;
-               const { id, firstName } = customer;
-   
-               if (firstName) {
-                 const userData: UserData = {
-                   customerId: id,
-                   firstName,
-                   email,
-                   password,
-                 };
-   
-                 dispatch(setUserName(firstName));
-                 setEncryptedDataToCookie('userData', userData);
-               }
-   
-               push('/user/dashboard');
-             }
-           }
+          } else {
+            if (res?.statusCode === 200) {
+              const { customer } = res.body;
+              const { id, firstName } = customer;
+
+              if (firstName) {
+                const userData: UserData = {
+                  customerId: id,
+                  firstName,
+                  email,
+                  password,
+                };
+
+                dispatch(setUserName(firstName));
+                setEncryptedDataToCookie('userData', userData);
+              }
+
+              push('/user/dashboard');
+            }
+          }
 
           return;
         case 'registration':
@@ -103,11 +104,11 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
         errorMessage={error}
       />
       <button onClick={handleClickSubmitBtn}>submit</button>
-        {authMode === 'login' && (
-          <Link href={'/auth/registration'} onClick={() => setError('')}>
-            Go to registration
-          </Link>
-        )}
+      {authMode === 'login' && (
+        <Link href={'/auth/registration'} onClick={() => setError('')}>
+          Go to registration
+        </Link>
+      )}
     </div>
   );
 }

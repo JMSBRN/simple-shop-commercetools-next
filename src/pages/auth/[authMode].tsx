@@ -1,8 +1,13 @@
 import { Login, RegistrationMe } from '@/commercetools/utils/utilsMe';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
+import {
+  selectCommerceTools,
+  setErrorMessage,
+  setUserName,
+} from '@/features/commerceTools/CommerceToolsSlice';
+import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { AuthCustomerDraftFields } from '@/components/forms/formsInterfaces';
 import AuthForm from '@/components/forms/auth-form/AuthForm';
-import { Cart } from '@commercetools/platform-sdk';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { ParsedUrlQuery } from 'querystring';
@@ -11,16 +16,14 @@ import { getCarts } from '@/commercetools/utils/utilsCarts';
 import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { setEncryptedDataToCookie } from '@/commercetools/utils/secureCookiesUtils';
-import { setUserName } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from '../../styles/AuthPage.module.scss';
-import { useAppDispatch } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
 function AuthPage({ params }: { params: ParsedUrlQuery }) {
   const dispatch = useAppDispatch();
+  const { errorMessage } = useAppSelector(selectCommerceTools);
   const formRef = useRef<HTMLFormElement | null>(null);
   const { push } = useRouter();
-  const [error, setError] = useState('');
   const loginFormFields: (keyof AuthCustomerDraftFields)[][] = [
     ['email'],
     ['password'],
@@ -34,42 +37,44 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
   const { authMode } = params;
 
   const onSubmitForm = async (e?: AuthCustomerDraftFields) => {
-    setError('');
+    dispatch(setErrorMessage(''));
     if (e?.email) {
       const { email, password, firstName } = e;
 
       switch (authMode) {
         case 'login':
-          const carts = (await getCarts()) as Cart[];
-          const anonimousCartId = carts
-            .filter((c) => c.cartState === 'Active')
-            .find((c) => c.anonymousId)?.id;
+          const cartsResult = await getCarts();
+           
+          if (!isErrorResponse(cartsResult) && Array.isArray(cartsResult)) {
+            const anonimousCartId = cartsResult
+              .filter((c) => c.cartState === 'Active')
+              .find((c) => c.anonymousId)?.id;
 
-          const res = await Login(email, password, anonimousCartId);
+            const res = await Login(email, password, anonimousCartId);
 
-          if (isErrorResponse(res)) {
-            setError(res.message);
-          } else {
-            if (res?.statusCode === 200) {
-              const { customer } = res.body;
-              const { id, firstName } = customer;
+            if (isErrorResponse(res)) {
+              dispatch(setErrorMessage(res.message));
+            } else {
+              if (res?.statusCode === 200) {
+                const { customer } = res.body;
+                const { id, firstName } = customer;
 
-              if (firstName) {
-                const userData: UserData = {
-                  customerId: id,
-                  firstName,
-                  email,
-                  password,
-                };
+                if (firstName) {
+                  const userData: UserData = {
+                    customerId: id,
+                    firstName,
+                    email,
+                    password,
+                  };
 
-                dispatch(setUserName(firstName));
-                setEncryptedDataToCookie('userData', userData);
+                  dispatch(setUserName(firstName));
+                  setEncryptedDataToCookie('userData', userData);
+                }
+
+                push('/user/dashboard');
               }
-
-              push('/user/dashboard');
             }
           }
-
           return;
         case 'registration':
           const result = await RegistrationMe({
@@ -78,9 +83,14 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
             firstName,
           });
 
-          if (result.statusCode === 201) {
-            push('/auth/login');
+          if (isErrorResponse(result)) {
+            dispatch(setErrorMessage(result.message));
+          } else {
+            if (result.statusCode === 201) {
+              push('/auth/login');
+            }
           }
+
           return;
         default:
           return;
@@ -101,11 +111,15 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
         formRef={formRef}
         onSubmit={onSubmitForm}
         formFields={authMode === 'login' ? loginFormFields : signOutFormFields}
-        errorMessage={error}
+        errorMessage={errorMessage}
+        isConfirmPasswordExisted={authMode === 'registration'}
       />
       <button onClick={handleClickSubmitBtn}>submit</button>
       {authMode === 'login' && (
-        <Link href={'/auth/registration'} onClick={() => setError('')}>
+        <Link
+          href={'/auth/registration'}
+          onClick={() => dispatch(setErrorMessage(''))}
+        >
           Go to registration
         </Link>
       )}

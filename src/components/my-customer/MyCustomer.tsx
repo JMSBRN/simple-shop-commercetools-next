@@ -18,6 +18,7 @@ import { Address } from 'cluster';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Customer } from '@commercetools/platform-sdk';
 import InputField from '../forms/input-field/InputField';
+import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import { setUserName } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MyCustomer.module.scss';
 import { useAppDispatch } from '@/hooks/storeHooks';
@@ -88,24 +89,31 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
         });
         setFormData(formDataObject as CustomerInfo);
 
-        const { body } = (await getCustomers(
+        const result = (await getCustomers(
           customer.id
         )) as ClientResponse<Customer>;
-        const { version } = body!;
 
-        const res = await updateMyDetails(email, password, formData, version);
+        if(!isErrorResponse(result)) {
 
-        if (res?.statusCode === 200) {
-          setIsAddresFormRendered(false);
-          fetchMyDetails();
-          const newUserData: UserData = {
-            firstName: formData.firstName,
-            email,
-            password,
-          };
-
-          dispatch(setUserName(formData.firstName!));
-          setEncryptedDataToCookie('userData', newUserData);
+          const { version } = result.body!;
+  
+          const res = await updateMyDetails(email, password, formData, version);
+  
+          if (res?.statusCode === 200) {
+            setIsAddresFormRendered(false);
+            fetchMyDetails();
+            const newUserData: UserData = {
+              firstName: formData.firstName,
+              email,
+              password,
+            };
+  
+            dispatch(setUserName(formData.firstName!));
+            setEncryptedDataToCookie('userData', newUserData);
+          }
+        } else {
+          console.log(result.message);
+          
         }
       }
     };

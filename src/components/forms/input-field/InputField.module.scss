@@ -67,15 +67,9 @@
     height: auto;
     text-align: center;
     padding: 4px 2px;
-    background-color: rgb(187, 187, 187);
-    color: white;
+    background-color: rgb(255, 255, 255);
+    color: rgb(132, 132, 132);
     cursor: pointer;
-
-    &:active {
-        background-color: white;
-        color: gray;
-    }
-
 }
 
 .visibleModeButtonStyleActive {
@@ -84,13 +78,8 @@
     height: auto;
     text-align: center;
     padding: 4px 2px;
-    background-color: rgb(255, 255, 255);
-    color: rgb(132, 132, 132);
+    background-color: rgb(187, 187, 187);
+    color: white;
     cursor: pointer;
-
-    &:active {
-        background-color: white;
-        color: gray;
-    }
 
 }

@@ -1,18 +1,24 @@
 import React, { HTMLInputTypeAttribute, useState } from 'react';
 import { AuthCustomerDraftFields } from '../formsInterfaces';
+import { AutocompleteValue } from '@/interfaces';
 import InputField from '../input-field/InputField';
+import { setErrorMessage } from '@/features/commerceTools/CommerceToolsSlice';
+import { useAppDispatch } from '@/hooks/storeHooks';
 
 function AuthForm({
   formFields,
   onSubmit,
   formRef,
   errorMessage,
+  isConfirmPasswordExisted,
 }: {
   formFields: (keyof AuthCustomerDraftFields)[][];
   onSubmit: (updatedFormData: AuthCustomerDraftFields) => void;
   formRef: React.LegacyRef<HTMLFormElement> | undefined;
   errorMessage: string;
+  isConfirmPasswordExisted?: boolean;
 }) {
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<AuthCustomerDraftFields>(
     {} as AuthCustomerDraftFields
   );
@@ -25,15 +31,38 @@ function AuthForm({
     });
   };
 
+  const setIsPasswordConfirmed = (formData: AuthCustomerDraftFields) => {
+    if (formData.password) {
+      const { password, password_Confirm } = formData;
+
+      if (password === password_Confirm) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    dispatch(setErrorMessage(''));
     e.preventDefault();
-    onSubmit(formData);
+    if (isConfirmPasswordExisted) {
+      if (setIsPasswordConfirmed(formData)) {
+        onSubmit(formData);
+        dispatch(setErrorMessage(''));
+      } else {
+        dispatch(setErrorMessage('The password confirmation does not match'));
+      }
+    } else {
+      onSubmit(formData);
+    }
   };
 
   const renderInputField = (
     fieldName: keyof AuthCustomerDraftFields,
     fieldType?: HTMLInputTypeAttribute | undefined,
-    isPasswordConfirmMode?: boolean
+    isPasswordConfirmMode?: boolean,
+    autoCompleteType?: AutocompleteValue
   ) => {
     return (
       <InputField
@@ -42,8 +71,13 @@ function AuthForm({
         fieldType={fieldType}
         handleChange={handleChange}
         isPasswordConfirmMode={isPasswordConfirmMode}
+        autoCompleteType={autoCompleteType}
       />
     );
+  };
+
+  const renderPasswordInputElement = (el: keyof AuthCustomerDraftFields) => {
+    return renderInputField(el, 'password', true, 'current-password');
   };
 
   return (
@@ -55,9 +89,9 @@ function AuthForm({
               {el === 'email'
                 ? renderInputField(el, 'email')
                 : el === 'password'
-                ? renderInputField(el, 'password', true)
+                ? renderPasswordInputElement(el)
                 : el === 'password_Confirm'
-                ? renderInputField(el, 'password', true)
+                ? renderPasswordInputElement(el)
                 : renderInputField(el)}
             </div>
           ))}

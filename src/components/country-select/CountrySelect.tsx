@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { selectCommerceTools, setCountry } from '@/features/commerceTools/CommerceToolsSlice';
+import {
+  selectCommerceTools,
+  setCountry,
+  setErrorMessage,
+} from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { getCountries } from '@/commercetools/utils/utilsCommercTools';
 import { isErrorResponse } from '@/commercetools/utils/utilsApp';
@@ -15,7 +19,12 @@ function CountrySelect() {
   const fetchFunction = useCallback(
     async function () {
       const res = await getCountries();
-
+    
+      if(!Array.isArray(res)) {
+        if(res.message === 'Failed to fetch')
+        dispatch(setErrorMessage('Please check internet connection'));
+      }
+   
       const currentCountryFromLocal = JSON.parse(
         window.localStorage.getItem('country') || '"GB"'
       );
@@ -23,7 +32,9 @@ function CountrySelect() {
       setCurrentCountry(currentCountryFromLocal);
 
       dispatch(setCountry(currentCountry));
-      if (!isErrorResponse(res)) setCountries(res);
+      if (!isErrorResponse(res) && Array.isArray(res)) {
+        setCountries(res);
+      }
     },
     [currentCountry, dispatch]
   );
@@ -43,10 +54,10 @@ function CountrySelect() {
   return (
     <div className={styles.countrySelectContainer}>
       {!!countries.length && (
-        <select 
-        onChange={(e) => handleChangeCountry(e)}
-        defaultValue={currentCountry}
-        disabled={isCartsCreated}
+        <select
+          onChange={(e) => handleChangeCountry(e)}
+          defaultValue={currentCountry}
+          disabled={isCartsCreated}
         >
           {countries.map((el, idx) => (
             <option key={idx} value={el}>
@@ -55,7 +66,7 @@ function CountrySelect() {
           ))}
         </select>
       )}
-      {!isCartsCreated && <div>select avalible country</div> }
+      {!isCartsCreated && <div>select avalible country</div>}
     </div>
   );
 }

@@ -22,6 +22,7 @@ interface InitialState {
   products: Product[];
   orders: Order[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  errorMessage: string;
   shoppingLists: ShoppingList[];
   cart: Cart;
   carts: Cart[];
@@ -35,6 +36,7 @@ const initialState: InitialState = {
   products: [],
   orders: [] as Order[],
   status: 'idle',
+  errorMessage: '',
   shoppingLists: [],
   cart: {} as Cart,
   carts: [] as Cart[],
@@ -71,6 +73,9 @@ const commerceToolseSlice = createSlice({
     },
     setUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
+    },
+    setErrorMessage: (state, action: PayloadAction<string>) => {
+      state.errorMessage = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -118,6 +123,7 @@ export const {
   setCarts,
   setPayments,
   setUserName,
+  setErrorMessage
 } = commerceToolseSlice.actions;
 export const selectCommerceTools = (state: RootState) => state.commercetools;
 export default commerceToolseSlice.reducer;

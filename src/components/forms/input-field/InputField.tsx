@@ -1,7 +1,7 @@
+import { AutocompleteValue, CustomerInfo } from '@/interfaces';
 import React, { HTMLInputTypeAttribute, useState } from 'react';
 import { AuthCustomerDraftFields } from '../formsInterfaces';
 import { BaseAddress } from '@commercetools/platform-sdk';
-import { CustomerInfo } from '@/interfaces';
 import { removeUnderscores } from '@/commercetools/utils/utilsApp';
 import styles from './InputField.module.scss';
 
@@ -14,6 +14,7 @@ function InputField({
   defaultValue,
   errorMessage,
   isPasswordConfirmMode,
+  autoCompleteType
 }: {
   fieldName:
     | keyof AuthCustomerDraftFields
@@ -27,6 +28,7 @@ function InputField({
   defaultValue?: string | number | readonly string[];
   errorMessage?: string;
   isPasswordConfirmMode?: boolean;
+  autoCompleteType?: AutocompleteValue;
 }) {
   const {
     inputContainer,
@@ -57,6 +59,7 @@ function InputField({
           value={inputValue}
           onChange={handleInputChange}
           required={isRequired === undefined ? true : isRequired}
+          autoComplete={autoCompleteType || 'off'}
         />
         {isPasswordConfirmMode && (
           <div
@@ -67,7 +70,7 @@ function InputField({
             }
             onClick={() => setIsVisibleMode(!isVisibleMode)}
           >
-            visible
+            {isVisibleMode ? 'Hide' : 'Visible'}
           </div>
         )}
         <div className={errorMessageStyle}>{errorMessage || ''}</div>

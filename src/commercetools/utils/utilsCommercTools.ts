@@ -1,6 +1,7 @@
-import { Attribute, Category, ErrorResponse } from '@commercetools/platform-sdk';
+import { Attribute, ErrorResponse } from '@commercetools/platform-sdk';
 import { apiRoot } from '../BuildClient';
 import colorIcon from '../../../public/svgs/colors.svg';
+import { isErrorResponse } from './utilsApp';
 import sizeIcon from '../../../public/svgs/size.svg';
 import weightIcon from '../../../public/svgs/weight.svg';
 
@@ -32,27 +33,39 @@ export async function getProductsByCategoryId(id: string) {
 
 export async function getCategories(id?: string) {
   if (id) {
-    const res = await apiRoot.categories().withId({ ID: id }).get().execute();
+    return (await apiRoot.categories().withId({ ID: id }).get().execute().then(d => {
+      return d.body;
+    }).catch((e: ErrorResponse) => {
+      return e;
+    }));
 
-    return res.body;
   } else {
-    const res = await apiRoot.categories().get().execute();
-    const { results } = res.body;
+    return (await apiRoot.categories().get().execute().then( d => {
+      const { results } = d.body;
 
-    return results;
+      return results;
+    }).catch((e: ErrorResponse) => {
+      return e;
+    }));
   }
 }
 
 export  async function getCategoryNameWithId (id: string, language: string) {
-  const res = await getCategories(id as string) as Category;
+  const res = await getCategories(id as string);
+
+  if(!isErrorResponse(res) && !Array.isArray(res)) {
+
+    return (filterObjectAndReturnValue(res.name, language)) as string;
+  }
   
-  return (filterObjectAndReturnValue(res.name, language)) as string;
 };
 
 export async function getMainParentId(id: string) {
-  const res = await getCategories(id as string) as Category;
+  const res = await getCategories(id);
 
-  return res.ancestors[0]?.id;
+  if(!isErrorResponse(res) && !Array.isArray(res)) { 
+    return res.ancestors[0]?.id;
+  }
 }
 
 export async function getLanguages() {
@@ -67,7 +80,7 @@ export async function getCountries() {
   return ( await apiRoot.get().execute().then((d) => {
     return d.body.languages;
   })
-  .catch((e: ErrorResponse) => {
+  .catch((e: ErrorResponse) => {    
     return e;
   }));
 }

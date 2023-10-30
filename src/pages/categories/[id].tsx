@@ -45,7 +45,7 @@ function Subcategories({
       if (id) {
         const catName = await getCategoryNameWithId(id, language);
 
-        setMainCatName(catName);
+        if(catName) setMainCatName(catName);
       }
     };
 

@@ -5,6 +5,7 @@ import {
 } from '@/commercetools/utils/secureCookiesUtils';
 import {
   selectCommerceTools,
+  setErrorMessage,
   setUserName,
 } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
@@ -73,6 +74,11 @@ function Header() {
     push('/');
   };
 
+  const handleLogin = () => {
+    dispatch(setErrorMessage(''));
+    push('/auth/login');
+  };
+
   return (
     <header className={headerContainer}>
       <CountrySelect />
@@ -100,7 +106,7 @@ function Header() {
       </div>
       <div className={authContainer}>
         {!userName ? (
-          <div className={loginBtnStyle} onClick={() => push('/auth/login')}>
+          <div className={loginBtnStyle} onClick={handleLogin}>
             Log In
           </div>
         ) : (

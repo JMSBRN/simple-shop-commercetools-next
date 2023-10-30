@@ -15,7 +15,7 @@ export const Login = async (
   anonymousCartId?: string
 ) => {
   if (anonymousCartId) {
-    return await apiRoot
+    return (await apiRoot
       .login()
       .post({
         body: {
@@ -35,9 +35,9 @@ export const Login = async (
       })
       .catch((e: ErrorResponse) => {
         return e;
-      });
+      }));
   } else {
-    return await apiRoot
+    return (await apiRoot
       .me()
       .login()
       .post({
@@ -47,12 +47,12 @@ export const Login = async (
         },
       })
       .execute()
-      .then((d) => {
+      .then((d) => {        
         return d;
       })
       .catch((e: ErrorResponse) => {
         return e;
-      });
+      }));
   }
 };
 
@@ -70,7 +70,13 @@ export const RegistrationMe = async (args: MyCustomerDraft) => {
         password,
       },
     })
-    .execute();
+    .execute()
+    .then((d) => {
+      return d;
+    })
+    .catch((e: ErrorResponse) => {
+      return e;
+    });
 };
 export const getMyDetails = async (email: string, password: string) => {
   const apiRootWithPass = getApiRootWithPasswordFlow(email, password);
@@ -141,9 +147,16 @@ export const getMyCarts = async (
   const apiRootWithPass = getApiRootWithPasswordFlow(email, password);
 
   if (ID)
-    return (await apiRootWithPass.me().carts().withId({ ID }).get().execute())
-      .body;
-  return (await apiRootWithPass.me().carts().get().execute()).body.results;
+    return (await apiRootWithPass.me().carts().withId({ ID }).get().execute().then( d => {
+      return d.body;
+    }).catch((e: ErrorResponse) => {
+      return e;
+    }));
+  return (await apiRootWithPass.me().carts().get().execute().then( d => {
+    return d.body.results;
+  }).catch((e: ErrorResponse) => {
+    return e;
+  }));
 };
 
 export const getMyOrders = async (

@@ -1,27 +1,38 @@
 import {
   Cart,
+  ErrorResponse,
   TaxedPrice,
   TypedMoney,
   _BaseAddress,
 } from '@commercetools/platform-sdk';
 import { createCreditCardPayment, deleteAllPaymentsFromPaymentInfo } from './utilsPayment';
+import { isErrorResponse, setCurrency } from '@/commercetools/utils/utilsApp';
 import { apiRoot } from '../BuildClient';
 import { getCurrencySymbol } from './utilsCommercTools';
 import { getPriceValue } from '@/commercetools/utils/utilsProductCard';
 import { getPricesFromProduct } from './utilsShoppingList';
 import { getShippingMethodsWithCountry } from './utilsShippingMethods';
-import { setCurrency } from '@/commercetools/utils/utilsApp';
 
 export const getCarts = async (ID?: string) => {
-  if (ID) {
-    return (await apiRoot.carts().withId({ ID }).get().execute()).body;
+  if (ID) {;
+    return (await apiRoot.carts().withId({ ID }).get().execute().then((d) => {
+      return d.body;
+    }).catch((e: ErrorResponse) => {      
+      return e;
+    }));
   }
-  return (await apiRoot.carts().get().execute()).body.results;
+  return (await apiRoot.carts().get() .execute().then((d) => {
+    return d.body.results;
+  }).catch((e: ErrorResponse) => {
+    return e;
+  }));
 };
 export const deleteCart = async (ID: string) => {
   if (ID) {
-    const { version, paymentInfo } = (await getCarts(ID)) as Cart;
+    const result = (await getCarts(ID)) as Cart;
 
+    if(isErrorResponse(result)) {
+     const { version, paymentInfo } = result;
     const res = await apiRoot
       .carts()
       .withId({ ID })
@@ -38,6 +49,8 @@ export const deleteCart = async (ID: string) => {
         }
         return false;
       }
+    }
+
   }
 
   return false;

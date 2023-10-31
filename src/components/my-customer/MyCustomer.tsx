@@ -105,7 +105,6 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
             formDataObject[element.name] = element.value;
           }
         });
-        setFormData(formDataObject as CustomerInfo);
 
         const result = (await getCustomers(
           customer.id
@@ -114,20 +113,27 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
         if (!isErrorResponse(result)) {
           const { version } = result.body!;
 
-          const res = await updateMyDetails(email, password, formData, version);
-
-          if (res?.statusCode === 200) {
-            setIsAddresFormRendered(false);
-            fetchMyDetails();
-            const newUserData: UserData = {
-              firstName: formData.firstName,
+          if (formDataObject.firstName) {
+            const res = await updateMyDetails(
               email,
               password,
-            };
+              formDataObject,
+              version
+            );
 
-            dispatch(setUserName(formData.firstName!));
-            setEncryptedDataToCookie('userData', newUserData);
-            setIsLoading(false);
+            if (res?.statusCode === 200) {
+              setIsAddresFormRendered(false);
+              fetchMyDetails();
+              const newUserData: UserData = {
+                firstName: formData.firstName,
+                email,
+                password,
+              };
+
+              dispatch(setUserName(formData.firstName!));
+              setEncryptedDataToCookie('userData', newUserData);
+              setIsLoading(false);
+            }
           }
         }
       }

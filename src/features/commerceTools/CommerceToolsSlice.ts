@@ -88,7 +88,7 @@ const commerceToolseSlice = createSlice({
         state.shoppingLists = action.payload;
       })
       .addCase(fetchCarts.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = 'succeeded';     
         state.carts = action.payload;
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {

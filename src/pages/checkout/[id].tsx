@@ -14,7 +14,7 @@ import AddressForm from '@/components/forms/addres-form/AddressForm';
 import { GetServerSideProps } from 'next';
 import OrderSummary from '@/components/order-summary/OrderSummary';
 import { deleteCookieFromLocal } from '@/commercetools/utils/secureCookiesUtils';
-import { getCarts } from '@/commercetools/utils/utilsCarts';
+import { getCurrentDataFromCart } from '@/commercetools/utils/utilsCarts';
 import { getPayments } from '@/commercetools/utils/utilsPayment';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -45,7 +45,8 @@ function Checkout({ paymentMethod }: { paymentMethod: string | undefined }) {
 
   const handleSubMit = async (e?: BaseAddress) => {
     if (e?.firstName) {
-      const { version, cartState } = (await getCarts(cartId)) as Cart;
+      const result = await  getCurrentDataFromCart(cartId);
+      const { version, cartState } = result!;
 
       const res = (await createOrder(
         cartId,

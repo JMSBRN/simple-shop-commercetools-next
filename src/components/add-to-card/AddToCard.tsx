@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   addLineItemToCart,
   createCartWithProductId,
-  getCarts,
+   getCurrentDataFromCart,
 } from '@/commercetools/utils/utilsCarts';
 import {
   getDecryptedDataFromCookie,
@@ -28,7 +28,9 @@ function AddToCard({
   const [quantity, setQuantity] = useState<number>(0);
   const anonimouseId = process.env.ANONIMOUS_ID;
 
-  const userData = JSON.parse(getDecryptedDataFromCookie('userData')) as UserData | undefined;
+  const userData = JSON.parse(getDecryptedDataFromCookie('userData')) as
+    | UserData
+    | undefined;
 
   const handleCreateCard = async () => {
     const currentCartId = JSON.parse(
@@ -41,7 +43,7 @@ function AddToCard({
         productId,
         variantId,
         quantity,
-        userData?.customerId ?  undefined : anonimouseId,
+        userData?.customerId ? undefined : anonimouseId,
         userData?.customerId
       );
       const newCart = resNewCart?.body as Cart;
@@ -53,7 +55,8 @@ function AddToCard({
     }
 
     if (quantity && currentCartId) {
-      const { version } = (await getCarts(currentCartId)) as Cart;
+      const cart = await  getCurrentDataFromCart(currentCartId);
+      const { version } = cart!;
 
       await addLineItemToCart(
         currentCartId,

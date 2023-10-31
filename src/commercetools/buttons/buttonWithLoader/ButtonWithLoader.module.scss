@@ -1,40 +1,43 @@
 @import 'variables';
 
 .buttonStyle {
-    width: auto;
-    height: auto;
-    padding: 6px 20px;
-    color: $primary-color;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    span {
-        font-size: $button-font-size;
-    }
-    &:hover {
-        background-color: rgb(150, 150, 150);
-        color: rgb(255, 255, 255);
-    }
+  width: auto;
+  height: auto;
+  padding: 6px 20px;
+  color: $primary-color;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+
+  span {
+    font-size: $button-font-size;
+  }
+
+  &:hover {
+    background-color: rgb(150, 150, 150);
+    color: rgb(255, 255, 255);
+  }
 }
+
 .buttonStyleWithLoader {
-    @extend .buttonStyle;
-    background-color: rgb(255, 255, 255);
-    background-image: linear-gradient(
-        to right,
-        #d9d9d9 0%,
-        rgba(0, 0, 0, 0.1) 20%, 
-        #d9d9d9 40%,
-        #d9d9d9 100%
-      );
-      background-size: 150% 100%;
-      animation: wave 2s infinite;
+  @extend .buttonStyle;
+  background-color: rgb(255, 255, 255);
+  background-image: linear-gradient(to right,
+      #d9d9d9 0%,
+      rgba(0, 0, 0, 0.1) 20%,
+      #d9d9d9 40%,
+      #d9d9d9 100%);
+  background-size: 150% 100%;
+  animation: wave 2s infinite;
+
 }
 
 @keyframes wave {
-    0% {
-      background-position: 150% 0;
-    }
-    100% {
-      background-position: -150% 0;
-    }
+  0% {
+    background-position: 150% 0;
   }
+
+  100% {
+    background-position: -150% 0;
+  }
+}

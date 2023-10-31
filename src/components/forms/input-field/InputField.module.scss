@@ -2,11 +2,9 @@
 
 .inputContainer {
 
-    input[type="text"],
-    input[type="password"],
-    input[type="date"],
-    input[type="email"] {
+    input {
         width: 100%;
+        margin-top: 6px;
         padding: $input-padding;
         font-size: $input-font-size;
         border: none;
@@ -31,7 +29,6 @@
         text-align: start;
         color: gray;
         font-size: $input-font-size;
-        margin-bottom: 6px;
 
         span {
             color: rgb(255, 0, 0, 0.6);

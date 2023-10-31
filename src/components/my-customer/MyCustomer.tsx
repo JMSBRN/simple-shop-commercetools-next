@@ -15,6 +15,7 @@ import {
   getCustomers,
 } from '@/commercetools/utils/utilsCustomers';
 import { Address } from 'cluster';
+import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWithLoader';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Customer } from '@commercetools/platform-sdk';
 import InputField from '../forms/input-field/InputField';
@@ -32,12 +33,19 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
     customerAddressStyle,
     customerBtnsContainer,
     updateUserInfoModal,
+    deleteWarningModalStyle,
   } = styles;
   const [customer, setCustomer] = useState<Customer>({} as Customer);
   const [isAddresFormRendered, setIsAddresFormRendered] =
     useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isWarningDelModalRendered, setIsWarningDelModalRendered] =
+    useState<boolean>(false);
   const [formData, setFormData] = useState<CustomerInfo>({} as CustomerInfo);
   const formRef = useRef<HTMLFormElement>(null);
+  const confirmFormRef = useRef<HTMLFormElement>(null);
+  const refSubmitInput = useRef<HTMLInputElement>(null);
+  const inputSubRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
   const { push } = useRouter();
 
@@ -75,6 +83,7 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
     };
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      setIsLoading(true);
       if (formRef.current) {
         const formDataObject: Record<string, any> = {};
 
@@ -93,12 +102,11 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
           customer.id
         )) as ClientResponse<Customer>;
 
-        if(!isErrorResponse(result)) {
-
+        if (!isErrorResponse(result)) {
           const { version } = result.body!;
-  
+
           const res = await updateMyDetails(email, password, formData, version);
-  
+
           if (res?.statusCode === 200) {
             setIsAddresFormRendered(false);
             fetchMyDetails();
@@ -107,13 +115,11 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
               email,
               password,
             };
-  
+
             dispatch(setUserName(formData.firstName!));
             setEncryptedDataToCookie('userData', newUserData);
+            setIsLoading(false);
           }
-        } else {
-          console.log(result.message);
-          
         }
       }
     };
@@ -148,6 +154,7 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
       setIsAddresFormRendered(true);
     };
     const handleDeleteAccount = async () => {
+      setIsWarningDelModalRendered(true);
 
       if (customer.id) {
         const isAllCartsRemoved = await deleteAllMyCarts(
@@ -164,15 +171,40 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
         if (isAllCartsRemoved && isAllOrdersRemoved) {
           const res = await deleteCustomer(customer.id);
 
-          if(res?.id) {
+          if (res?.id) {
             dispatch(setUserName(''));
             deleteAllCookiesFromLocal(['currentCartId', 'userData']);
             setIsAddresFormRendered(true);
-            push('/');
-
+            setIsLoading(false);
+            //push('/');
           }
         }
       }
+    };
+
+    const handleSubmitForm = async () => {
+      refSubmitInput.current?.onsubmit;
+    };
+
+    const handleConfirmDeleteAccount = (
+      e: React.FormEvent<HTMLFormElement>
+    ) => {
+      e.preventDefault();
+      // const formData = new FormData(confirmFormRef.current!);
+
+      // const passwords: Record<string, string> = {};
+
+      // formData.forEach((value, name) => {
+      //   passwords[name] = value.toString();
+      // });
+
+      // if (passwords.password === passwords.confirm_password) {
+      //   if(passwords.password) {
+      //     // handleDeleteAccount();
+      //   }
+      // } else {
+      //   alert('Passwords match: false');
+      // }
     };
 
     return (
@@ -189,7 +221,16 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
                     : renderInputField(key, undefined, value)}
                 </label>
               ))}
-              <input type="submit" />
+              <ButtonWithLoader
+                onClick={handleSubmitForm}
+                text="submit"
+                isLoading={isLoading}
+              />
+              <input
+                ref={refSubmitInput}
+                type="submit"
+                style={{ display: 'none' }}
+              />
             </form>
           </div>
         )}
@@ -222,9 +263,35 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
           </div>
         </div>
         <div className={customerBtnsContainer}>
-          <button onClick={handleUpdateAccount}>Update Account Data</button>
-          <button onClick={handleDeleteAccount}>Delete Account</button>
+          <ButtonWithLoader
+            onClick={handleUpdateAccount}
+            text="Update Account Data"
+          />
+          <ButtonWithLoader
+            onClick={handleDeleteAccount}
+            text="Delete Account"
+          />
         </div>
+        {isWarningDelModalRendered && (
+          <div className={deleteWarningModalStyle}>
+            <form ref={confirmFormRef} onSubmit={handleConfirmDeleteAccount}>
+              {Array.from(['password', 'confirm_password'], (el, idx) => (
+                <div key={idx}>
+                  {renderInputField(el, 'password', undefined, true)}
+                </div>
+              ))}
+              <ButtonWithLoader
+                onClick={() => inputSubRef.current?.onclick}
+                text="confirm to delete"
+              />
+              <input
+                ref={inputSubRef}
+                type="submit"
+                style={{ display: 'none' }}
+              />
+            </form>
+          </div>
+        )}
       </div>
     );
   }

@@ -5,7 +5,10 @@ import {
   TypedMoney,
   _BaseAddress,
 } from '@commercetools/platform-sdk';
-import { createCreditCardPayment, deleteAllPaymentsFromPaymentInfo } from './utilsPayment';
+import {
+  createCreditCardPayment,
+  deleteAllPaymentsFromPaymentInfo,
+} from './utilsPayment';
 import { isErrorResponse, setCurrency } from '@/commercetools/utils/utilsApp';
 import { apiRoot } from '../BuildClient';
 import { getCurrencySymbol } from './utilsCommercTools';
@@ -14,45 +17,66 @@ import { getPricesFromProduct } from './utilsShoppingList';
 import { getShippingMethodsWithCountry } from './utilsShippingMethods';
 
 export const getCarts = async (ID?: string) => {
-  if (ID) {;
-    return (await apiRoot.carts().withId({ ID }).get().execute().then((d) => {
-      return d.body;
-    }).catch((e: ErrorResponse) => {      
-      return e;
-    }));
-  }
-  return (await apiRoot.carts().get() .execute().then((d) => {
-    return d.body.results;
-  }).catch((e: ErrorResponse) => {
-    return e;
-  }));
-};
-export const deleteCart = async (ID: string) => {
   if (ID) {
-    const result = (await getCarts(ID)) as Cart;
-
-    if(isErrorResponse(result)) {
-     const { version, paymentInfo } = result;
-    const res = await apiRoot
+    return await apiRoot
       .carts()
       .withId({ ID })
-      .delete({
-        queryArgs: {
-          version,
-        },
+      .get()
+      .execute()
+      .then((d) => {
+        return d.body;
       })
-      .execute();
+      .catch((e: ErrorResponse) => {
+        return e;
+      });
+  }
+  return await apiRoot
+    .carts()
+    .get()
+    .execute()
+    .then((d) => {
+      return d.body.results;
+    })
+    .catch((e: ErrorResponse) => {
+      return e;
+    });
+};
+export const getCurrentDataFromCart = async (
+  cartId: string
+) => {
+  const res = await getCarts(cartId);
+
+  if (!isErrorResponse(res) && !Array.isArray(res)) {
+    const { version, paymentInfo, cartState } = res;
+
+    return { version, paymentInfo, cartState };
+  }
+};
+
+export const deleteCart = async (ID: string) => {
+  if (ID) {
+    const result = await  getCurrentDataFromCart(ID);
+
+    if (result?.version) {
+      const { version, paymentInfo } = result;
+      const res = await apiRoot
+        .carts()
+        .withId({ ID })
+        .delete({
+          queryArgs: {
+            version,
+          },
+        })
+        .execute();
 
       if (res.statusCode === 200) {
-        if(paymentInfo) {
-          return (await deleteAllPaymentsFromPaymentInfo(paymentInfo));
+        if (paymentInfo) {
+          return await deleteAllPaymentsFromPaymentInfo(paymentInfo);
         }
         return false;
       }
     }
-
   }
-
   return false;
 };
 
@@ -121,27 +145,32 @@ export const createCartWithProductId = async (
         })
         .execute();
 
-        if(resCreateCart.statusCode === 201) {
-          const resCreatePayment = await createCreditCardPayment(currency, customerId);
+      if (resCreateCart.statusCode === 201) {
+        const resCreatePayment = await createCreditCardPayment(
+          currency,
+          customerId
+        );
 
-          if(resCreatePayment.statusCode === 201) {
-            const createdCart = resCreateCart.body;
-            const createdPayment = resCreatePayment.body;
-            const res = await addPaymentToCart(createdCart.id, createdPayment.id );
+        if (resCreatePayment.statusCode === 201) {
+          const createdCart = resCreateCart.body;
+          const createdPayment = resCreatePayment.body;
+          const res = await addPaymentToCart(createdCart.id, createdPayment.id);
 
-            return res;
-          }
+          return res;
         }
+      }
     }
   }
 };
+
 export const addShippingAddresToCart = async (
   ID: string,
   country: string,
   address?: _BaseAddress
 ) => {
-  const res = (await getCarts(ID)) as Cart;
-  const { version } = res;
+  const res = await  getCurrentDataFromCart(ID);
+
+  const { version } = res!;
 
   return await apiRoot
     .carts()
@@ -162,6 +191,7 @@ export const addShippingAddresToCart = async (
     })
     .execute();
 };
+
 export const addShoopingListToCart = async (
   ID: string,
   version: number,
@@ -367,8 +397,8 @@ export const setShippingMethodToCart = async (
   cartId: string,
   methodId: string
 ) => {
-  const cart = (await getCarts(cartId)) as Cart;
-  const { version } = cart;
+  const cart = await  getCurrentDataFromCart(cartId);
+  const { version } = cart!;
 
   return await apiRoot
     .carts()
@@ -391,8 +421,9 @@ export const setShippingMethodToCart = async (
 };
 
 export const addPaymentToCart = async (cartId: string, payMentId: string) => {
-  const { version } = (await getCarts(cartId)) as Cart;
-
+  const cart = await  getCurrentDataFromCart(cartId);
+  const { version } = cart!;
+  
   return await apiRoot
     .carts()
     .withId({ ID: cartId })
@@ -417,7 +448,8 @@ export const removePaymentFromCart = async (
   cartId: string,
   payMentId: string
 ) => {
-  const { version } = (await getCarts(cartId)) as Cart;
+  const cart = await  getCurrentDataFromCart(cartId);
+  const { version } = cart!;
 
   return await apiRoot
     .carts()

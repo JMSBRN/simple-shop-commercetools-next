@@ -1,6 +1,10 @@
 import { CustomerInfo, UserData } from '@/interfaces';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  areAllObjectValuesEqual,
+  isErrorResponse,
+} from '@/commercetools/utils/utilsApp';
+import {
   deleteAllCookiesFromLocal,
   setEncryptedDataToCookie,
 } from '@/commercetools/utils/secureCookiesUtils';
@@ -14,15 +18,19 @@ import {
   deleteCustomer,
   getCustomers,
 } from '@/commercetools/utils/utilsCustomers';
+import {
+  selectCommerceTools,
+  setErrorMessage,
+  setUserName,
+} from '@/features/commerceTools/CommerceToolsSlice';
+import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Address } from 'cluster';
 import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWithLoader';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
+import ConfirmForm from '../forms/confirm-form/ConfirmForm';
 import { Customer } from '@commercetools/platform-sdk';
 import InputField from '../forms/input-field/InputField';
-import { isErrorResponse } from '@/commercetools/utils/utilsApp';
-import { setUserName } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MyCustomer.module.scss';
-import { useAppDispatch } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
 function MyCustomer({ email, password }: { email: string; password: string }) {
@@ -42,11 +50,12 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
   const [isWarningDelModalRendered, setIsWarningDelModalRendered] =
     useState<boolean>(false);
   const [formData, setFormData] = useState<CustomerInfo>({} as CustomerInfo);
+  const [confirmFormData, setConfirmFormData] = useState<any>({} as any);
   const formRef = useRef<HTMLFormElement>(null);
   const confirmFormRef = useRef<HTMLFormElement>(null);
   const refSubmitInput = useRef<HTMLInputElement>(null);
-  const inputSubRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
+  const { errorMessage } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
 
   const fetchMyDetails = useCallback(async () => {
@@ -155,56 +164,76 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
     };
     const handleDeleteAccount = async () => {
       setIsWarningDelModalRendered(true);
-
-      if (customer.id) {
-        const isAllCartsRemoved = await deleteAllMyCarts(
-          email,
-          password,
-          customer.id
-        );
-        const isAllOrdersRemoved = await deleteAllMyOrders(
-          email,
-          password,
-          customer.id
-        );
-
-        if (isAllCartsRemoved && isAllOrdersRemoved) {
-          const res = await deleteCustomer(customer.id);
-
-          if (res?.id) {
-            dispatch(setUserName(''));
-            deleteAllCookiesFromLocal(['currentCartId', 'userData']);
-            setIsAddresFormRendered(true);
-            setIsLoading(false);
-            //push('/');
-          }
-        }
-      }
     };
 
     const handleSubmitForm = async () => {
       refSubmitInput.current?.onsubmit;
     };
 
-    const handleConfirmDeleteAccount = (
-      e: React.FormEvent<HTMLFormElement>
+    const handleChangeConfirmForm = (
+      e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      const { name, value } = e.target;
+
+      setConfirmFormData((prevData: any) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    };
+    const handleSubmitCurrentFormData = async (
+      e: React.ChangeEvent<HTMLFormElement>
     ) => {
       e.preventDefault();
-      // const formData = new FormData(confirmFormRef.current!);
+      setIsLoading(true);
+      if (confirmFormRef.current) {
+        const formDataObject: Record<string, any> = {};
 
-      // const passwords: Record<string, string> = {};
+        const formElements = Array.from(
+          confirmFormRef.current.elements
+        ) as HTMLInputElement[];
 
-      // formData.forEach((value, name) => {
-      //   passwords[name] = value.toString();
-      // });
+        formElements.forEach((element) => {
+          if (element.name) {
+            formDataObject[element.name] = element.value;
+          }
+        });
+        setConfirmFormData(formDataObject);
+      }
+      const isAllPasswordFieldsEquall = areAllObjectValuesEqual({
+        ...confirmFormData,
+        existedPassword: password,
+      });
 
-      // if (passwords.password === passwords.confirm_password) {
-      //   if(passwords.password) {
-      //     // handleDeleteAccount();
-      //   }
-      // } else {
-      //   alert('Passwords match: false');
-      // }
+      if (isAllPasswordFieldsEquall) {
+        dispatch(setErrorMessage(''));
+        if (customer.id) {
+          const isAllCartsRemoved = await deleteAllMyCarts(
+            email,
+            password,
+            customer.id
+          );
+          const isAllOrdersRemoved = await deleteAllMyOrders(
+            email,
+            password,
+            customer.id
+          );
+
+          if (isAllCartsRemoved && isAllOrdersRemoved) {
+            const res = await deleteCustomer(customer.id);
+
+            if (res?.id) {
+              dispatch(setUserName(''));
+              deleteAllCookiesFromLocal(['currentCartId', 'userData']);
+              setIsAddresFormRendered(true);
+              setIsLoading(false);
+              push('/');
+            }
+          }
+        }
+      } else {
+        dispatch(setErrorMessage('The password confirmation does not match'));
+        setIsLoading(false);
+      }
     };
 
     return (
@@ -274,22 +303,15 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
         </div>
         {isWarningDelModalRendered && (
           <div className={deleteWarningModalStyle}>
-            <form ref={confirmFormRef} onSubmit={handleConfirmDeleteAccount}>
-              {Array.from(['password', 'confirm_password'], (el, idx) => (
-                <div key={idx}>
-                  {renderInputField(el, 'password', undefined, true)}
-                </div>
-              ))}
-              <ButtonWithLoader
-                onClick={() => inputSubRef.current?.onclick}
-                text="confirm to delete"
-              />
-              <input
-                ref={inputSubRef}
-                type="submit"
-                style={{ display: 'none' }}
-              />
-            </form>
+            <h4>Please confirm delete process</h4>
+            <ConfirmForm
+              formRef={confirmFormRef}
+              formData={confirmFormData}
+              onSubmit={handleSubmitCurrentFormData}
+              handleChange={handleChangeConfirmForm}
+              errorMessage={errorMessage}
+              isLoading={isLoading}
+            />
           </div>
         )}
       </div>

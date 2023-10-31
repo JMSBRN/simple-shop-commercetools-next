@@ -43,3 +43,21 @@ export const toggleServerSideLaguage = (router: NextRouter, newLocale: string) =
     }
     return false;
   };
+  export const  areAllObjectValuesEqual = (obj: Record<string, string>) => {
+    const values = Object.values(obj);
+  
+    if (values.length === 0) {
+      // If the object has no values, consider them not equal
+      return false;
+    }
+  
+    const firstValue = values[0];
+  
+    for (let i = 1; i < values.length; i++) {
+      if (values[i] !== firstValue) {
+        return false;
+      }
+    }
+  
+    return true;
+  };

@@ -22,18 +22,6 @@
     }
     button {
         margin-top: 30px;
-        width: 150px;
-        height: 50px;
-        font-size: 19px;
-        color: $primary-color;
-        text-transform: uppercase;
-        border: none;
-        cursor: pointer;
-        &:hover {
-            background-color: white;
-            border: 0.5px solid rgb(128, 128, 128, 0.5);
-        }
-
     }
      a {
         margin-top: 50px;

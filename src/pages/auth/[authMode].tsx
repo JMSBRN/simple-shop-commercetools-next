@@ -1,5 +1,5 @@
 import { Login, RegistrationMe } from '@/commercetools/utils/utilsMe';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   selectCommerceTools,
   setErrorMessage,
@@ -8,6 +8,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { AuthCustomerDraftFields } from '@/components/forms/formsInterfaces';
 import AuthForm from '@/components/forms/auth-form/AuthForm';
+import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWithLoader';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { ParsedUrlQuery } from 'querystring';
@@ -35,7 +36,7 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
     ['password_Confirm'],
   ];
   const { authMode } = params;
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const onSubmitForm = async (e?: AuthCustomerDraftFields) => {
     dispatch(setErrorMessage(''));
     if (e?.email) {
@@ -43,8 +44,9 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
 
       switch (authMode) {
         case 'login':
+          setIsLoading(true);
           const cartsResult = await getCarts();
-           
+
           if (!isErrorResponse(cartsResult) && Array.isArray(cartsResult)) {
             const anonimousCartId = cartsResult
               .filter((c) => c.cartState === 'Active')
@@ -54,6 +56,7 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
 
             if (isErrorResponse(res)) {
               dispatch(setErrorMessage(res.message));
+              setIsLoading(false);
             } else {
               if (res?.statusCode === 200) {
                 const { customer } = res.body;
@@ -69,6 +72,7 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
 
                   dispatch(setUserName(firstName));
                   setEncryptedDataToCookie('userData', userData);
+                  setIsLoading(true);
                 }
 
                 push('/user/dashboard');
@@ -77,6 +81,7 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
           }
           return;
         case 'registration':
+          setIsLoading(true);
           const result = await RegistrationMe({
             email,
             password,
@@ -85,9 +90,11 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
 
           if (isErrorResponse(result)) {
             dispatch(setErrorMessage(result.message));
+            setIsLoading(false);
           } else {
             if (result.statusCode === 201) {
               push('/auth/login');
+              setIsLoading(false);
             }
           }
 
@@ -114,7 +121,11 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
         errorMessage={errorMessage}
         isConfirmPasswordExisted={authMode === 'registration'}
       />
-      <button onClick={handleClickSubmitBtn}>submit</button>
+      <ButtonWithLoader
+        isLoading={isLoading}
+        onClick={handleClickSubmitBtn}
+        text="submit"
+      />
       {authMode === 'login' && (
         <Link
           href={'/auth/registration'}

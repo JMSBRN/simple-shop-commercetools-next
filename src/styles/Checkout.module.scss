@@ -1,33 +1,37 @@
 @import 'mixins';
 
- .checkoutMainContainer{
+.checkoutMainContainer {
     width: 100%;
     height: 100vh;
     text-align: center;
- }
- .mainTitle{
+}
+
+.mainTitle {
     height: 50px;
     font-size: 23px;
     font-weight: 500;
     color: rgb(169, 169, 169);
     text-transform: uppercase;
- }
- .formTitle {
-     height: 40px;
-     font-size: 20px;
-     font-weight: 500;
-     text-align: start;
-     text-transform: lowercase;
-     color: brown;
- }
-.checkoutContainer{
-    margin:  0 auto;
+}
+
+.formTitle {
+    height: 40px;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: start;
+    text-transform: lowercase;
+    color: brown;
+}
+
+.checkoutContainer {
+    margin: 0 auto;
     width: 100%;
     max-width: 1200px;
     height: 100%;
     @include flex(flex-start, space-between);
     gap: 20px;
     color: rgb(163, 163, 163);
+
     input {
         border: none;
         border: 0.5px solid rgb(201, 201, 201, 0.5);
@@ -35,11 +39,11 @@
         font-size: 20px;
         padding: 3px 10px;
         color: rgb(163, 163, 163);
-        
+
     }
 }
 
-.billingDetailsContainer{
+.billingDetailsContainer {
     width: 700px;
     height: auto;
     min-height: 770px;
@@ -47,7 +51,7 @@
     border: 0.5px solid rgb(201, 201, 201, 0.5);
 }
 
-.orderSummaryContainer{
+.orderSummaryContainer {
     width: 400px;
     height: auto;
     min-height: 770px;

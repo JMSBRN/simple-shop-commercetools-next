@@ -1,0 +1,47 @@
+{ "slider-images":
+    [
+        {
+            "name": "home",
+            "images": [
+                {
+                    "url": "/slider-images/home/slider_home_1.jpg"
+                },
+                {
+                    "url": "/slider-images/home/slider_home_2.jpg"
+                },
+                {
+                    "url": "/slider-images/home/slider_home_3.jpg"
+                }
+            ]
+        },
+        {
+            "name": "woman",
+            "images": [
+                {
+                    "url": "/slider-images/women_brands/women_brands_1.jpg"
+                },
+                {
+                    "url": "/slider-images/women_brands/women_brands_2.jpg"
+                },
+                {
+                    "url": "/slider-images/women_brands/women_brands_3.jpg"
+                }
+            ]
+        },
+        {
+            "name": "men",
+            "images": [
+                {
+                    "url": "/slider-images/men_brands/men_brands_1.jpg"
+                },
+                {
+                    "url": "/slider-images/men_brands/men_brands_2.jpg"
+                },
+                {
+                    "url": "/slider-images/men_brands/men_brands_3.jpg"
+                }
+            ]
+        }
+        
+    ]
+}

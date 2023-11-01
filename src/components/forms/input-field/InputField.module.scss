@@ -4,7 +4,7 @@
 
     input {
         width: 100%;
-        margin-top: 6px;
+        margin-top: 3px;
         padding: $input-padding;
         font-size: $input-font-size;
         border: none;
@@ -21,6 +21,26 @@
         &::placeholder {
             color: #888;
         }
+    }
+
+    [type="date"]::-webkit-inner-spin-button {
+        display: none;
+    }
+
+    [type="date"]::-webkit-calendar-picker-indicator {
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        filter: brightness(0) saturate(100%) invert(79%) sepia(0%) saturate(905%) hue-rotate(325deg) brightness(97%) contrast(99%);
+
+        &:hover {
+            filter: brightness(0) saturate(100%) invert(12%) sepia(58%) saturate(5241%) hue-rotate(351deg) brightness(95%) contrast(105%);
+        }
+    }
+
+    [type="date"]::-webkit-datetime-edit {
+        font-size: $input-font-size;
     }
 
     label {

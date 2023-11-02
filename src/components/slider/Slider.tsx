@@ -6,13 +6,18 @@ import styles from './Slider.module.scss';
 const Slider = ({
   images,
   isPointsRendered,
-  intervalSeconds
+  intervalSeconds,
+  imageWidth,
+  imageHeight
 }: {
   images: SliderImage[];
   isPointsRendered?: boolean;
   intervalSeconds?: number;
+  imageWidth?: number;
+  imageHeight?: number;
 }) => {
-  const { sliderContainer, active, sliderPoints, point, sliderBtnsAndPoints } = styles;
+  const { sliderContainer, active, sliderPoints, point, sliderBtnsAndPoints } =
+    styles;
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const nextSlide = useCallback(() => {
@@ -33,16 +38,17 @@ const Slider = ({
 
   return (
     <div className={sliderContainer}>
-      <Image
-        width={300}
-        height={200}
-        alt="slider image"
-        src={images.find((_, idx) => idx === currentSlide)?.url!}
-        priority
-      />
+        <Image
+          layout='fixed'
+          width={imageWidth || 100}
+          height={ imageHeight || 130}
+          alt="slider image"
+          src={images.find((_, idx) => idx === currentSlide)?.url!}
+          loading="lazy"
+        />
       {isPointsRendered && (
         <div className={sliderBtnsAndPoints}>
-              <button onClick={prevSlide}>{'<'}</button>
+          <button onClick={prevSlide}>{'<'}</button>
           <div className={sliderPoints}>
             {images.map((_, index) => (
               <div

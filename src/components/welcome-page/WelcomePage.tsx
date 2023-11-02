@@ -10,12 +10,14 @@ function WelcomePage() {
     <div>
       <div className={slidersContainer}>
         {sliderData['slider-images'].map((slider, index) => (
-          <div key={index} style={{ textAlign: 'center' }}>
+          <div key={index} style={{ textAlign: 'center', margin: '70px' }}>
             <div className={sliderTitle}>{slider.name} Brands </div>
             <div className={sliderWrapperStyle}>
               <Slider
                 images={slider.images}
-                intervalSeconds={9000 + index}
+                intervalSeconds={9000 + (index * 3000)}
+                imageWidth={350}
+                imageHeight={500}
               />
             </div>
           </div>

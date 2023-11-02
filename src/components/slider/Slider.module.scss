@@ -3,61 +3,49 @@
 
 $base-width: 100%;
 
-
 .sliderContainer {
-    width: calc($base-width * 1);
-    padding: 0.5em;
-    min-width: 180px;
-    height: 100%;
-    min-height: 320px;
-    @include flex(center, center, column);
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
+  width: calc(#{$base-width} * 1);
+  padding: 0.5em;
+  min-width: 180px;
+  min-height: 320px;
+  @include flex(center, center, column);
 }
 
 .sliderBtnsAndPoints {
-    width: 60%;
-    min-width: 180px;
-    height: auto;
-    min-height: 40px;
-    @include flex(center, space-between);
+  width: 60%;
+  min-width: 180px;
+  min-height: 40px;
+  @include flex(center, space-between);
 
-    button {
-        width: auto;
-        height: auto;
-        padding: 0 0.7em;
-        background-color: transparent;
-        color: #c3c3c3;
-        border: none;
-        cursor: pointer;
-        font-size: calc($base-width * 1.5);
-        &:hover {
-            color: $primary-color;
-        }
+  button {
+    width: auto;
+    padding: 0 0.7em;
+    background-color: transparent;
+    color: #c3c3c3;
+    border: none;
+    cursor: pointer;
+    font-size: calc(#{$base-width} * 1.5);
+    &:hover {
+      color: $primary-color;
     }
-
+  }
 }
 
 .sliderPoints {
-    width: calc($base-width * 0.25);
-    height: auto;
-    @include flex();
+  width: calc(#{$base-width} * 0.25);
+  @include flex();
 }
 
 .point {
-    width: 10px;
-    height: 10px;
-    background-color: #ccc;
-    border-radius: 50%;
-    margin: 0 3px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
+  width: 10px;
+  height: 10px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin: 0 3px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 
-.point.active {
+  &.active {
     background-color: #b3b3b3;
+  }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import Slider from '../slider/Slider';
+import Slider from '../sliders/slider/Slider';
 import sliderData from '../../../public/data/data.json';
 import styles from './WelcomePage.module.scss';
 

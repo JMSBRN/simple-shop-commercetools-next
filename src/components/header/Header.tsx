@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
 import Categories from '../categories/Categories';
 import CountrySelect from '../country-select/CountrySelect';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import LanguageSelect from '../language-select/LanguageSelect';
 import Link from 'next/link';
 import MiniCartModal from '../mini-cart-modal/MiniCartModal';

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Image from 'next/image';
-import { SliderImage } from '../../../public/data/dataInterfaces';
+import Image from "next/legacy/image";
+import { SliderImage } from '../../../../public/data/dataInterfaces';
 import styles from './Slider.module.scss';
 
 const Slider = ({

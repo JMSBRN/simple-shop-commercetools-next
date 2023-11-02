@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { getImagesUrlsFromProduct } from '@/commercetools/utils/utilsShoppingList';
 import styles from './ProductImages.module.scss';
 

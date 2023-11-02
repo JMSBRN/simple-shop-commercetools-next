@@ -7,7 +7,7 @@ import {
   updateCartLineitemQuantity,
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';

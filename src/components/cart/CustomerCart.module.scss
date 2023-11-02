@@ -1,4 +1,5 @@
 @import 'mixins';
+@import 'variables';
 
 .cartContainer {
     margin: 0 auto;
@@ -47,10 +48,10 @@
     width: 80%;
     height: auto;
     max-height: 300px;
-
     padding: 10px;
     overflow-x: auto;
-    background-color: rgb(231, 231, 231);
+    background-color: rgb(255, 255, 255);
+    border: $border;
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -66,7 +67,7 @@
     height: 40px;
     padding-left: 100px;
     display: grid;
-    grid-template-columns: 90px 1.7fr repeat(3, 1fr);
+    grid-template-columns: 2.9fr 2fr 2.5fr 2fr 1.2fr;
 
     div {
         width: auto;
@@ -88,30 +89,13 @@
         border: none;
         outline: none;
         font-size: 20px;
-        border-bottom: 1px solid rgb(125, 125, 125, 0.4);
+        border-bottom: $border;
         color: rgb(136, 136, 136);
         &::-webkit-input-placeholder {
             color: rgb(73, 90, 38);
         }
 
     }
-
-    button {
-        margin-left: 20px;
-        width: auto;
-        height: auto;
-        padding: 6px 30px;
-        border: none;
-        text-transform: uppercase;
-        cursor: pointer;
-        color: rgb(136, 136, 136);
-
-        &:active {
-            background-color: rgb(246, 246, 246);
-            color: rgb(100, 100, 100);
-        }
-    }
-
 }
 
 .cartTotalsContainer {
@@ -119,31 +103,18 @@
     height: 100%;
     @include flex(center, center, column);
 
-    button {
-        margin: 10px auto;
-        width: 200px;
-        height: 50px;
-        font-size: 16px;
-        font-weight: 500;
-        text-transform: uppercase;
-        border: none;
-        background-color: rgb(131, 131, 131);
-        color: white;
-        cursor: pointer;
-
-        &:active {
-            border: 1px solid rgb(125, 125, 125, 0.4);
-            background-color: white;
-            color: rgb(100, 100, 100);
-        }
-    }
+  
+}
+.cartTotalsContainerBtns {
+    width: 100%;
+    @include flex(center, space-around);
 }
 
 .cartTotalsTable {
     margin: 30px auto;
     width: 90%;
     height: 300px;
-    border: 1px solid rgb(125, 125, 125, 0.4);
+    border: $border;
     color: rgb(136, 136, 136);
 }
 
@@ -155,7 +126,7 @@
     font-size: 16px;
     font-weight: 500;
     text-transform: uppercase;
-    border-bottom: 1px solid rgb(125, 125, 125, 0.4);
+    border-bottom: $border;
 }
 
 .cartTotalsInfo {
@@ -179,6 +150,6 @@
 .cartTotals {
     @extend .cartTotalsInfo;
     font-size: 25px;
-    border-top: 1px solid rgb(125, 125, 125, 0.4);
+    border-top: $border;
 
 }

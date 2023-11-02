@@ -1,9 +1,15 @@
 import { Cart, TaxedPrice } from '@commercetools/platform-sdk';
+import React, { useState } from 'react';
+import {
+  deleteCart,
+  getMoneyValueFromCartField,
+} from '@/commercetools/utils/utilsCarts';
+import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWithLoader';
 import CartLineItem from './cart-line-item/CartLineItem';
-import Link from 'next/link';
-import React from 'react';
-import { getMoneyValueFromCartField } from '@/commercetools/utils/utilsCarts';
+import { deleteCookieFromLocal } from '@/commercetools/utils/secureCookiesUtils';
+import { fetchCarts } from '@/features/thunks/FetchCarts';
 import styles from './CustomerCart.module.scss';
+import { useAppDispatch } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
 function CustomerCart({ cart }: { cart: Cart }) {
@@ -21,26 +27,46 @@ function CustomerCart({ cart }: { cart: Cart }) {
     cartTotalsInfoData,
     cartTotals,
     lineItemHeadlines,
+    cartTotalsContainerBtns,
   } = styles;
 
   const { push } = useRouter();
+  const dispatch = useAppDispatch();
 
-  const handleCheckout = async () => {
-    if (cart?.lineItems.length) {
-      push(`/checkout/${cart?.id}`);
-    }
-  };
-
-  const { taxedPrice, shippingInfo } = cart;
+  const { id, taxedPrice, shippingInfo } = cart;
   const { taxPortions, totalGross, totalNet, totalTax } =
     taxedPrice as TaxedPrice;
   const shipingMethodTaxTotal = shippingInfo?.taxedPrice?.totalGross!;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [actionType, setActiontype] = useState<string>('');
+
+  const handleCheckout = async (actionType: string) => {
+    setActiontype(actionType);
+    setIsLoading(true);
+      if (cart?.lineItems.length) {
+        push(`/checkout/${cart?.id}`);
+        setIsLoading(false);
+      }
+  };
+  const handleDeleteCart = async (actionType: string) => {
+    setActiontype(actionType);
+      setIsLoading(true);
+      const res = await deleteCart(id);
+      
+      if (res) dispatch(fetchCarts());
+      
+      if (res) {
+        dispatch(fetchCarts());
+        deleteCookieFromLocal('currentCartId');
+        push('/');
+        setIsLoading(false);
+      }
+  };
 
   return (
     <div className={cartContainer}>
       <div className={cartTitle}>
         <h3>Customer Cart</h3>
-        <Link href={'/'}>Home</Link>
       </div>
       <div className={mainContainer}>
         <div className={leftSideContainer}>
@@ -65,7 +91,7 @@ function CustomerCart({ cart }: { cart: Cart }) {
           </div>
           <div className={promoCodeContainer}>
             <input type="text" placeholder="promo code" />
-            <button type="button">Apply</button>
+            <ButtonWithLoader text="Apply" onClick={() => {}} />
           </div>
         </div>
         <div className={cartTotalsContainer}>
@@ -97,9 +123,18 @@ function CustomerCart({ cart }: { cart: Cart }) {
               Total : {getMoneyValueFromCartField(totalGross)}
             </div>
           </div>
-          <button type="button" onClick={handleCheckout}>
-            Checkout
-          </button>
+          <div className={cartTotalsContainerBtns}>
+            <ButtonWithLoader
+              isLoading={isLoading && actionType === 'checkout'}
+              text="Checkout"
+              onClick={() => handleCheckout('checkout')}
+            />
+            <ButtonWithLoader
+              isLoading={isLoading && actionType === 'delete'}
+              text="Delete cart"
+              onClick={() => handleDeleteCart('delete')}
+            />
+          </div>
         </div>
       </div>
     </div>

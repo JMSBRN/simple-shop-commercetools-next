@@ -33,7 +33,11 @@ function CountrySelect() {
 
       dispatch(setCountry(currentCountry));
       if (!isErrorResponse(res) && Array.isArray(res)) {
-        setCountries(res);
+       const resWithoutStartPrefix=  res.map(c => {
+          return c.substring(3);
+        });
+
+        setCountries(resWithoutStartPrefix);
       }
     },
     [currentCountry, dispatch]
@@ -46,6 +50,8 @@ function CountrySelect() {
   const handleChangeCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
 
+    console.log(value);
+    
     setCurrentCountry(value);
     dispatch(setCountry(value));
     window.localStorage.setItem('country', JSON.stringify(value));

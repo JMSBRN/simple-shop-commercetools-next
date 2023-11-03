@@ -1,5 +1,5 @@
 import Atributes from '../atributes/Atributes';
-import Image from "next/legacy/image";
+import Image from 'next/legacy/image';
 import Link from 'next/link';
 import { ProductVariant } from '@commercetools/platform-sdk';
 import React from 'react';

@@ -1,10 +1,12 @@
 import React from 'react';
 import Slider from '../sliders/slider/Slider';
+import SliderNonStop from '../sliders/slider-non-stop/SlideNonStop';
+import logoBrandsData from '../../../public/data/brands-logo.json';
 import sliderData from '../../../public/data/data.json';
 import styles from './WelcomePage.module.scss';
 
 function WelcomePage() {
-  const { slidersContainer, sliderWrapperStyle, sliderTitle } = styles;
+  const { slidersContainer, sliderWrapperStyle, sliderTitle, brendLogoNonStopSlider } = styles;
 
   return (
     <div>
@@ -22,6 +24,15 @@ function WelcomePage() {
             </div>
           </div>
         ))}
+      </div>
+      <div className={brendLogoNonStopSlider}>
+        <SliderNonStop slideWidth={150}>
+         {
+          logoBrandsData['brands-logo'].map((el, idx) => (
+            <div key={idx}>{el.name}</div>
+          ))
+         }
+        </SliderNonStop>
       </div>
     </div>
   );

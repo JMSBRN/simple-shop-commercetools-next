@@ -3,7 +3,7 @@ import {
   setIconSrcForAtribute,
 } from '@/commercetools/utils/utilsCommercTools';
 import { Attribute } from '@commercetools/platform-sdk';
-import Image from "next/legacy/image";
+import Image from 'next/legacy/image';
 import React from 'react';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './Atributes.module.scss';

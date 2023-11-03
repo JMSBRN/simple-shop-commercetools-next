@@ -35,11 +35,12 @@ const SliderNonStop: React.FC<SliderProps> = ({ children, slideWidth  }) => {
   }, [children, cycle, slideLoclalWidth, sliderContent.length]);
 
   const sliderMainWrapperStyle: React.CSSProperties = {
-    width: '100%',
+    width: 'auto',
     height: 'auto',
     position: 'relative'
   };
   const sliderContainerStyle: React.CSSProperties = {
+    margin: '0 auto',
     width: '50%',
     height: 'auto',
     position: 'relative' as 'relative',

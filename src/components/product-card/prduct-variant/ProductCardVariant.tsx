@@ -1,4 +1,4 @@
-import Image from "next/legacy/image";
+import Image from 'next/legacy/image';
 import { ProductVariant } from '@commercetools/platform-sdk';
 import React from 'react';
 import { formatValue } from '../../../commercetools/utils/utilsProductCard';

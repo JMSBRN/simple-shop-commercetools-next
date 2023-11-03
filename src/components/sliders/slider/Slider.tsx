@@ -34,7 +34,7 @@ const Slider = ({
     return () => {
       clearInterval(interval);
     };
-  }, [currentSlide, nextSlide]);
+  }, [currentSlide, intervalSeconds, nextSlide]);
 
   return (
     <div className={sliderContainer}>

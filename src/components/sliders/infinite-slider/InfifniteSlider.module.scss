@@ -1,3 +1,9 @@
+@import 'mixins';
+@import 'variables';
+
+.sliderContainer {
+  width: 500px;
+}
 .slider {
     overflow: hidden;
     width: 100%;
@@ -9,7 +15,7 @@
   .carousel {
     display: flex;
     transition: transform 0.5s ease;
-    height: 200px; /* Adjust the height as needed */
+    height: 200px;
   }
   
   .slide {
@@ -17,11 +23,10 @@
     width: 100%;
     text-align: center;
     padding: 20px;
-    border: 1px solid #ccc;
-    font-size: 24px;
+    border: $border;
   }
   
-  .controls {
+  .controls, .points {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,7 +34,7 @@
   }
   
   .controlButton {
-    background-color: #007BFF;
+    background-color: #a8a8a8;
     color: #fff;
     padding: 5px 10px;
     border: none;
@@ -42,11 +47,12 @@
     height: 12px;
     background-color: #ccc;
     border-radius: 50%;
+    border: none;
     cursor: pointer;
     margin: 0 5px;
   }
   
   .active {
-    background-color: #007BFF;
+    background-color: #727272;
   }
   

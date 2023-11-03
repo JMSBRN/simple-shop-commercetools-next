@@ -3,7 +3,26 @@ import styles from './InfifniteSlider.module.scss';
 
 const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
 
-function InfiniteSlider() {
+function InfiniteSlider({
+  intervalMilSeconds,
+  isButtonsExisted,
+  isPountsExisted,
+}: {
+  intervalMilSeconds?: number;
+  isButtonsExisted?: boolean;
+  isPountsExisted?: boolean;
+}) {
+  const {
+    sliderContainer,
+    slider,
+    carousel,
+    slide,
+    controls,
+    controlButton,
+    active,
+    points,
+    point,
+  } = styles;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHidden, setIsHidden] = useState(false);
   const isFirstSlide = currentIndex === 0;
@@ -24,12 +43,12 @@ function InfiniteSlider() {
         setIsHidden(false);
         setCurrentIndex(3);
         break;
-        case 1:
-          setIsHidden(true);
+      case 1:
+        setIsHidden(true);
         setCurrentIndex(4);
         break;
-        case 2:
-          setIsHidden(false);
+      case 2:
+        setIsHidden(false);
         setCurrentIndex(1);
         break;
       case 3:
@@ -39,57 +58,64 @@ function InfiniteSlider() {
       default:
         break;
     }
-};
+  };
 
   useEffect(() => {
-    const interval = setInterval(nextSlide, isFirstSlide ? 0 : 3000);
+    const interval = setInterval(nextSlide, isFirstSlide ? 0 : intervalMilSeconds || 3000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [isFirstSlide, nextSlide]);
+  }, [intervalMilSeconds, isFirstSlide, nextSlide]);
 
   return (
-    <div style={{ width: '500px' }}>
-      {JSON.stringify(currentIndex)}
-      <div className={styles.slider}>
+    <div className={sliderContainer}>
+      <div className={slider}>
         <div
-          className={styles.carousel}
+          className={carousel}
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,
             transition,
           }}
         >
           {[...items, items[0]].map((item, index) => (
-            <div key={index} className={styles.slide}>
+            <div key={index} className={slide}>
               {item}
             </div>
           ))}
         </div>
 
-        <div className={styles.controls}>
-          <button onClick={prevSlide} className={styles.controlButton}>
-            Previous
-          </button>
-          <button
-              onClick={() => moveToSlide(items.length)}
-              className={`${styles.point} ${
-                currentIndex === 4 ? styles.active : ''
-              }`}
-            ></button>
-          {items.map((_, index) => (
-            <button
-              key={index}
-              style={{ display: `${ index === 0 ? 'none': 'block' }` }}
-              onClick={() => moveToSlide(index)}
-              className={`${styles.point} ${
-                currentIndex === index || 0 ? styles.active : ''
-              }`}
-            ></button>
-          ))}
-          <button onClick={nextSlide} className={styles.controlButton}>
-            Next
-          </button>
+        <div className={controls}>
+          {isButtonsExisted && (
+            <button onClick={prevSlide} className={controlButton}>
+              Previous
+            </button>
+          )}
+          <div className={points}>
+            {isPountsExisted && (
+              <>
+                <button
+                  onClick={() => moveToSlide(items.length)}
+                  className={`${point} ${currentIndex === 4 ? active : ''}`}
+                ></button>
+                {items.map((_, index) => (
+                  <button
+                    key={index}
+                    style={{ display: `${index === 0 ? 'none' : 'block'}` }}
+                    onClick={() => moveToSlide(index)}
+                    className={`${point} ${
+                      currentIndex === index || 0 ? active : ''
+                    }`}
+                  ></button>
+                ))}
+              </>
+            )}
+          </div>
+          {isButtonsExisted && (
+            <button onClick={nextSlide} className={controlButton}>
+              Next
+            </button>
+          )}
         </div>
       </div>
     </div>

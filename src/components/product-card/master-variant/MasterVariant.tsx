@@ -41,6 +41,7 @@ function MasterVariant({
               alt={el.label || 'product image'}
               width={el.dimensions.w}
               height={el.dimensions.h}
+              objectFit='contain'
             />
           </Link>
         ))}

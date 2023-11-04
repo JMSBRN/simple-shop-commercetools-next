@@ -109,9 +109,10 @@ function CartLineItem({
       </div>}
       <Image
         priority
+        objectFit='fill'
         src={images?.find((el) => el.url)?.url!}
-        width={100}
-        height={160}
+        width={40}
+        height={50}
         alt="product image"
       />
       <div className={description}>

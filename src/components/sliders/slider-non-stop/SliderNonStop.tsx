@@ -6,10 +6,11 @@ interface SliderChild {
 
 interface SliderProps {
   slideWidth?: number;
+  sliderContainerwidth?: number;
   children: React.ReactNode[] | React.ReactElement<SliderChild>[];
 }
 
-const SliderNonStop: React.FC<SliderProps> = ({ children, slideWidth  }) => {
+const SliderNonStop: React.FC<SliderProps> = ({ children, slideWidth, sliderContainerwidth  }) => {
   const [position, setPosition] = useState(0);
   const [cycle, setCycle] = useState(0);
   const sliderContent = React.Children.toArray(children) as ReactNode[];
@@ -41,9 +42,9 @@ const SliderNonStop: React.FC<SliderProps> = ({ children, slideWidth  }) => {
   };
   const sliderContainerStyle: React.CSSProperties = {
     margin: '0 auto',
-    width: '50%',
+    width: `${sliderContainerwidth || 300 }px`,
     height: 'auto',
-    position: 'relative' as 'relative',
+    position: 'relative',
     overflow: 'hidden',
   };
   

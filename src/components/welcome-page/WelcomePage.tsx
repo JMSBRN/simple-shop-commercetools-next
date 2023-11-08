@@ -1,12 +1,18 @@
+import LogosSlider from '../sliders/logos-slider/LogosSlider';
 import React from 'react';
 import Slider from '../sliders/slider/Slider';
-import SliderNonStop from '../sliders/slider-non-stop/SliderNonStop';
 import logoBrandsData from '../../../public/data/brands-logo.json';
 import sliderData from '../../../public/data/data.json';
 import styles from './WelcomePage.module.scss';
 
 function WelcomePage() {
-  const { slidersContainer, sliderWrapperStyle, sliderTitle, brendLogoNonStopSlider } = styles;
+  const {
+    slidersContainer,
+    sliderWrapperStyle,
+    sliderTitle,
+    brendLogoNonStopSlider,
+    logoContainer
+  } = styles;
 
   return (
     <div>
@@ -17,7 +23,7 @@ function WelcomePage() {
             <div className={sliderWrapperStyle}>
               <Slider
                 images={slider.images}
-                intervalSeconds={9000 + (index * 3000)}
+                intervalSeconds={9000 + index * 3000}
                 imageWidth={350}
                 imageHeight={500}
               />
@@ -26,13 +32,14 @@ function WelcomePage() {
         ))}
       </div>
       <div className={brendLogoNonStopSlider}>
-        <SliderNonStop slideWidth={150} sliderContainerwidth={1800}>
-         {
-          [...logoBrandsData['brands-logo'], ...logoBrandsData['brands-logo']].map((el, idx) => (
-            <div key={idx}>{el.name}</div>
-          ))
-         }
-        </SliderNonStop>
+        <LogosSlider>
+          {[
+            ...logoBrandsData['brands-logo'],
+            ...logoBrandsData['brands-logo'],
+          ].map((el, idx) => (
+            <div className={logoContainer} key={idx}>{el.name}</div>
+          ))}
+        </LogosSlider>
       </div>
     </div>
   );

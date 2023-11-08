@@ -51,10 +51,11 @@ const useLeavePageConfirmation = ({
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (shouldStopNavigation) {
-        e.returnValue =
-          'You have unsaved changes. Are you sure you want to leave this page?';
+        if(customPath) {
+          e.returnValue = 'message for old browsers';
+        }
       }
-      router.push('/test');
+      if(customPath) router.push(customPath);
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -62,7 +63,7 @@ const useLeavePageConfirmation = ({
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [router, shouldStopNavigation]);
+  }, [customPath, router, shouldStopNavigation]);
 
   return navigate;
 };

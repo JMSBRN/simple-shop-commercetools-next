@@ -8,6 +8,7 @@ const secretKey = process.env.CLIENT_SECRET as string;
 export const setEncryptedDataToCookie = (
   key: CookiesKeys,
   data: UserData | string,
+  expirationInSeconds?: number,
   req?: any,
   res?: any
 ) => {
@@ -16,7 +17,7 @@ export const setEncryptedDataToCookie = (
     secretKey
   ).toString();
 
-  setCookie(key, encryptedData, { req, res });
+  setCookie(key, encryptedData, { req, res, maxAge: expirationInSeconds });
 };
 
 export const getDecryptedDataFromCookie = (key: CookiesKeys) => {

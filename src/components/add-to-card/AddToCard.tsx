@@ -49,7 +49,7 @@ function AddToCard({
       const newCart = resNewCart?.body as Cart;
 
       if (newCart?.id) {
-        setEncryptedDataToCookie('currentCartId', newCart.id);
+        setEncryptedDataToCookie('currentCartId', newCart.id, 3600);
         dispatch(fetchCarts());
       }
     }

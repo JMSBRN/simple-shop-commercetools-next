@@ -39,19 +39,15 @@ function Header() {
   const [isModalRendered, setIsModalRendered] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { carts, userName } = useAppSelector(selectCommerceTools);
-  const currnetCartId = JSON.parse(
+  const currentCartId = JSON.parse(
     getDecryptedDataFromCookie('currentCartId')!
   ) as string | undefined;
 
-  const cart = carts?.find((el) => el.id === currnetCartId!) as Cart;
+  const cart = carts?.find((el) => el.id === currentCartId!) as Cart;
   const { push } = useRouter();
 
   useEffect(() => {
-    const fn = async () => {
-      dispatch(fetchCarts());
-    };
-
-    fn();
+    dispatch(fetchCarts());
     const userdataFromLocal = JSON.parse(
       getDecryptedDataFromCookie('userData')!
     ) as UserData;
@@ -62,6 +58,22 @@ function Header() {
       if (firstName) dispatch(setUserName(firstName));
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    const fn = async () => {
+      if (!currentCartId && carts.length) {
+        const promises = carts.map(async (c) => {
+          if (c.customerId === undefined) {
+            return await deleteCart(c.id);
+          }
+        });
+
+        await Promise.all(promises);
+      }
+    };
+
+    fn();
+  }, [carts, currentCartId]);
 
   const handleLogout = async () => {
     dispatch(setUserName(''));

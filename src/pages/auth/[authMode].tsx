@@ -1,6 +1,10 @@
 import { Login, RegistrationMe } from '@/commercetools/utils/utilsMe';
 import React, { useRef, useState } from 'react';
 import {
+  getDecryptedDataFromCookie,
+  setEncryptedDataToCookie,
+} from '@/commercetools/utils/secureCookiesUtils';
+import {
   selectCommerceTools,
   setErrorMessage,
   setUserName,
@@ -16,7 +20,6 @@ import { UserData } from '@/interfaces';
 import { getCarts } from '@/commercetools/utils/utilsCarts';
 import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { setEncryptedDataToCookie } from '@/commercetools/utils/secureCookiesUtils';
 import styles from '../../styles/AuthPage.module.scss';
 import { useRouter } from 'next/router';
 
@@ -37,6 +40,11 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
   ];
   const { authMode } = params;
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const currentCartId = JSON.parse(
+    getDecryptedDataFromCookie('currentCartId')!
+  ) as string | undefined;
+  const pushUrl = currentCartId ? '/user/dashboard' : '/';
+
   const onSubmitForm = async (e?: AuthCustomerDraftFields) => {
     dispatch(setErrorMessage(''));
     if (e?.email) {
@@ -48,36 +56,37 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
           const cartsResult = await getCarts();
 
           if (!isErrorResponse(cartsResult) && Array.isArray(cartsResult)) {
-            const anonimousCartId = cartsResult
-              .filter((c) => c.cartState === 'Active')
-              .find((c) => c.anonymousId)?.id;
-
-            const res = await Login(email, password, anonimousCartId);
-
-            if (isErrorResponse(res)) {
-              dispatch(setErrorMessage(res.message));
-              setIsLoading(false);
-            } else {
-              if (res?.statusCode === 200) {
-                const { customer } = res.body;
-                const { id, firstName } = customer;
-
-                if (firstName) {
-                  const userData: UserData = {
-                    customerId: id,
-                    firstName,
-                    email,
-                    password,
-                  };
-
-                  dispatch(setUserName(firstName));
-                  setEncryptedDataToCookie('userData', userData);
-                  setIsLoading(true);
+              const anonimousCartId = cartsResult
+                .filter((c) => c.cartState === 'Active')
+                .find((c) => c.id === currentCartId || '')?.id;
+                
+                console.log(anonimousCartId);
+                
+              const res = await Login(email, password, anonimousCartId);
+  
+              if (isErrorResponse(res)) {
+                dispatch(setErrorMessage(res.message));
+                setIsLoading(false);
+              } else {
+                if (res?.statusCode === 200) {
+                  const { customer } = res.body;
+                  const { id, firstName } = customer;
+  
+                  if (firstName) {
+                    const userData: UserData = {
+                      customerId: id,
+                      firstName,
+                      email,
+                      password,
+                    };
+  
+                    dispatch(setUserName(firstName));
+                    setEncryptedDataToCookie('userData', userData);
+                    setIsLoading(true);
+                  }
+                  push(pushUrl);
                 }
-
-                push('/user/dashboard');
               }
-            }
           }
           return;
         case 'registration':

@@ -1,6 +1,7 @@
 import Footer from '../footer/Footer';
 import Header from '../header/Header';
 import React  from 'react';
+import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
 import styles from './Layout.module.scss';
 import useLeavePageConfirmation from '@/hooks/useLeavePageConfirmation';
 
@@ -10,8 +11,15 @@ function Layout({
   children: React.ReactNode;
 }) {
 
+  const currentCartId = JSON.parse(
+    getDecryptedDataFromCookie('currentCartId')!
+  ) as string | undefined;
+
+ console.log(currentCartId);
+ 
   useLeavePageConfirmation({
-    shouldStopNavigation: true
+    shouldStopNavigation: true,
+    customPath: !!currentCartId ? `/cart/${currentCartId}` : undefined
 
   });
 

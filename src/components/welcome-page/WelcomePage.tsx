@@ -10,7 +10,6 @@ function WelcomePage() {
     slidersContainer,
     sliderWrapperStyle,
     sliderTitle,
-    brendLogoNonStopSlider,
     logoContainer
   } = styles;
 
@@ -31,7 +30,6 @@ function WelcomePage() {
           </div>
         ))}
       </div>
-      <div className={brendLogoNonStopSlider}>
         <LogosSlider>
           {[
             ...logoBrandsData['brands-logo'],
@@ -40,7 +38,6 @@ function WelcomePage() {
             <div className={logoContainer} key={idx}>{el.name}</div>
           ))}
         </LogosSlider>
-      </div>
     </div>
   );
 }

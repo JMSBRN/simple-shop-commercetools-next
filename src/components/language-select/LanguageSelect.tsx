@@ -42,7 +42,7 @@ function LanguageSelect() {
       {!!languages.length && (
         <select onChange={(e) => changeLanguage(e)}>
           {languages.map((el, idx) => (
-            <option key={idx} value={el}>{el}
+            <option key={idx} value={el}>{el.substring(3)}
             </option>
           ))}
         </select>

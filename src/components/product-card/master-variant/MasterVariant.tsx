@@ -7,6 +7,7 @@ import { formatValue } from '../../../commercetools/utils/utilsProductCard';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MasterVariant.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
+import { useTranslation } from 'next-i18next';
 
 function MasterVariant({
   masterVariant,
@@ -23,10 +24,12 @@ function MasterVariant({
     priceCurrencyStyle,
     ImageStyle,
     imageLayoutStyle,
+    noPriceMessage
   } = styles;
   const { images, attributes, prices } = masterVariant;
 
   const { country } = useAppSelector(selectCommerceTools);
+  const { t } = useTranslation('common');
    
   return (
     <div className={masterVariantContainer}>
@@ -51,7 +54,7 @@ function MasterVariant({
       </div>
       <div className="description">{}</div>
       <div className={pricesStyle}>
-        {prices
+        {prices?.filter((el) => el.country === country).length ? (prices
           ?.filter((el) => el.country === country)
           .map((price) => (
             <div key={price.id}>
@@ -59,7 +62,9 @@ function MasterVariant({
                 price.value
               )} ${price.value.currencyCode}`}</div>
             </div>
-          ))}
+          ))) : (
+            <div className={noPriceMessage}>{t('no-price-message')}</div>
+          )}
       </div>
     </div>
   );

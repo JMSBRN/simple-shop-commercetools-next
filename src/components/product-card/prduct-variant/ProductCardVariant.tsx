@@ -28,7 +28,7 @@ function ProductCardVariant({ variant }: { variant: ProductVariant }) {
             src={image.url}
             width={image.dimensions.w / 2}
             height={image.dimensions.h / 2}
-            alt={image.label || 'alt not exist sorry for that'}
+            alt={image.label || t('no-exist-alt-img')}
             layout="fixed"
           />
         ))}

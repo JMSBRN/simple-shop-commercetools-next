@@ -8,5 +8,6 @@
     "origin":"herkunft",
     "variant": "variante",
     "add-to-cart":"in den warenkorb legen",
-    "login":"anmeldung"
+    "login":"anmeldung",
+    "no-exist-alt-img":"alt existiert nicht, tut mir leid"
 }

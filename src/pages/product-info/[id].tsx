@@ -23,7 +23,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, params })
     props: {
       id,
       product,
-      ...(await serverSideTranslations(locale || 'en', ['translation', 'common'])),
+      ...(await serverSideTranslations(locale || 'en-GB', ['translation', 'common'])),
     },
   };
 };

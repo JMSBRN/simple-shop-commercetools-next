@@ -140,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
       paymentMethod,
-      ...(await serverSideTranslations(locale || 'en', [
+      ...(await serverSideTranslations(locale || 'en-GB', [
         'translation',
         'common',
       ])),

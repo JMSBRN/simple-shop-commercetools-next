@@ -85,7 +85,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   return {
     props: {
       parentCatName,
-      ...(await serverSideTranslations(locale || 'en', [
+      ...(await serverSideTranslations(locale || 'en-GB', [
         'translation',
         'common',
       ])),

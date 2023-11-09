@@ -2,7 +2,7 @@
 
 .addToCardContiner{
    width: 200px;
-   height: 80px; 
+   height: auto; 
    padding: 14px 0;
    @include flex ();
    background-color: rgb(176, 176, 176);

@@ -155,7 +155,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => ({
   props: {
     params,
-    ...(await serverSideTranslations(locale || 'en', [
+    ...(await serverSideTranslations(locale || 'en-GB', [
       'translation',
       'common',
     ])),

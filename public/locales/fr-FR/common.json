@@ -8,5 +8,6 @@
     "origin":"origine",
     "variant": "une variante",
     "add-to-cart":"ajouter au panier",
-    "login":"se connecter"
+    "login":"se connecter",
+    "no-exist-alt-img":"ça n'existe pas, désolé pour ça"
 }

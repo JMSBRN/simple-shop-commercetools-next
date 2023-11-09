@@ -5,6 +5,7 @@ import { formatValue } from '../../../commercetools/utils/utilsProductCard';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './ProductCardVariant.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
+import { useTranslation } from 'next-i18next';
 
 function ProductCardVariant({ variant }: { variant: ProductVariant }) {
   const {
@@ -12,9 +13,10 @@ function ProductCardVariant({ variant }: { variant: ProductVariant }) {
     pricesStyle,
     priceCurrencyStyle,
     imageLayout,
-    noPriceMessage
+    noPriceMessage,
   } = styles;
   const { country } = useAppSelector(selectCommerceTools);
+  const { t } = useTranslation('common');
 
   return (
     <div className={variantContainerStyle}>
@@ -27,7 +29,7 @@ function ProductCardVariant({ variant }: { variant: ProductVariant }) {
             width={image.dimensions.w / 2}
             height={image.dimensions.h / 2}
             alt={image.label || 'alt not exist sorry for that'}
-            layout='fixed'
+            layout="fixed"
           />
         ))}
       </div>
@@ -38,14 +40,12 @@ function ProductCardVariant({ variant }: { variant: ProductVariant }) {
             .map((price) => (
               <div key={price.id}>
                 <div className={priceCurrencyStyle}>
-                {`${formatValue(price.value)} ${price.value.currencyCode}`}
+                  {`${formatValue(price.value)} ${price.value.currencyCode}`}
                 </div>
               </div>
             ))
         ) : (
-          <div className={noPriceMessage}>
-            no price in this country
-          </div>
+          <div className={noPriceMessage}>{t('no-price-message')}</div>
         )}
       </div>
     </div>

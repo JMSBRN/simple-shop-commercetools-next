@@ -14,6 +14,7 @@ import { UserData } from '@/interfaces';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './AddToCard.module.scss';
+import { useTranslation } from 'next-i18next';
 
 function AddToCard({
   productId,
@@ -27,6 +28,7 @@ function AddToCard({
   const { country } = useAppSelector(selectCommerceTools);
   const [quantity, setQuantity] = useState<number>(0);
   const anonimouseId = process.env.ANONIMOUS_ID;
+  const { t } = useTranslation('common');
 
   const userData = JSON.parse(getDecryptedDataFromCookie('userData')) as
     | UserData
@@ -86,7 +88,7 @@ function AddToCard({
         <button onClick={handleMinusQuantuty}>-</button>
       </div>
       <button type="button" onClick={handleCreateCard}>
-        Add to Cart
+        {t('add-to-cart')}
       </button>
     </div>
   );

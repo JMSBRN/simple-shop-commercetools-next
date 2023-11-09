@@ -23,6 +23,7 @@ import logoutIcon from '../../../public/svgs/logout.svg';
 import shoppingBasketIcon from '../../../public/icons/shopping_busket.png';
 import styles from './Header.module.scss';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 function Header() {
   const {
@@ -42,9 +43,9 @@ function Header() {
   const currentCartId = JSON.parse(
     getDecryptedDataFromCookie('currentCartId')!
   ) as string | undefined;
-
   const cart = carts?.find((el) => el.id === currentCartId!) as Cart;
   const { push } = useRouter();
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     dispatch(fetchCarts());
@@ -119,7 +120,7 @@ function Header() {
       <div className={authContainer}>
         {!userName ? (
           <div className={loginBtnStyle} onClick={handleLogin}>
-            Log In
+            {t('login')}
           </div>
         ) : (
           <div className={userNameStyle}>

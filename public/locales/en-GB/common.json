@@ -3,5 +3,10 @@
         "title": "Categories"
     },
     "product-info": "Product Info",
-    "select-country-message": "select avalible country"
+    "select-country-message": "select avalible country",
+    "no-price-message": "no price in this country",
+    "origin": "origin",
+    "variant": "variant",
+    "add-to-cart":"add to cart",
+    "login":"login"
 }

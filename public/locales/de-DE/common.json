@@ -3,5 +3,10 @@
      "title": "Kategorien"
     },
     "product-info": "Produktinformation",
-    "select-country-message": "Wählen Sie das verfügbare Land aus"
+    "select-country-message": "wählen sie das verfügbare land aus",
+    "no-price-message": "kein preis in diesem land",
+    "origin":"herkunft",
+    "variant": "variante",
+    "add-to-cart":"in den warenkorb legen",
+    "login":"anmeldung"
 }

@@ -6,6 +6,7 @@ import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice
 import { setDynamicArray } from '../../commercetools/utils/utilsProductCard';
 import styles from './ProductCard.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
+import { useTranslation } from 'next-i18next';
 
 function ProductCard({ product }: { product: Product }) {
   const {
@@ -21,6 +22,7 @@ function ProductCard({ product }: { product: Product }) {
   const productName = filterObjectAndReturnValue(name, language);
   const { masterVariant, variants } = current;
   const [selectedOption, setSelectedOption] = useState<number>(0);
+  const { t } = useTranslation('common');
   const handleOptionChange = (option: number) => {
     setSelectedOption(option === selectedOption ? 0 : option);
   };
@@ -37,7 +39,7 @@ function ProductCard({ product }: { product: Product }) {
       <div className={variantsContainer}>
         {selectedOption ? (
           <div className={variantStyle} onClick={() => setSelectedOption(0)}>
-            origin
+            {t('origin')}
           </div>
         ) : null}
         {setDynamicArray(variants.length).map((option, idx) => (
@@ -46,7 +48,7 @@ function ProductCard({ product }: { product: Product }) {
             key={idx.toString()}
             onClick={() => handleOptionChange(option)}
           >
-            variant
+            {t('variant')}
           </div>
         ))}
       </div>

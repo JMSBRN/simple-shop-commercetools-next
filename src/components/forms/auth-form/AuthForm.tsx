@@ -33,9 +33,9 @@ function AuthForm({
 
   const setIsPasswordConfirmed = (formData: AuthCustomerDraftFields) => {
     if (formData.password) {
-      const { password, password_Confirm } = formData;
+      const { password, passwordConfirm } = formData;
 
-      if (password === password_Confirm) {
+      if (password === passwordConfirm) {
         return true;
       }
       return false;
@@ -90,7 +90,7 @@ function AuthForm({
                 ? renderInputField(el, 'email')
                 : el === 'password'
                 ? renderPasswordInputElement(el)
-                : el === 'password_Confirm'
+                : el === 'passwordConfirm'
                 ? renderPasswordInputElement(el)
                 : renderInputField(el)}
             </div>
@@ -112,3 +112,4 @@ function AuthForm({
 }
 
 export default AuthForm;
+

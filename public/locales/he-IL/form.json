@@ -1,0 +1,11 @@
+{
+    "login":"כניסה",
+    "register":"רשום",
+    "firstName":"שם פרטי",
+    "email":"אימייל",
+    "password":"סיסמה",
+    "passwordConfirm":"אישור סיסמה",
+    "visible":"visible",
+    "submit":"שלח",
+    "registration-link":"עבור לרישום"
+}

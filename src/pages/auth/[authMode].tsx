@@ -22,21 +22,23 @@ import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../styles/AuthPage.module.scss';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 function AuthPage({ params }: { params: ParsedUrlQuery }) {
   const dispatch = useAppDispatch();
   const { errorMessage } = useAppSelector(selectCommerceTools);
   const formRef = useRef<HTMLFormElement | null>(null);
   const { push } = useRouter();
+  const { t } = useTranslation('form');
   const loginFormFields: (keyof AuthCustomerDraftFields)[][] = [
-    ['email'],
-    ['password'],
+    [t('email')],
+    [t('password')],
   ];
   const signOutFormFields: (keyof AuthCustomerDraftFields)[][] = [
-    ['firstName'],
-    ['email'],
-    ['password'],
-    ['password_Confirm'],
+    [t('firstName')],
+    [t('email')],
+    [t('password')],
+    [t('passwordConfirm')],
   ];
   const { authMode } = params;
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -59,9 +61,6 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
               const anonimousCartId = cartsResult
                 .filter((c) => c.cartState === 'Active')
                 .find((c) => c.id === currentCartId || '')?.id;
-                
-                console.log(anonimousCartId);
-                
               const res = await Login(email, password, anonimousCartId);
   
               if (isErrorResponse(res)) {
@@ -122,7 +121,7 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
 
   return (
     <div className={styles.authPageContainer}>
-      <h3>{authMode === 'login' ? 'login' : 'Register'}</h3>
+      <h3>{authMode === 'login' ? t('login') : t('register')}</h3>
       <AuthForm
         formRef={formRef}
         onSubmit={onSubmitForm}
@@ -133,14 +132,14 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
       <ButtonWithLoader
         isLoading={isLoading}
         onClick={handleClickSubmitBtn}
-        text="submit"
+        text={t('submit')}
       />
       {authMode === 'login' && (
         <Link
           href={'/auth/registration'}
           onClick={() => dispatch(setErrorMessage(''))}
         >
-          Go to registration
+          {t('registration-link')}
         </Link>
       )}
     </div>
@@ -158,6 +157,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     ...(await serverSideTranslations(locale || 'en-GB', [
       'translation',
       'common',
+      'form'
     ])),
   },
 });

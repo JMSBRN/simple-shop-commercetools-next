@@ -13,6 +13,7 @@
     @include flex(center, flex-start, column);
     h3 {
         margin-top: 100px;
+        text-transform: uppercase;
         color: $primary-color;
     }
 

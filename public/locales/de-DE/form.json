@@ -1,0 +1,11 @@
+{
+    "login":"anmeldung",
+    "register":"registrieren",
+    "firstName":"vorname",
+    "email":"email",
+    "password":"passwort",
+    "passwordConfirm":"passwortbestätigung",
+    "visible":"sichtbar",
+    "submit":"einreichen",
+    "registration-link":"gehe zur registrierung"
+}

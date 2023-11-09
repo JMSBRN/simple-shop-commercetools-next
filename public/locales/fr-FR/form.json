@@ -1,0 +1,11 @@
+{
+    "login":"s'inscrire",
+    "register":"registre",
+    "firstName":"prénom",
+    "email":"e-mail",
+    "password":"mot de passe",
+    "passwordConfirm":"confirmer le mot de passe",
+    "visible":"visible",
+    "submit":"soumettre",
+    "registration-link":"aller à l'inscription"
+}

@@ -1,7 +1,7 @@
 export interface AuthCustomerDraftFields {
   email: string;
   password: string;
-  password_Confirm: string;
+  passwordConfirm: string;
   isEmailVerified: string;
   authenticationMode: string;
   firstName: string;

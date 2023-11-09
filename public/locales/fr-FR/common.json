@@ -9,5 +9,6 @@
     "variant": "une variante",
     "add-to-cart":"ajouter au panier",
     "login":"se connecter",
-    "no-exist-alt-img":"ça n'existe pas, désolé pour ça"
+    "no-exist-alt-img":"ça n'existe pas, désolé pour ça",
+    "checkout":"vérifier"
 }

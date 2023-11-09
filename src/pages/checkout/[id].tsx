@@ -21,6 +21,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../styles/Checkout.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 function Checkout({ paymentMethod }: { paymentMethod: string | undefined }) {
   const {
@@ -36,6 +37,7 @@ function Checkout({ paymentMethod }: { paymentMethod: string | undefined }) {
   const [cart, setCart] = useState<Cart>();
   const { query, push } = useRouter();
   const cartId = query.id as string;
+  const { t } = useTranslation('form');
 
   useEffect(() => {
     carts.forEach((c) => {
@@ -78,19 +80,28 @@ function Checkout({ paymentMethod }: { paymentMethod: string | undefined }) {
   };
 
   const addressFields: (keyof BaseAddress)[][] = [
-    ['firstName', 'lastName'],
-    ['postalCode', 'city'],
-    ['streetName', 'streetNumber'],
-    ['additionalStreetInfo'],
-    ['building', 'apartment'],
-    ['company', 'department'],
-    ['email', 'phone'],
+    [t('firstName'), t('lastName')],
+    [t('postalCode'), t('city')],
+    [t('streetName'), t('streetNumber')],
+    [t('additionalStreetInfo')],
+    [t('building'), t('apartment')],
+    [t('company'), t('department')],
+    [t('email'), t('phone')],
+  ];
+  const addressFieldsOrderSummary: (keyof BaseAddress)[][] = [
+    [t('firstName')],
+    [t('lastName')],
+    [t('city')],
+    [t('streetName')],
+    [t('building')],
+    [t('email')],
+    [t('phone')],
   ];
 
   return (
     <div className={checkoutMainContainer}>
       <div className={mainTitle}>
-        <h3>Checkout</h3>
+        <h3>{t('checkout', { ns: 'common' })}</h3>
       </div>
       <div className={checkoutContainer}>
         <div className={billingDetailsContainer}>
@@ -107,6 +118,7 @@ function Checkout({ paymentMethod }: { paymentMethod: string | undefined }) {
           {cart?.id && (
             <OrderSummary
               cart={cart}
+              addressFields={addressFieldsOrderSummary}
               paymentMethod={paymentMethod}
               handlePlaceOrder={handlePlaceOrder}
             />
@@ -141,6 +153,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
     props: {
       paymentMethod,
       ...(await serverSideTranslations(locale || 'en-GB', [
+        'form',
         'translation',
         'common',
       ])),

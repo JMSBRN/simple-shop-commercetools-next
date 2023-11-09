@@ -7,5 +7,16 @@
     "passwordConfirm":"אישור סיסמה",
     "visible":"visible",
     "submit":"שלח",
-    "registration-link":"עבור לרישום"
+    "registration-link":"עבור לרישום",
+    "lastName": "שם משפחה",
+    "postalCode": "מיקוד",
+    "city": "עִיר",
+    "streetName": "שם רחוב",
+    "additionalStreetInfo": "מידע רחוב נוסף",
+    "building": "בִּניָן",
+    "apartment": "דִירָה",
+    "company": "חֶברָה",
+    "department": "מַחלָקָה",
+    "phone": "טלפון",
+    "streetNumber": "מספר רחוב"
 }

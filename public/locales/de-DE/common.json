@@ -9,5 +9,6 @@
     "variant": "variante",
     "add-to-cart":"in den warenkorb legen",
     "login":"anmeldung",
-    "no-exist-alt-img":"alt existiert nicht, tut mir leid"
+    "no-exist-alt-img":"alt existiert nicht, tut mir leid",
+    "checkout":"kasse"
 }

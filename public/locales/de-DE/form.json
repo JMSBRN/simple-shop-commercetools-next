@@ -7,5 +7,16 @@
     "passwordConfirm":"passwortbestätigung",
     "visible":"sichtbar",
     "submit":"einreichen",
-    "registration-link":"gehe zur registrierung"
+    "registration-link":"gehe zur registrierung",
+    "lastName": "familienname, nachname",
+    "postalCode": "postleitzahl",
+    "city": "stadt",
+    "streetName": "straßenname",
+    "additionalStreetInfo": "additionalStreetInfo",
+    "building": "gebäude",
+    "apartment": "wohnung",
+    "company": "unternehmen",
+    "department": "abteilung",
+    "phone": "telefon",
+    "streetNumber":"hausnummer"
 }

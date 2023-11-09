@@ -27,10 +27,12 @@ import { useRouter } from 'next/router';
 
 function OrderSummary({
   cart,
+  addressFields,
   paymentMethod,
   handlePlaceOrder,
 }: {
   cart: Cart;
+  addressFields: (keyof BaseAddress)[][];
   paymentMethod: string | undefined;
   handlePlaceOrder: () => void;
 }) {
@@ -67,15 +69,7 @@ function OrderSummary({
   const isShippingAddressExisted = !cart.shippingAddress?.email;
   const cartShippingMethodId = cart.shippingInfo?.shippingMethod?.id as string;
   const shippingAdrRef = useRef<HTMLFormElement | null>(null);
-  const addressFields: (keyof BaseAddress)[][] = [
-    ['firstName'],
-    ['lastName'],
-    ['city'],
-    ['streetName'],
-    ['building'],
-    ['email'],
-    ['phone'],
-  ];
+
   const paymantsFields: PaymentMethods[] = ['CREDIT_CARD', 'PAY_PAL'];
 
   const handleChangePaymentMethod = async (

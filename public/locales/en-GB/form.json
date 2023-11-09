@@ -1,11 +1,24 @@
 {
-    "login":"login",
-    "register":"register",
+    "login": "login",
+    "register": "register",
     "firstName": "firstname",
-    "email":"email",
-    "password":"password",
-    "passwordConfirm":"password confirm",
-    "visible":"visible",
-    "submit":"submit",
-    "registration-link":"go to registration"
+    "email": "email",
+    "password": "password",
+    "passwordConfirm": "password confirm",
+    "visible": "visible",
+    "submit": "submit",
+    "registration-link": "go to registration",
+    "lastName": "lastName",
+    "postalCode": "postalCode",
+    "city": "city",
+    "streetName": "streetName",
+    "additionalStreetInfo": "additionalStreetInfo",
+    "building": "building",
+    "apartment": "apartment",
+    "company": "company",
+    "department": "department",
+    "phone": "phone",
+    "streetNumber":"street number"
 }
+
+

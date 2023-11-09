@@ -2,5 +2,6 @@
     "category":{
         "title": "Categories"
     },
-    "product-info": "Product Info"
+    "product-info": "Product Info",
+    "select-country-message": "select avalible country"
 }

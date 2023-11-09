@@ -1,7 +1,11 @@
 { "slider-images":
     [
         {
-            "name": "home",
+            "name":  {
+                "en-GB": "home brands",
+                "de-DE": "Hausmarken",
+                "he-IL": "מותגי בית"
+            },
             "images": [
                 {
                     "url": "/slider-images/home/slider_home_1.jpg"
@@ -15,7 +19,11 @@
             ]
         },
         {
-            "name": "woman",
+            "name":  {
+                "en-GB": "women brands",
+                "de-DE": "Damenmarken",
+                "he-IL": "מותגי נשים"
+            },
             "images": [
                 {
                     "url": "/slider-images/women_brands/women_brands_1.jpg"
@@ -29,7 +37,11 @@
             ]
         },
         {
-            "name": "men",
+            "name": {
+                "en-GB": "men brands",
+                "de-DE": "Herrenmarken",
+                "he-IL": "מותגי גברים"
+            },
             "images": [
                 {
                     "url": "/slider-images/men_brands/men_brands_1.jpg"

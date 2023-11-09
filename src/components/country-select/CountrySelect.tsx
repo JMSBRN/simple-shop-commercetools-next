@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { getCountries } from '@/commercetools/utils/utilsCommercTools';
 import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import styles from './CountrySelect.module.scss';
+import { useTranslation } from 'next-i18next';
 
 function CountrySelect() {
   const dispatch = useAppDispatch();
@@ -15,6 +16,7 @@ function CountrySelect() {
   const [countries, setCountries] = useState<string[]>([]);
   const [currentCountry, setCurrentCountry] = useState<string>('');
   const isCartsCreated = !!carts.length;
+  const { t } = useTranslation('common');
 
   const fetchFunction = useCallback(
     async function () {
@@ -72,7 +74,7 @@ function CountrySelect() {
           ))}
         </select>
       )}
-      {!isCartsCreated && <div>select avalible country</div>}
+      {!isCartsCreated && <div>{t('select-country-message')}</div>}
     </div>
   );
 }

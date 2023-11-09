@@ -2,5 +2,6 @@
     "category":{
      "title": "קטגוריות"
     },
-    "product-info": "מידע על המוצר"
+    "product-info": "מידע על המוצר",
+    "select-country-message": "בחר מדינה זמינה"
 }

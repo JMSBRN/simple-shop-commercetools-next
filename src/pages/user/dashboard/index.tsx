@@ -205,7 +205,7 @@ export default DashBoard;
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale || 'en-GB', [
+      ...(await serverSideTranslations(locale || 'en', [
         'translation',
         'common',
       ])),

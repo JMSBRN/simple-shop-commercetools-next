@@ -8,6 +8,7 @@ import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice
 import styles from './MiniCartModal.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 function MiniCartModal({ onClick }: { onClick: () => void }) {
   const {
@@ -22,6 +23,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
   const { carts } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
   const [cart, setCart] = useState<Cart>();
+  const { t } = useTranslation('common');
   const currentCartId = JSON.parse(
     getDecryptedDataFromCookie('currentCartId')!
   ) as string | undefined;
@@ -50,9 +52,9 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
   return (
     <div className={miniModalConTainer}>
       <div className={miniModalClose} onClick={onClick}>
-        close
+        {t('close')}
       </div>
-      <div className={titleStyle}>Mini Cart</div>
+      <div className={titleStyle}>{t('miniCart')}</div>
       {cart?.lineItems.length && cart?.cartState === 'Active' ? (
         <>
           <div className={cartLineItemsStyle}>
@@ -67,19 +69,19 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
               ))}
           </div>
           <div className={subTotal}>
-            Sub Total: <OriginalTotal cart={cart} />
+            {t('subTotal')}: <OriginalTotal cart={cart} />
           </div>
           <div className={total}>
-            Total:
+          {t('total')}:
             {cart?.taxedPrice &&
               getMoneyValueFromCartField(cart?.taxedPrice.totalGross)}
           </div>
           <div className={buttonsContiner}>
             <button onClick={handleRedirectToCartPage} type="button">
-              Viewbag
+            {t('viewbag')}
             </button>
             <button type="button" onClick={handleCheckout}>
-              Checkout
+            {t('checkout')}
             </button>
           </div>
         </>

@@ -13,6 +13,7 @@ import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTo
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './CartLineItem.module.scss';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 function CartLineItem({
   cartId,
@@ -45,6 +46,7 @@ function CartLineItem({
   const { images } = variant;
   const [currentQuantity, setCurrentQuantity] = useState<number>(quantity);
   const { push } = useRouter();
+  const { t } = useTranslation('common');
   const upDateQuantityLineItem = async (cartId: string, quantity: number) => {
     const cart = (await getCarts(cartId)) as Cart;
 
@@ -105,7 +107,7 @@ function CartLineItem({
         className={deleteLineItem}
         onClick={() => handleDeleteLineItem(cartId, version, id)}
       >
-        delete
+        {t('delete')}
       </div>}
       <Image
         priority
@@ -137,7 +139,7 @@ function CartLineItem({
       ) :  (
         <>
           <div>*</div>
-          <div>{quantity}</div>
+          <div>{t('quantity')}</div>
         </>
       )}
       {isTotlaSummExisted && (

@@ -24,6 +24,7 @@ import { removeUnderscores } from '@/commercetools/utils/utilsApp';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './OrderSummary.module.scss';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 function OrderSummary({
   cart,
@@ -59,7 +60,7 @@ function OrderSummary({
 
   const dispatch = useAppDispatch();
   const { country } = useAppSelector(selectCommerceTools);
-  const { push } = useRouter();
+  const { push, locale } = useRouter();
   const [shippingMethods, setShippingMethods] = useState<ShippingMethod[]>(
     [] as ShippingMethod[]
   );
@@ -69,6 +70,7 @@ function OrderSummary({
   const isShippingAddressExisted = !cart.shippingAddress?.email;
   const cartShippingMethodId = cart.shippingInfo?.shippingMethod?.id as string;
   const shippingAdrRef = useRef<HTMLFormElement | null>(null);
+  const { t } = useTranslation('common');
 
   const paymantsFields: PaymentMethods[] = ['CREDIT_CARD', 'PAY_PAL'];
 
@@ -197,20 +199,20 @@ function OrderSummary({
             className={closeModal}
             onClick={() => setIsShippingAdrModalRendered(false)}
           >
-            close
+            {t('close')}
           </div>
           <AddressForm
             formRef={shippingAdrRef}
             addressFields={addressFields}
             onSubmit={formSubmit}
           />
-          <button onClick={handleSubmitForm}>submit</button>
+          <button onClick={handleSubmitForm}> {t('submit')}</button>
         </div>
       )}
       <div className={totalsInfo}>
         <div className={totalsInfoTitles}>
-          <span>product</span>
-          <span>total</span>
+          <span>{t('product')}</span>
+          <span>{t('total')}</span>
         </div>
         <div className={lineItemsStyle}>
           {cart.lineItems.map((item) => (
@@ -221,11 +223,11 @@ function OrderSummary({
                   handleDeleteLineItem(cart.id, cart.version, item.id)
                 }
               >
-                delete
+                {t('delete')}
               </div>
               <div className={itemName}>
                 {filterObjectAndReturnValue(item.name, 'en') ||
-                  'no product name'}
+                  t('noProductMessage')}
               </div>
               <div className={itemPrice}>
                 <ProductPrice
@@ -237,7 +239,7 @@ function OrderSummary({
           ))}
         </div>
         <div className={subTotal}>
-          Sub Total: <OriginalTotal cart={cart} />
+          {t('subTotal')}: <OriginalTotal cart={cart} />
         </div>
       </div>
       <div style={{ height: '25px' }}>
@@ -248,7 +250,7 @@ function OrderSummary({
               setIsShippingAdrModalRendered(!isShippingAdrModalRendered)
             }
           >
-            please fill shipping details
+            {t('shippingWarnMessage')} 
           </div>
         )}
       </div>
@@ -256,7 +258,7 @@ function OrderSummary({
         {shippingMethods.map((el) => (
           <div key={el.id}>
             <label>
-              {el.name}
+              {filterObjectAndReturnValue(el.localizedName!, locale!)}
               <input
                 type="radio"
                 name="delivery"
@@ -270,7 +272,7 @@ function OrderSummary({
         ))}
       </div>
       <div className={deliveryTax}>
-        Delivery tax:{' '}
+      {t('deliveryTax')} :{' '}
         {getMoneyValueFromCartField(cart.shippingInfo?.taxedPrice?.totalGross!)}
       </div>
       <div className={paymentMethodContainer}>
@@ -288,7 +290,7 @@ function OrderSummary({
         ))}
       </div>
       <div className={totalSum}>
-        Total: {getMoneyValueFromCartField(cart.taxedPrice?.totalGross!)}
+      {t('total')}: {getMoneyValueFromCartField(cart.taxedPrice?.totalGross!)}
       </div>
       <button
         className={checkoutBtn}
@@ -300,9 +302,9 @@ function OrderSummary({
             : ({} as React.CSSProperties)
         }
       >
-        {isOrdered ? 'Card Ordered' : 'Placeorder'}
+        {isOrdered ? t('orderedCart') : t('placeOrder')}
       </button>
-      <div className={errors}>error</div>
+      <div className={errors}>error ??</div>
     </div>
   );
 }

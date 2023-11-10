@@ -88,7 +88,7 @@ function AddToCard({
         <button onClick={handleMinusQuantuty}>-</button>
       </div>
       <button type="button" onClick={handleCreateCard}>
-        {t('add-to-cart')}
+        {t('addToCart')}
       </button>
     </div>
   );

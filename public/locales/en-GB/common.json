@@ -1,14 +1,42 @@
 {
-    "category":{
+    "category": {
         "title": "Categories"
     },
-    "product-info": "Product Info",
+    "productInfo": "Product Info",
     "select-country-message": "select avalible country",
     "no-price-message": "no price in this country",
     "origin": "origin",
     "variant": "variant",
-    "add-to-cart":"add to cart",
-    "login":"login",
-    "no-exist-alt-img":"alt not exist sorry for that",
-    "checkout":"checkout"
+    "addToCart": "add to cart",
+    "login": "login",
+    "noExistAltMessage": "alt not exist sorry for that",
+    "checkout": "checkout",
+    "billingDetails": "billingDetails",
+    "orderSummary": "orderSummary",
+    "close": "close",
+    "delete": "delete",
+    "submit": "submit",
+    "product": "product",
+    "total": "total",
+    "subTotal": "subTotal",
+    "shippingWarnMessage": "please fill shipping details",
+    "deliveryTax": "delivery tax",
+    "orderedCart": "cart ordered",
+    "placeOrder": "place order",
+    "noProductMessage": "no product name",
+    "viewbag": "viewbag",
+    "emptyCart": "empty cart",
+    "miniCart": "mini Cart",
+    "customerCart": "customer cart",
+    "description": "description",
+    "price": "price",
+    "quantity": "quantity",
+    "taxesIncluded": "taxes included",
+    "netAmount": "net amount",
+    "delivery": "delivery",
+    "deleteCart": "delete cart",
+    "cartTotals":"cart totals",
+    "apply":"apply",
+    "promoCode": "promo code"
+
 }

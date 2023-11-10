@@ -7,7 +7,7 @@
     "passwordConfirm":"passwortbestätigung",
     "visible":"sichtbar",
     "submit":"einreichen",
-    "registration-link":"gehe zur registrierung",
+    "registrationLink":"gehe zur registrierung",
     "lastName": "familienname, nachname",
     "postalCode": "postleitzahl",
     "city": "stadt",

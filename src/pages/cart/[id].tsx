@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Cart } from '@commercetools/platform-sdk';
 import CustomerCart from '@/components/cart/CustomerCart';
+import { GetServerSideProps } from 'next';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useAppSelector } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
 
@@ -22,3 +24,12 @@ function CustomerCartPage() {
 };
 
 export default CustomerCartPage;
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale || 'en-GB', ['translation', 'common'])),
+    },
+  };
+};

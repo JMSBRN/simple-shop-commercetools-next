@@ -11,9 +11,9 @@ function NotFound() {
   return (
     <div className={styles.notFoundContainer}>
       <div>
-        {t('not-found')}
+        {t('notFoundMessage')}
         <Trans
-          i18nKey="home-link"
+          i18nKey="homeLink"
           t={t}
           components={[<Link href={'/'} key={'1'} />]}
         />

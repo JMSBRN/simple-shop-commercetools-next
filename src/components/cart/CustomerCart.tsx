@@ -11,6 +11,7 @@ import { fetchCarts } from '@/features/thunks/FetchCarts';
 import styles from './CustomerCart.module.scss';
 import { useAppDispatch } from '@/hooks/storeHooks';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 function CustomerCart({ cart }: { cart: Cart }) {
   const {
@@ -31,6 +32,7 @@ function CustomerCart({ cart }: { cart: Cart }) {
   } = styles;
 
   const { push } = useRouter();
+  const { t } = useTranslation('common');
   const dispatch = useAppDispatch();
 
   const { id, taxedPrice, shippingInfo } = cart;
@@ -43,39 +45,39 @@ function CustomerCart({ cart }: { cart: Cart }) {
   const handleCheckout = async (actionType: string) => {
     setActiontype(actionType);
     setIsLoading(true);
-      if (cart?.lineItems.length) {
-        push(`/checkout/${cart?.id}`);
-        setIsLoading(false);
-      }
+    if (cart?.lineItems.length) {
+      push(`/checkout/${cart?.id}`);
+      setIsLoading(false);
+    }
   };
   const handleDeleteCart = async (actionType: string) => {
     setActiontype(actionType);
-      setIsLoading(true);
-      const res = await deleteCart(id);
-      
-      if (res) dispatch(fetchCarts());
-      
-      if (res) {
-        dispatch(fetchCarts());
-        deleteCookieFromLocal('currentCartId');
-        push('/');
-        setIsLoading(false);
-      }
+    setIsLoading(true);
+    const res = await deleteCart(id);
+
+    if (res) dispatch(fetchCarts());
+
+    if (res) {
+      dispatch(fetchCarts());
+      deleteCookieFromLocal('currentCartId');
+      push('/');
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className={cartContainer}>
       <div className={cartTitle}>
-        <h3>Customer Cart</h3>
+        <h3>{t('customerCart')}t</h3>
       </div>
       <div className={mainContainer}>
         <div className={leftSideContainer}>
           <div className={lineItemHeadlines}>
             <div></div>
-            <div>Description</div>
-            <div>Price</div>
-            <div>Quantity</div>
-            <div>Total</div>
+            <div>{t('description')}</div>
+            <div>{t('price')}</div>
+            <div>{t('quantity')}</div>
+            <div>{t('total')}</div>
           </div>
           <div className={lineItemsStyle}>
             {cart.lineItems.map((el) => (
@@ -90,17 +92,17 @@ function CustomerCart({ cart }: { cart: Cart }) {
             ))}
           </div>
           <div className={promoCodeContainer}>
-            <input type="text" placeholder="promo code" />
-            <ButtonWithLoader text="Apply" onClick={() => {}} />
+            <input type="text" placeholder={t('promoCode')} />
+            <ButtonWithLoader text={t('apply')} onClick={() => {}} />
           </div>
         </div>
         <div className={cartTotalsContainer}>
           <div className={cartTotalsTable}>
-            <div className={cartTotalsTitle}>Cart Totals</div>
+            <div className={cartTotalsTitle}>{t('cartTotals')}</div>
             <div className={cartTotalsInfo}>
-              Taxes included
+              {t('taxesIncluded')}
               <div className={cartTotalsInfoData}>
-                Net amount
+                {t('netAmount')}
                 <span>{getMoneyValueFromCartField(totalNet)}</span>
               </div>
               <div className={cartTotalsInfoData}>
@@ -115,23 +117,23 @@ function CustomerCart({ cart }: { cart: Cart }) {
                 <span>{getMoneyValueFromCartField(totalTax!)}</span>
               </div>
               <div className={cartTotalsInfoData}>
-                Delivery
+                {t('delivery')}
                 <span>{getMoneyValueFromCartField(shipingMethodTaxTotal)}</span>
               </div>
             </div>
             <div className={cartTotals}>
-              Total : {getMoneyValueFromCartField(totalGross)}
+              {t('total')} : {getMoneyValueFromCartField(totalGross)}
             </div>
           </div>
           <div className={cartTotalsContainerBtns}>
             <ButtonWithLoader
               isLoading={isLoading && actionType === 'checkout'}
-              text="Checkout"
+              text={t('checkout')}
               onClick={() => handleCheckout('checkout')}
             />
             <ButtonWithLoader
               isLoading={isLoading && actionType === 'delete'}
-              text="Delete cart"
+              text={t('deleteCart')}
               onClick={() => handleDeleteCart('delete')}
             />
           </div>

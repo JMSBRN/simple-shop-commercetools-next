@@ -1,5 +1,6 @@
 import { Login, RegistrationMe } from '@/commercetools/utils/utilsMe';
 import React, { useRef, useState } from 'react';
+import { TranslationsFormType, UserData } from '@/interfaces';
 import {
   getDecryptedDataFromCookie,
   setEncryptedDataToCookie,
@@ -16,7 +17,6 @@ import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWit
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { ParsedUrlQuery } from 'querystring';
-import { UserData } from '@/interfaces';
 import { getCarts } from '@/commercetools/utils/utilsCarts';
 import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -30,16 +30,19 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const { push } = useRouter();
   const { t } = useTranslation('form');
+
   const loginFormFields: (keyof AuthCustomerDraftFields)[][] = [
-    [t('email')],
-    [t('password')],
-  ];
-  const signOutFormFields: (keyof AuthCustomerDraftFields)[][] = [
-    [t('firstName')],
-    [t('email')],
-    [t('password')],
-    [t('passwordConfirm')],
-  ];
+    ['email'],
+    ['password'],
+].map(keys => keys.map(k => t(k as keyof TranslationsFormType)));
+
+const signOutFormFields: (keyof AuthCustomerDraftFields)[][] = [
+    ['firstName'],
+    ['email'],
+    ['password'],
+    ['passwordConfirm'],
+].map(keys => keys.map(k => t(k as keyof TranslationsFormType)));
+
   const { authMode } = params;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentCartId = JSON.parse(
@@ -139,7 +142,7 @@ function AuthPage({ params }: { params: ParsedUrlQuery }) {
           href={'/auth/registration'}
           onClick={() => dispatch(setErrorMessage(''))}
         >
-          {t('registration-link')}
+          {t('registrationLink')}
         </Link>
       )}
     </div>

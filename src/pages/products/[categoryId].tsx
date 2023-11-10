@@ -26,7 +26,7 @@ function Products({ parentCatName, products }: { parentCatName: string; products
           {products.map((el) => (
             <div key={el.id} className={productWrapper}>
               <ProductCard product={el} />
-              <div className={productInfoStyle} onClick={() => push(`/productInfo/${el.id}`)}/>
+              <div className={productInfoStyle} onClick={() => push(`/product/${el.id}`)}/>
             </div>
           ))}
       </div>

@@ -37,5 +37,8 @@
     "deleteCart": "warenkorb löschen",
     "cartTotals": "warenkorbsumme",
     "apply": "anwenden",
-    "promoCode": "aktionscode"
+    "promoCode": "aktionscode",
+    "explore": "erkunden",
+    "shopSlogan": "überall kaufen, günstiger kaufen, an Ihre Adresse liefern und genießen.",
+    "contactUsMessage": "verbinden sie sich mit uns"
 }

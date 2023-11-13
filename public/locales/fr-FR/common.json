@@ -1,16 +1,16 @@
 {
-    "category":{
-     "title": "Catégories"
+    "category": {
+        "title": "Catégories"
     },
     "productInfo": "Information sur le produit",
     "select-country-message": "sélectionner le pays disponible",
     "no-price-message": "pas de prix dans ce pays",
-    "origin":"origine",
+    "origin": "origine",
     "variant": "une variante",
-    "addToCart":"ajouter au panier",
-    "login":"se connecter",
-    "noExistAltMessage":"ça n'existe pas, désolé pour ça",
-    "checkout":"vérifier",
+    "addToCart": "ajouter au panier",
+    "login": "se connecter",
+    "noExistAltMessage": "ça n'existe pas, désolé pour ça",
+    "checkout": "vérifier",
     "billingDetails": "détails de facturation",
     "orderSummary": "récapitulatif de commande",
     "close": "fermer",
@@ -37,5 +37,8 @@
     "deleteCart": "supprimer le panier",
     "cartTotals": "total du panier",
     "apply": "appliquer",
-    "promoCode": "code promo"
+    "promoCode": "code promo",
+    "explore": "explorer",
+    "shopSlogan": "achetez partout, achetez moins cher, recevez à votre adresse et profitez.",
+    "contactUsMessage": "connectez-vous avec nous"
 }

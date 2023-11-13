@@ -37,6 +37,9 @@
     "deleteCart": "delete cart",
     "cartTotals":"cart totals",
     "apply":"apply",
-    "promoCode": "promo code"
+    "promoCode": "promo code",
+    "explore":"explore",
+    "shopSlogan":"buy everywhere, buy cheaper, receive at your address and enjoy.",
+    "contactUsMessage":"connect with us"
 
 }

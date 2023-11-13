@@ -14,8 +14,6 @@ function Layout({
   const currentCartId = JSON.parse(
     getDecryptedDataFromCookie('currentCartId')!
   ) as string | undefined;
-
- console.log(currentCartId);
  
   useLeavePageConfirmation({
     shouldStopNavigation: true,

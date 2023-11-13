@@ -9,10 +9,11 @@
 }
 
 .imageLayout {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
   min-height: 170px;
   @include flex();
+  background-color: rgb(237, 237, 237);
 }
 
 .pricesStyle {

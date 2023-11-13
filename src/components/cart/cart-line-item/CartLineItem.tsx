@@ -112,7 +112,11 @@ function CartLineItem({
       <Image
         priority
         objectFit='fill'
-        src={images?.find((el) => el.url)?.url!}
+        src={images?.find((el) => el.url)?.url!  || {
+          src: '/images/No-Image-Placeholder.svg',
+          width: 10,
+          height: 10,
+        }}
         width={40}
         height={50}
         alt="product image"

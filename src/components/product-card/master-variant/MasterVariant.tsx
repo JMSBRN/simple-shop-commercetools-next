@@ -40,7 +40,11 @@ function MasterVariant({
             <Image
               className={ImageStyle}
               priority
-              src={el.url}
+              src={el.url  || {
+                src: '/images/No-Image-Placeholder.svg',
+                width: 10,
+                height: 10,
+              }}
               alt={el.label || 'product image'}
               width={el.dimensions.w}
               height={el.dimensions.h}

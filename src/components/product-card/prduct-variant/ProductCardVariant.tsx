@@ -16,6 +16,7 @@ function ProductCardVariant({ variant }: { variant: ProductVariant }) {
     noPriceMessage,
   } = styles;
   const { country } = useAppSelector(selectCommerceTools);
+
   const { t } = useTranslation('common');
 
   return (
@@ -25,8 +26,14 @@ function ProductCardVariant({ variant }: { variant: ProductVariant }) {
           <Image
             priority
             key={idx.toString()}
-            src={image.url}
-            width={image.dimensions.w / 2}
+            src={
+              image.url || {
+                src: '/images/No-Image-Placeholder.svg',
+                width: 10,
+                height: 10,
+              }
+            }
+            width={image.dimensions.w / 1.8}
             height={image.dimensions.h / 2}
             alt={image.label || t('noExistAltMessage')}
             layout="fixed"

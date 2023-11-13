@@ -1,9 +1,0 @@
-@import 'mixins';
-
-.imagesContainer {
-    width: 100%;
-    min-width: 50px;
-    height: 100%;
-    min-height: 25px;
-   @include flex(center, space-around);
-}

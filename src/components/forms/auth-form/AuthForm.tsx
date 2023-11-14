@@ -76,8 +76,15 @@ function AuthForm({
     );
   };
 
-  const renderPasswordInputElement = (el: keyof AuthCustomerDraftFields) => {
-    return renderInputField(el, 'password', true, 'current-password');
+  const renderPasswordInputElement = (
+    el: keyof AuthCustomerDraftFields
+  ) => {
+    return renderInputField(
+      el,
+      'password',
+      true,
+      'current-password'
+    );
   };
 
   return (
@@ -112,4 +119,3 @@ function AuthForm({
 }
 
 export default AuthForm;
-

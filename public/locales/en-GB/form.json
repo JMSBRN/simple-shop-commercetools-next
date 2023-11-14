@@ -18,7 +18,8 @@
     "company": "company",
     "department": "department",
     "phone": "phone",
-    "streetNumber":"street number"
+    "streetNumber":"street number",
+    "hide":"hide"
 }
 
 

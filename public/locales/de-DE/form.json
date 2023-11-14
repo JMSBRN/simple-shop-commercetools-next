@@ -18,5 +18,6 @@
     "company": "unternehmen",
     "department": "abteilung",
     "phone": "telefon",
-    "streetNumber":"hausnummer"
+    "streetNumber":"hausnummer",
+     "hide":"verbergen"
 }

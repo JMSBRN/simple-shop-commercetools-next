@@ -115,6 +115,7 @@ function Header() {
           height={34}
           src={shoppingBasketIcon}
           alt="shopping basket"
+          layout='fixed'
         />
       </div>
       <div className={authContainer}>
@@ -130,6 +131,7 @@ function Header() {
               alt="logout icon"
               width={25}
               onClick={handleLogout}
+              layout='fixed'
             />
           </div>
         )}

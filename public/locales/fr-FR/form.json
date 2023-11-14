@@ -18,5 +18,6 @@
     "company": "entreprise",
     "department": "département",
     "phone": "téléphone",
-    "streetNumber":"numéro de rue"
+    "streetNumber":"numéro de rue",
+    "hide":"cacher"
 }

@@ -44,7 +44,7 @@ const Slider = ({
           height={ imageHeight || 130}
           alt="slider image"
           src={images.find((_, idx) => idx === currentSlide)?.url!}
-          loading="lazy"
+          priority
         />
       {isPointsRendered && (
         <div className={sliderBtnsAndPoints}>

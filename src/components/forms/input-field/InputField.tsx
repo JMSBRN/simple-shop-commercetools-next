@@ -70,7 +70,7 @@ function InputField({
             }
             onClick={() => setIsVisibleMode(!isVisibleMode)}
           >
-            {isVisibleMode ? 'Hide' : 'Visible'}
+            {isVisibleMode ? `${t('hide')}` : `${t('visible')}`}
           </div>
         )}
         <div className={errorMessageStyle}>{errorMessage || ''}</div>

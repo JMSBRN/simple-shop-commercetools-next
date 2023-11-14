@@ -1,3 +1,4 @@
+import Atributes from '../atributes/Atributes';
 import Image from 'next/legacy/image';
 import { ProductVariant } from '@commercetools/platform-sdk';
 import React from 'react';
@@ -7,21 +8,30 @@ import styles from './ProductCardVariant.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
 import { useTranslation } from 'next-i18next';
 
-function ProductCardVariant({ variant }: { variant: ProductVariant }) {
+function ProductCardVariant({
+  variant,
+  productName,
+  isMastervariantExisted,
+}: {
+  variant: ProductVariant;
+  productName?: string;
+  isMastervariantExisted?: boolean;
+}) {
   const {
     variantContainerStyle,
+    productTitle,
     pricesStyle,
     priceCurrencyStyle,
-    imageLayout,
+    attributesStyle,
     noPriceMessage,
   } = styles;
   const { country } = useAppSelector(selectCommerceTools);
-
   const { t } = useTranslation('common');
 
   return (
     <div className={variantContainerStyle}>
-      <div className={imageLayout}>
+      <div className={productTitle}>{productName || ''}</div>
+      <div>
         {variant.images?.map((image, idx) => (
           <Image
             priority
@@ -33,13 +43,19 @@ function ProductCardVariant({ variant }: { variant: ProductVariant }) {
                 height: 10,
               }
             }
-            width={image.dimensions.w / 1.8}
-            height={image.dimensions.h / 2}
+            width={isMastervariantExisted ? 320 : image.dimensions.w / 1.8}
+            height={isMastervariantExisted ? 420 : image.dimensions.h / 2}
             alt={image.label || t('noExistAltMessage')}
-            layout="fixed"
+            layout={'fixed'}
+            objectFit='contain'
           />
         ))}
       </div>
+      {isMastervariantExisted && (
+        <div className={attributesStyle}>
+          <Atributes atributes={variant.attributes!} />
+        </div>
+      )}
       <div className={pricesStyle}>
         {variant.prices?.filter((el) => el.country === country).length ? (
           variant.prices

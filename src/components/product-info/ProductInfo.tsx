@@ -1,7 +1,6 @@
 import { Product, ProductVariant } from '@commercetools/platform-sdk';
 import React, { useState } from 'react';
 import AddToCard from '../add-to-card/AddToCard';
-import MasterVariant from '../product-card/master-variant/MasterVariant';
 import ProductCardVariant from '../product-card/prduct-variant/ProductCardVariant';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
@@ -12,6 +11,7 @@ function ProductInfo({ product }: { product: Product }) {
   const [selectedIdVariant, setSelectedIdVariant] = useState<number>(1);
   const {
     productInfoContainer,
+    masterVarianStyle,
     variantsStyle,
     variantStyle,
     addToCardContainerStyle,
@@ -36,24 +36,28 @@ function ProductInfo({ product }: { product: Product }) {
 
   return (
     <div className={productInfoContainer}>
-      {selectedIdVariant === 1 ? (
-        <MasterVariant
-          productName={productName!}
-          masterVariant={masterVariant}
-        />
-      ) : (
-        <>
-          {variants
-            .filter((el) => el.id === selectedIdVariant)
-            .map((el) => (
-              <MasterVariant
-                key={el.id}
-                masterVariant={el}
-                productName={productName!}
-              />
-            ))}
-        </>
-      )}
+      <div className={masterVarianStyle}>
+        {selectedIdVariant === 1 ? (
+          <ProductCardVariant
+            productName={productName!}
+            variant={masterVariant}
+            isMastervariantExisted={true}
+          />
+        ) : (
+          <>
+            {variants
+              .filter((el) => el.id === selectedIdVariant)
+              .map((el) => (
+                <ProductCardVariant
+                  key={el.id}
+                  variant={el}
+                  productName={productName!}
+                  isMastervariantExisted={true}
+                />
+              ))}
+          </>
+        )}
+      </div>
       <div className={addToCardContainerStyle}>
         <AddToCard
           productId={product.id}

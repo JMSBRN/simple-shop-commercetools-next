@@ -7,13 +7,9 @@
   text-align: center;
   @include flex(center, center, column);
 }
-
-.imageLayout {
-  width: auto;
-  height: auto;
-  min-height: 170px;
-  @include flex();
-  background-color: rgb(237, 237, 237);
+.productTitle {
+  margin: 20px auto;
+  font-size: 30px;
 }
 
 .pricesStyle {

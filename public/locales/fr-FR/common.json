@@ -40,5 +40,18 @@
     "promoCode": "code promo",
     "explore": "explorer",
     "shopSlogan": "achetez partout, achetez moins cher, recevez à votre adresse et profitez.",
-    "contactUsMessage": "connectez-vous avec nous"
+    "contactUsMessage": "connectez-vous avec nous",
+    "customerInformation": "informations client",
+    "addressData": "données d'adresse",
+    "noAddressData": "pas de données d'adresse",
+    "confirmDeleteProcess": "veuillez confirmer la suppression du processus",
+    "updateAccountData": "mettre à jour les données du compte",
+    "deleteAccount": "supprimer le compte",
+    "activeCarts": "paniers actifs",
+    "orders": "commandes",
+    "billingData": "données de facturation",
+    "shippingData": "données d'expédition",
+    "orderStatus": "état de la commande",
+    "confirmTodelete": "confirmer la suppression"
+
 }

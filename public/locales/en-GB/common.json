@@ -40,6 +40,18 @@
     "promoCode": "promo code",
     "explore":"explore",
     "shopSlogan":"buy everywhere, buy cheaper, receive at your address and enjoy.",
-    "contactUsMessage":"connect with us"
+    "contactUsMessage":"connect with us",
+    "customerInformation":"customer information",
+    "addressData":"address data",
+    "noAddressData":"no address data",
+    "confirmDeleteProcess":"please confirm delete process",
+    "updateAccountData":"update account data",
+    "deleteAccount":"delete account",
+    "activeCarts":"active carts",
+    "orders":"orders",
+    "billingData":"billing data",
+    "shippingData":"shipping data",
+    "orderStatus": "order status",
+    "confirmTodelete":"confirm to delete"
 
 }

@@ -1,11 +1,19 @@
-import  common from '../public/locales/en-GB/common.json';
-import  form from '../public/locales/en-GB/form.json';
-import  translation from '../public/locales/en-GB/translation.json';
+type CommonType = typeof import('../public/locales/en-GB/common.json');
+type FormType = typeof import('../public/locales/en-GB/form.json');
+type TranslationType = typeof import('../public/locales/en-GB/translation.json');
 
-const resources = {
-    common,
-    translation,
-    form
-  } as const;
-  
-  export default resources;
+type ResourcesType = {
+  common: CommonType;
+  translation: TranslationType;
+  form: FormType;
+};
+
+const resources: ResourcesType = {
+  common: require('../public/locales/en-GB/common.json'),
+  translation: require('../public/locales/en-GB/translation.json'),
+  form: require('../public/locales/en-GB/form.json'),
+} as const;
+
+export type { CommonType, TranslationType, FormType, ResourcesType };
+export default resources;
+

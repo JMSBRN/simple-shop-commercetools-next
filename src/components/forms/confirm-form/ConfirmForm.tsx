@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWithLoader';
 import InputField from '../input-field/InputField';
 import styles from './ConfirmForm.module.scss';
+import { useTranslation } from 'next-i18next';
 
 function ConfirmForm({
   formRef,
@@ -20,14 +21,15 @@ function ConfirmForm({
 }) {
   const { formContainer, errorMessageStyle } = styles;
   const inputSubRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation('common');
 
   return (
     <div className={formContainer}>
       <form ref={formRef} onSubmit={onSubmit}>
-        {Array.from(['password', 'confirm_password'], (el, idx) => (
+        {Array.from(['password', 'passwordConfirm'], (el, idx) => (
           <div key={idx}>
             <InputField
-              fieldName={el || 'test'}
+              fieldName={el}
               fieldType="password"
               isPasswordConfirmMode={true}
               isRequired={true}
@@ -39,7 +41,7 @@ function ConfirmForm({
         ))}
         <ButtonWithLoader
           onClick={() => inputSubRef.current?.onclick}
-          text="confirm to delete"
+          text={t('confirmTodelete')}
           isLoading={isLoading}
         />
         <input ref={inputSubRef} type="submit" style={{ display: 'none' }} />

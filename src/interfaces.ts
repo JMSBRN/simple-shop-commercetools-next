@@ -68,26 +68,3 @@ export type AutocompleteValue =
   | 'new-password'
   | 'current-password'
   | 'one-time-code';
-
-  export type TranslationsFormType = {
-    login: string;
-    register: string;
-    firstName: string;
-    email: string;
-    password: string;
-    passwordConfirm: string;
-    visible: string;
-    submit: string;
-    registrationLink: string;
-    lastName: string;
-    postalCode: string;
-    city: string;
-    streetName: string;
-    additionalStreetInfo: string;
-    building: string;
-    apartment: string;
-    company: string;
-    department: string;
-    phone: string;
-    streetNumber: string;
-};

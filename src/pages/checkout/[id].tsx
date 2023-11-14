@@ -13,7 +13,6 @@ import {
 import AddressForm from '@/components/forms/addres-form/AddressForm';
 import { GetServerSideProps } from 'next';
 import OrderSummary from '@/components/order-summary/OrderSummary';
-import { TranslationsFormType } from '@/interfaces';
 import { deleteCookieFromLocal } from '@/commercetools/utils/secureCookiesUtils';
 import { getCurrentDataFromCart } from '@/commercetools/utils/utilsCarts';
 import { getPayments } from '@/commercetools/utils/utilsPayment';
@@ -87,7 +86,7 @@ function Checkout({ paymentMethod }: { paymentMethod: string | undefined }) {
     ['building', 'apartment'],
     ['company', 'department'],
     ['email', 'phone'],
-].map(keys => keys.map(k => t(k as keyof TranslationsFormType)));
+];
 
 const addressFieldsOrderSummary: (keyof BaseAddress)[][] = [
   ['firstName'],
@@ -97,7 +96,7 @@ const addressFieldsOrderSummary: (keyof BaseAddress)[][] = [
   ['building'],
   ['email'],
   ['phone'],
-].map(keys => keys.map(k => t(k as keyof TranslationsFormType)));
+];
 
   return (
     <div className={checkoutMainContainer}>

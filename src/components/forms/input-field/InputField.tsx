@@ -1,7 +1,8 @@
-import { AutocompleteValue, CustomerInfo, TranslationsFormType } from '@/interfaces';
+import { AutocompleteValue, CustomerInfo } from '@/interfaces';
 import React, { HTMLInputTypeAttribute, useState } from 'react';
 import { AuthCustomerDraftFields } from '../formsInterfaces';
 import { BaseAddress } from '@commercetools/platform-sdk';
+import { FormType } from '../../../../@types/resources';
 import styles from './InputField.module.scss';
 import { useTranslation } from 'next-i18next';
 
@@ -20,7 +21,7 @@ function InputField({
     | keyof AuthCustomerDraftFields
     | keyof BaseAddress
     | keyof CustomerInfo
-    | keyof TranslationsFormType
+    | keyof FormType
     | string;
   formData: any;
   fieldType?: HTMLInputTypeAttribute | undefined;
@@ -51,7 +52,7 @@ function InputField({
   return (
     <div key={fieldName} className={inputContainer}>
       <label>
-        {t(fieldName as keyof TranslationsFormType)}
+        {t(fieldName as keyof FormType)}
         {isRequired !== false && <span>*</span>}
         <input
           type={!isVisibleMode ? fieldType || 'text' : 'text'}

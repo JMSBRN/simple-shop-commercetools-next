@@ -1,13 +1,13 @@
 {
-    "login":"כניסה",
-    "register":"רשום",
-    "firstName":"שם פרטי",
-    "email":"אימייל",
-    "password":"סיסמה",
-    "passwordConfirm":"אישור סיסמה",
-    "visible":"גלוי",
-    "submit":"שלח",
-    "registrationLink":"עבור לרישום",
+    "login": "כניסה",
+    "register": "רשום",
+    "firstName": "שם פרטי",
+    "email": "אימייל",
+    "password": "סיסמה",
+    "passwordConfirm": "אישור סיסמה",
+    "visible": "גלוי",
+    "submit": "שלח",
+    "registrationLink": "עבור לרישום",
     "lastName": "שם משפחה",
     "postalCode": "מיקוד",
     "city": "עִיר",
@@ -19,5 +19,9 @@
     "department": "מַחלָקָה",
     "phone": "טלפון",
     "streetNumber": "מספר רחוב",
-    "hide": "להסתיר"
+    "hide": "להסתיר",
+    "salutation": "ברכה",
+    "middleName": "שם אמצעי",
+    "dateOfBirth": "תאריך לידה",
+    "companyName": "שם החברה"
 }

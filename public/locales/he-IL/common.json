@@ -40,5 +40,17 @@
     "promoCode": "קוד פרסום",
     "explore": "לחקות",
     "shopSlogan": "קנה בכל מקום, קנה זול יותר, קבל לכת אליך ותהנה.",
-    "contactUsMessage": "התחבר אלינו"
+    "contactUsMessage": "התחבר אלינו",
+    "customerInformation": "מידע לקוח",
+    "addressData": "נתוני כתובת",
+    "noAddressData": "אין נתוני כתובת",
+    "confirmDeleteProcess": "אנא אשר מחיקת התהליך",
+    "updateAccountData": "עדכון נתוני החשבון",
+    "deleteAccount": "מחק חשבון",
+    "activeCarts": "עגלות פעילות",
+    "orders": "הזמנות",
+    "billingData": "נתוני חיוב",
+    "shippingData": "נתוני משלוח",
+    "orderStatus": "סטטוס הזמנה",
+    "confirmTodelete": "אשר למחוק"
 }

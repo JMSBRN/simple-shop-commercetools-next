@@ -23,6 +23,7 @@ import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import styles from '../../../styles/DashBoardPage.module.scss';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 function DashBoard() {
   const {
@@ -43,6 +44,7 @@ function DashBoard() {
   const dispatch = useAppDispatch();
   const { carts, orders } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
+  const { t } = useTranslation('common');
   const userDataFromLocal = JSON.parse(
     getDecryptedDataFromCookie('userData')!
   ) as UserData;
@@ -101,7 +103,7 @@ function DashBoard() {
         />
       </div>
       <div className={myCartsStyle}>
-        <h3>Active Carts</h3>
+        <h3>{t('activeCarts')}</h3>
         {carts
           .filter((c) => c.cartState === 'Active')
           .map((c) => (
@@ -124,10 +126,10 @@ function DashBoard() {
                 ))}
               </div>
               <div className={cartSubTotal}>
-                Sub Total: <OriginalTotal cart={c} />
+              {t('subTotal')}: <OriginalTotal cart={c} />
               </div>
               <div className={cartTotal}>
-                Total:
+              {t('total')} :
                 {c.taxedPrice &&
                   getMoneyValueFromCartField(c.taxedPrice.totalGross)}
               </div>
@@ -135,19 +137,19 @@ function DashBoard() {
           ))}
       </div>
       <div className={myOrdersStyle}>
-        <h3>Orders</h3>
+        <h3>{t('orders')}</h3>
         {orders.map((o) => (
           <div className={orderContainer} key={o.id}>
             <div
               className={deleteOrderStyle}
               onClick={() => handleDeleteOrder(o)}
             >
-              delete
+              {t('delete')}
             </div>
-            <div>Order Status : {o.orderState}</div>
+            <div>{t('orderStatus')} : {o.orderState}</div>
             <div className={orderUserDataStyle}>
               <div>
-                <h4>Billing Data</h4>
+                <h4>{t('billingData')}</h4>
                 {Object.entries(o.billingAddress!).map(([key, value]) => (
                   <>
                     <span>{key} : </span>
@@ -157,7 +159,7 @@ function DashBoard() {
                 ))}
               </div>
               <div>
-                <h4>Shipping Data</h4>
+                <h4>{t('shippingData')}</h4>
                 {Object.entries(o.shippingAddress!).map(([key, value]) => (
                   <>
                     <span>{key} : </span>
@@ -184,10 +186,10 @@ function DashBoard() {
                 <div key={p.id}>
                   <div>
                     <PaymentInfo paymentId={p.id} />
-                    <div> Delivery : {o.shippingInfo?.shippingMethodName}</div>
+                    <div> {t('delivery')} : {o.shippingInfo?.shippingMethodName}</div>
                     <div>
                       {' '}
-                      Sum Total : {getMoneyValueFromCartField(o.totalPrice)}
+                      {t('total')} : {getMoneyValueFromCartField(o.totalPrice)}
                     </div>
                   </div>
                 </div>
@@ -206,6 +208,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
       ...(await serverSideTranslations(locale || 'en-GB', [
+        'form',
         'translation',
         'common',
       ])),

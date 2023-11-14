@@ -29,9 +29,11 @@ import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWit
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import ConfirmForm from '../forms/confirm-form/ConfirmForm';
 import { Customer } from '@commercetools/platform-sdk';
+import { FormType } from '../../../@types/resources';
 import InputField from '../forms/input-field/InputField';
 import styles from './MyCustomer.module.scss';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 function MyCustomer({ email, password }: { email: string; password: string }) {
   const {
@@ -57,6 +59,7 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
   const dispatch = useAppDispatch();
   const { errorMessage } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
+  const { t } = useTranslation('form');
 
   const fetchMyDetails = useCallback(async () => {
     if (email && password) {
@@ -258,12 +261,12 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
               ))}
               <ButtonWithLoader
                 onClick={handleSubmitForm}
-                text="submit"
+                text={t('submit')}
                 isLoading={isLoading}
               />
               <input
                 ref={refSubmitInput}
-                type="submit"
+                type={t('submit')}
                 style={{ display: 'none' }}
               />
             </form>
@@ -271,17 +274,17 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
         )}
         <div className={customerInfoContainer}>
           <div className={customerInfoStyle}>
-            <h4>Customer Information</h4>
+            <h4>{t('customerInformation', { ns: 'common' })}</h4>
             {Object.entries(customerInfo).map(([key, value]) => (
               <div key={key}>
                 <div>
-                  {key.toUpperCase()} : <span>{value || 'no data'}</span>
+                  {t(key as keyof FormType)} : <span>{value || 'no data'}</span>
                 </div>
               </div>
             ))}
           </div>
           <div className={customerAddressStyle}>
-            <h4>Address Data</h4>
+            <h4>{t('addressData', { ns: 'common' })}</h4>
             {addresses.length ? (
               Object.entries(
                 addresses.find((a) => a.id) || ({} as Address)
@@ -293,23 +296,23 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
                 </div>
               ))
             ) : (
-              <div>No address data</div>
+              <div>{t('noAddressData', { ns: 'common' })}</div>
             )}
           </div>
         </div>
         <div className={customerBtnsContainer}>
           <ButtonWithLoader
             onClick={handleUpdateAccount}
-            text="Update Account Data"
+            text={t('updateAccountData', { ns: 'common' })}
           />
           <ButtonWithLoader
             onClick={handleDeleteAccount}
-            text="Delete Account"
+            text={t('deleteAccount', { ns: 'common' })}
           />
         </div>
         {isWarningDelModalRendered && (
           <div className={deleteWarningModalStyle}>
-            <h4>Please confirm delete process</h4>
+            <h4>{t('confirmDeleteProcess', { ns: 'common' })}</h4>
             <ConfirmForm
               formRef={confirmFormRef}
               formData={confirmFormData}

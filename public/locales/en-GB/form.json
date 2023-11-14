@@ -8,7 +8,7 @@
     "visible": "visible",
     "submit": "submit",
     "registrationLink": "go to registration",
-    "lastName": "lastName",
+    "lastName": "last name",
     "postalCode": "postalCode",
     "city": "city",
     "streetName": "streetName",
@@ -18,8 +18,10 @@
     "company": "company",
     "department": "department",
     "phone": "phone",
-    "streetNumber":"street number",
-    "hide":"hide"
+    "streetNumber": "street number",
+    "hide": "hide",
+    "salutation": "salutation",
+    "middleName": "middle name",
+    "dateOfBirth": "date of birth",
+    "companyName": "company name"
 }
-
-

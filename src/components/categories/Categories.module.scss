@@ -1,6 +1,8 @@
 @import 'mixins';
 
 .categoriesContainer {
+  width: auto;
+  min-width: 650px;
   @include flex ();
   div {
     text-transform: uppercase;

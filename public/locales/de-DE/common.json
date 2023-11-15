@@ -52,5 +52,6 @@
     "billingData": "abrechnungsdaten",
     "shippingData": "versanddaten",
     "orderStatus": "bestellstatus",
-    "confirmTodelete": "bestätigen, um zu löschen"
+    "confirmTodelete": "bestätigen, um zu löschen",
+    "dashBoard":"armaturenbrett"
 }

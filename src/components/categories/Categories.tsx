@@ -8,6 +8,7 @@ import { isInternetConnectionOnline } from '@/commercetools/utils/utilsApp';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './Categories.module.scss';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 function Categories() {
   const { categoriesContainer, dashBoardLInk } = styles;
@@ -16,7 +17,8 @@ function Categories() {
   const { push, locale } = useRouter();
   const dispatch = useAppDispatch();
   const [isOnline, setIsOnline] = useState(true);
-  
+  const { t } = useTranslation('common');
+
   useEffect(() => {
     setIsOnline(isInternetConnectionOnline());
     dispatch(fetchCategories());
@@ -43,7 +45,7 @@ function Categories() {
         ))}
       {userName && (
         <div className={dashBoardLInk} onClick={() => push('/user/dashboard')}>
-          DashBoard
+          {t('dashBoard')}
         </div>
       )}
     </div>

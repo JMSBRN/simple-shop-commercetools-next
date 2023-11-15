@@ -52,6 +52,7 @@
     "billingData":"billing data",
     "shippingData":"shipping data",
     "orderStatus": "order status",
-    "confirmTodelete":"confirm to delete"
+    "confirmTodelete":"confirm to delete",
+    "dashBoard":"dashboard"
 
 }

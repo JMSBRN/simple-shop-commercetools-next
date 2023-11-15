@@ -52,6 +52,7 @@
     "billingData": "données de facturation",
     "shippingData": "données d'expédition",
     "orderStatus": "état de la commande",
-    "confirmTodelete": "confirmer la suppression"
+    "confirmTodelete": "confirmer la suppression",
+    "dashBoard":"tableau de bord"
 
 }

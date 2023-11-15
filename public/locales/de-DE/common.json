@@ -3,7 +3,7 @@
      "title": "Kategorien"
     },
     "productInfo": "Produktinformation",
-    "select-country-message": "wählen sie das verfügbare land aus",
+    "selectCountryMessage": "wählen sie das verfügbare land aus",
     "no-price-message": "kein preis in diesem land",
     "origin":"herkunft",
     "variant": "variante",

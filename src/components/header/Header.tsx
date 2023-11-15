@@ -94,7 +94,7 @@ function Header() {
 
   return (
     <header className={headerContainer}>
-      <CountrySelect />
+      <CountrySelect selectCountryText={t('selectCountryMessage')} />
       <Link href={'/'}>
         <div className={logoStyle}>
           Store

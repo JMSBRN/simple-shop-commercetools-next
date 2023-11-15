@@ -3,8 +3,10 @@
         {
             "name":  {
                 "en-GB": "home brands",
-                "de-DE": "Hausmarken",
-                "he-IL": "מותגי בית"
+                "de-DE": "hausmarken",
+                "he-IL": "מותגי בית",
+                "fr-FR": "marques maison"
+
             },
             "images": [
                 {
@@ -22,7 +24,8 @@
             "name":  {
                 "en-GB": "women brands",
                 "de-DE": "Damenmarken",
-                "he-IL": "מותגי נשים"
+                "he-IL": "מותגי נשים",
+                "fr-FR": "marques de femmes"
             },
             "images": [
                 {
@@ -40,7 +43,8 @@
             "name": {
                 "en-GB": "men brands",
                 "de-DE": "Herrenmarken",
-                "he-IL": "מותגי גברים"
+                "he-IL": "מותגי גברים",
+                "fr-FR": "marques hommes"
             },
             "images": [
                 {

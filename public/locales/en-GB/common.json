@@ -3,7 +3,7 @@
         "title": "Categories"
     },
     "productInfo": "Product Info",
-    "select-country-message": "select avalible country",
+    "selectCountryMessage": "select avalible country",
     "no-price-message": "no price in this country",
     "origin": "origin",
     "variant": "variant",

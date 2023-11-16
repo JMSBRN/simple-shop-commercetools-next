@@ -25,7 +25,7 @@ import {
 } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Address } from 'cluster';
-import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWithLoader';
+import ButtonWithLoader from '../buttons/buttonWithLoader/ButtonWithLoader';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import ConfirmForm from '../forms/confirm-form/ConfirmForm';
 import { Customer } from '@commercetools/platform-sdk';

@@ -14,6 +14,7 @@ import {
 } from '@/commercetools/utils/utilsPayment';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import AddressForm from '../forms/addres-form/AddressForm';
+import ButtonWithLoader from '../buttons/buttonWithLoader/ButtonWithLoader';
 import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
 import { PaymentMethods } from '@/interfaces';
 import ProductPrice from '../product-card/product-price/ProductPrice';
@@ -206,7 +207,7 @@ function OrderSummary({
             addressFields={addressFields}
             onSubmit={formSubmit}
           />
-          <button onClick={handleSubmitForm}> {t('submit')}</button>
+          <ButtonWithLoader onClick={handleSubmitForm} text={t('submit')} />
         </div>
       )}
       <div className={totalsInfo}>
@@ -250,7 +251,7 @@ function OrderSummary({
               setIsShippingAdrModalRendered(!isShippingAdrModalRendered)
             }
           >
-            {t('shippingWarnMessage')} 
+            {t('shippingWarnMessage')}
           </div>
         )}
       </div>
@@ -272,7 +273,7 @@ function OrderSummary({
         ))}
       </div>
       <div className={deliveryTax}>
-      {t('deliveryTax')} :{' '}
+        {t('deliveryTax')} :{' '}
         {getMoneyValueFromCartField(cart.shippingInfo?.taxedPrice?.totalGross!)}
       </div>
       <div className={paymentMethodContainer}>
@@ -290,7 +291,7 @@ function OrderSummary({
         ))}
       </div>
       <div className={totalSum}>
-      {t('total')}: {getMoneyValueFromCartField(cart.taxedPrice?.totalGross!)}
+        {t('total')}: {getMoneyValueFromCartField(cart.taxedPrice?.totalGross!)}
       </div>
       <button
         className={checkoutBtn}

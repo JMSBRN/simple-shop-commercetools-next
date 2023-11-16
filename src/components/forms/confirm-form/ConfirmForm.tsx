@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWithLoader';
+
+import ButtonWithLoader from '@/components/buttons/buttonWithLoader/ButtonWithLoader';
 import InputField from '../input-field/InputField';
 import styles from './ConfirmForm.module.scss';
 import { useTranslation } from 'next-i18next';

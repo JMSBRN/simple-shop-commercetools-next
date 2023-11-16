@@ -4,7 +4,7 @@ import {
   deleteCart,
   getMoneyValueFromCartField,
 } from '@/commercetools/utils/utilsCarts';
-import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWithLoader';
+import ButtonWithLoader from '../buttons/buttonWithLoader/ButtonWithLoader';
 import CartLineItem from './cart-line-item/CartLineItem';
 import { deleteCookieFromLocal } from '@/commercetools/utils/secureCookiesUtils';
 import { fetchCarts } from '@/features/thunks/FetchCarts';

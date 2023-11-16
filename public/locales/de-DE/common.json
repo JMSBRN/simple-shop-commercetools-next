@@ -53,5 +53,6 @@
     "shippingData": "versanddaten",
     "orderStatus": "bestellstatus",
     "confirmTodelete": "bestätigen, um zu löschen",
-    "dashBoard":"armaturenbrett"
+    "dashBoard":"armaturenbrett",
+    "view":"sicht"
 }

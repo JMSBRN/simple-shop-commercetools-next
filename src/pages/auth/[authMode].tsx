@@ -12,7 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { AuthCustomerDraftFields } from '@/components/forms/formsInterfaces';
 import AuthForm from '@/components/forms/auth-form/AuthForm';
-import ButtonWithLoader from '@/commercetools/buttons/buttonWithLoader/ButtonWithLoader';
+import ButtonWithLoader from '@/components/buttons/buttonWithLoader/ButtonWithLoader';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { ParsedUrlQuery } from 'querystring';

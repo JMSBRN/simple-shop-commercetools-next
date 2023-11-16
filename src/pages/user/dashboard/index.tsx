@@ -45,14 +45,13 @@ function DashBoard() {
   const { carts, orders } = useAppSelector(selectCommerceTools);
   const { push } = useRouter();
   const { t } = useTranslation('common');
-  const userDataFromLocal = JSON.parse(
+  const { customerId, email, password } = JSON.parse(
     getDecryptedDataFromCookie('userData')!
   ) as UserData;
 
   useEffect(() => {
     const fn = async () => {
-      if (userDataFromLocal?.email) {
-        const { email, password } = userDataFromLocal;
+      if (email) {
 
         if (email && password) {
           dispatch(fetchCarts({ email, password }));
@@ -71,7 +70,7 @@ function DashBoard() {
     if(res)   dispatch(fetchCarts());
 
     if (res) {
-      dispatch(fetchCarts(userDataFromLocal));
+      dispatch(fetchCarts({ email, password }));
       deleteCookieFromLocal('currentCartId');
     }
   };
@@ -98,20 +97,20 @@ function DashBoard() {
     <div className={dashboardContainer}>
       <div className={myInfoStyle}>
         <MyCustomer
-          email={userDataFromLocal.email}
-          password={userDataFromLocal.password}
+          email={email}
+          password={password}
         />
       </div>
       <div className={myCartsStyle}>
         <h3>{t('activeCarts')}</h3>
         {carts
-          .filter((c) => c.cartState === 'Active')
+          .filter((c) => c.cartState === 'Active' && c.customerId === customerId)
           .map((c) => (
             <div className={myCartStyle} key={c.id}>
               <div className={topButtonsStyle}>
-                <div onClick={() => handleDeleteMyCart(c.id)}>delete</div>
-                <div onClick={() => handleCheckoutMyCart(c.id)}>checkout</div>
-                <div onClick={() => handleViewMyCart(c.id)}>view</div>
+                <div onClick={() => handleDeleteMyCart(c.id)}>{t('delete')}</div>
+                <div onClick={() => handleCheckoutMyCart(c.id)}>{t('checkout')}</div>
+                <div onClick={() => handleViewMyCart(c.id)}>{t('view')}</div>
               </div>
               <div className={cartLineItems}>
                 {c.lineItems.map((l) => (

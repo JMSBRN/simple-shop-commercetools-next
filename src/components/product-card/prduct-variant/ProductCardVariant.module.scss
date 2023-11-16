@@ -8,15 +8,15 @@
   @include flex(center, center, column);
 }
 .productTitle {
-  margin: 20px auto;
+  margin: 15px auto;
   font-size: 30px;
 }
 
 .pricesStyle {
+  position: relative;
   margin-top: 20px;
   width: 100%;
   height: 25px;
-  @include flex();
 }
 
 .noPriceMessage {

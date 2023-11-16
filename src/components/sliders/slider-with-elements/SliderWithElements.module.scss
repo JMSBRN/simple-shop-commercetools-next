@@ -1,0 +1,66 @@
+@import 'mixins';
+
+.sliderWrapper {
+    width: 100%;
+    @include flex;
+    button {
+        margin: 0 10px;
+        width: auto;
+        height: auto;
+        padding: 0px 8px;
+        font-size: 30px;
+        background-color: transparent;
+        color: rgb(239, 239, 239);
+        border: none;
+        cursor: pointer;
+        &:hover {
+            color: rgb(188, 188, 188);
+            box-shadow: 0px 0px 10px rgb(228, 228, 228);
+        }
+        &:active {
+            color: rgb(210, 210, 210);
+            box-shadow: 0px 0px 0px rgb(228, 228, 228);
+        }
+    }
+}
+
+.sliderContainer {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sliderStyles {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.containerStyles {
+    display: flex;
+}
+
+.slide {
+    min-width: 100%;
+}
+
+.points {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    opacity: 0.5;
+
+    span {
+        width: 10px;
+        height: 10px;
+        background-color: #aaa;
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+    }
+
+    span.active {
+        background-color: #606060;
+    }
+}

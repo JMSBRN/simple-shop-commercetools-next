@@ -19,7 +19,7 @@ function Test() {
   };
 
   return (
-    <div>
+    <div style={{ display: 'flex' , }}>
       <div className="">
         Carts
         <div>

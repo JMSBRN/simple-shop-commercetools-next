@@ -43,8 +43,8 @@ function ProductCardVariant({
                 height: 10,
               }
             }
-            width={isMastervariantExisted ? 320 : image.dimensions.w / 1.8}
-            height={isMastervariantExisted ? 420 : image.dimensions.h / 2}
+            width={isMastervariantExisted ? 320 : 320/1.5}
+            height={isMastervariantExisted ? 420 : 420/1.5}
             alt={image.label || t('noExistAltMessage')}
             layout={'fixed'}
             objectFit='contain'

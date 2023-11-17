@@ -1,24 +1,33 @@
 @import 'mixins';
+@import 'variables';
 
 .categoriesContainer {
-  width: auto;
-  min-width: 650px;
-  @include flex ();
+  width: 100%;
+  max-width: 500px;
+  @include flex;
+  gap: 30px;
+
   div {
+    font-size: 1.3em;
+    color: rgb(152, 152, 152);
     text-transform: uppercase;
   }
-   p {
+
+  p {
     margin: 0 10px;
     cursor: pointer;
+
     &:hover {
-        color: red;
+      color: red;
     }
-   }
+  }
 }
+
 .dashBoardLInk {
-   margin: 0 10px;
-    cursor: pointer;
-    &:hover {
-        color: red;
-    }
+  margin: 0 10px;
+  cursor: pointer;
+
+  &:hover {
+    color: red;
+  }
 }

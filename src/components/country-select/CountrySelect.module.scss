@@ -1,6 +1,8 @@
+@import 'variables';
+
 .countrySelectContainer {
-    width: 100px;
-    height: 20px;
+    width: auto;
+    height: auto;
     text-align: center;
     color: grey;
     select {
@@ -13,8 +15,9 @@
         cursor: pointer;
         color: gray;
         text-transform: lowercase;
+        font-size: 1em;
     }
     div {
-        font-size: 10px;
+        font-size: 1em;
     }
 }

@@ -3,10 +3,6 @@
 .welcomePageContainer {
     width: 100%;
     min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 100px;
 }
 .slidersContainer {
     margin: 0 auto;
@@ -28,10 +24,10 @@
 }
 
 .logoContainer {
-  width: 200px;
+  width: 100%;
   height: 100px;
   @include flex();
-  font-size: 22px;
+  font-size: 1.4em;
   font-weight: 500;
   text-transform: uppercase;
   opacity: 0.4;

@@ -23,7 +23,7 @@ function AddToCard({
   productId: string;
   variantId: number;
 }) {
-  const { addToCardContiner, quantityContainer } = styles;
+  const { addToCardContainer, quantityContainer } = styles;
   const dispatch = useAppDispatch();
   const { country } = useAppSelector(selectCommerceTools);
   const [quantity, setQuantity] = useState<number>(0);
@@ -81,7 +81,7 @@ function AddToCard({
   };
 
   return (
-    <div className={addToCardContiner}>
+    <div className={addToCardContainer}>
       <div className={quantityContainer}>
         <button onClick={handlePlusQuantuty}>+</button>
         {quantity}

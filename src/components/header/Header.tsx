@@ -15,6 +15,7 @@ import CountrySelect from '../country-select/CountrySelect';
 import Image from 'next/legacy/image';
 import LanguageSelect from '../language-select/LanguageSelect';
 import Link from 'next/link';
+import MainLogo from '../main-logo/MainLogo';
 import MiniCartModal from '../mini-cart-modal/MiniCartModal';
 import { UserData } from '@/interfaces';
 import { deleteCart } from '@/commercetools/utils/utilsCarts';
@@ -27,9 +28,8 @@ import { useTranslation } from 'next-i18next';
 
 function Header() {
   const {
+    headerStyles,
     headerContainer,
-    logoStyle,
-    categoriesContainer,
     shoppingBasketContainer,
     countShoppingLists,
     authContainer,
@@ -93,52 +93,49 @@ function Header() {
   };
 
   return (
-    <header className={headerContainer}>
-      <CountrySelect selectCountryText={t('selectCountryMessage')} />
-      <Link href={'/'}>
-        <div className={logoStyle}>
-          Store
-          <div>international</div>
-        </div>
-      </Link>
-      <div className={categoriesContainer}>
-        <Categories />
-      </div>
-      <LanguageSelect />
-      <div className={shoppingBasketContainer}>
-        <div className={countShoppingLists}>
-          {cart?.cartState === 'Active' ? cart.totalLineItemQuantity : ''}
-        </div>
-        <Image
-          onClick={() => setIsModalRendered(true)}
-          width={55}
-          height={34}
-          src={shoppingBasketIcon}
-          alt="shopping basket"
-          layout='fixed'
-        />
-      </div>
-      <div className={authContainer}>
-        {!userName ? (
-          <div className={loginBtnStyle} onClick={handleLogin}>
-            {t('login')}
+    <header className={headerStyles}>
+      <div className={headerContainer}>
+        <CountrySelect selectCountryText={t('selectCountryMessage')} />
+        <Link href={'/'}>
+          <MainLogo />
+        </Link>
+          <Categories />
+        <LanguageSelect />
+        <div className={shoppingBasketContainer}>
+          <div className={countShoppingLists}>
+            {cart?.cartState === 'Active' ? cart.totalLineItemQuantity : ''}
           </div>
-        ) : (
-          <div className={userNameStyle}>
-            <div>{userName}</div>
-            <Image
-              src={logoutIcon}
-              alt="logout icon"
-              width={25}
-              onClick={handleLogout}
-              layout='fixed'
-            />
-          </div>
+          <Image
+            onClick={() => setIsModalRendered(true)}
+            width={55}
+            height={34}
+            src={shoppingBasketIcon}
+            alt="shopping basket"
+            layout="fixed"
+          />
+        </div>
+        <div className={authContainer}>
+          {!userName ? (
+            <div className={loginBtnStyle} onClick={handleLogin}>
+              {t('login')}
+            </div>
+          ) : (
+            <div className={userNameStyle}>
+              <div>{userName}</div>
+              <Image
+                src={logoutIcon}
+                alt="logout icon"
+                width={25}
+                onClick={handleLogout}
+                layout="fixed"
+              />
+            </div>
+          )}
+        </div>
+        {isModalRendered && (
+          <MiniCartModal onClick={() => setIsModalRendered(false)} />
         )}
       </div>
-      {isModalRendered && (
-        <MiniCartModal onClick={() => setIsModalRendered(false)} />
-      )}
     </header>
   );
 }

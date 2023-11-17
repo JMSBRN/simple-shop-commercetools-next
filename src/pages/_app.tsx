@@ -1,4 +1,4 @@
-import '../styles/Home.css';
+import '../styles/globals.scss';
 import type { AppProps } from 'next/app';
 import Layout from '@/components/layout/Layout';
 import ProgressLine from '@/components/progress-line/ProgressLine';

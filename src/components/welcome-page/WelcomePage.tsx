@@ -8,12 +8,17 @@ import styles from './WelcomePage.module.scss';
 import { useRouter } from 'next/router';
 
 function WelcomePage() {
-  const { slidersContainer, sliderWrapperStyle, sliderTitle, logoContainer } =
-    styles;
-    const { locale } = useRouter();
+  const {
+    welcomePageContainer,
+    slidersContainer,
+    sliderWrapperStyle,
+    sliderTitle,
+    logoContainer,
+  } = styles;
+  const { locale } = useRouter();
 
   return (
-    <div>
+    <div className={welcomePageContainer}>
       <div className={slidersContainer}>
         {sliderData['slider-images'].map((slider, index) => (
           <div key={index} style={{ textAlign: 'center', margin: '70px' }}>

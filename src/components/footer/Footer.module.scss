@@ -11,22 +11,7 @@
         display: flex;
         justify-content: space-around;
         color: white;
-
-        .logoStyle {
-            margin: 0 50px;
-            @include flex(center, center, column);
-            font-size: 30px;
-            font-weight: 600;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            color: rgb(152, 152, 152);
-
-            div {
-                font-size: 8px;
-                letter-spacing: 4px;
-            }
-        }
-
+        
         .section {
             @include flex(center, center, column);
             text-align: center;

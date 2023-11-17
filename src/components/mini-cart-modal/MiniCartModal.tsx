@@ -16,7 +16,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     miniModalClose,
     titleStyle,
     cartLineItemsStyle,
-    buttonsContiner,
+    buttonsContainer,
     total,
     subTotal,
   } = styles;
@@ -76,7 +76,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
             {cart?.taxedPrice &&
               getMoneyValueFromCartField(cart?.taxedPrice.totalGross)}
           </div>
-          <div className={buttonsContiner}>
+          <div className={buttonsContainer}>
             <button onClick={handleRedirectToCartPage} type="button">
             {t('viewbag')}
             </button>

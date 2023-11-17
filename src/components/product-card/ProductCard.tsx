@@ -15,13 +15,14 @@ function ProductCard({ product }: { product: Product }) {
   const { staged } = product.masterData;
   const { name } = staged;
   const productName = filterObjectAndReturnValue(name, language);
+  const combinedVariants = [masterVariant, ...variants];
 
   return (
     <div className={productCardContainer}>
       <div className={productNameStyle}>{productName}</div>
       <div className={sliderContainer}>
         <SliderWithElements isButtonsExisted={!!variants.length}>
-          {[...variants, masterVariant].map((el, idx) => (
+          {combinedVariants.map((el, idx) => (
             <div key={idx}>
               <ProductCardVariant variant={el} />
             </div>

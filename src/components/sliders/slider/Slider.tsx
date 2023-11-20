@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useEffect, useState } from 'react';
-import Image from 'next/legacy/image';
 import { SliderImage } from '../../../../public/data/dataInterfaces';
 import styles from './Slider.module.scss';
 
@@ -7,14 +7,10 @@ const Slider = ({
   images,
   isPointsRendered,
   intervalSeconds,
-  imageWidth,
-  imageHeight
 }: {
   images: SliderImage[];
   isPointsRendered?: boolean;
   intervalSeconds?: number;
-  imageWidth?: number;
-  imageHeight?: number;
 }) => {
   const { sliderContainer, active, sliderPoints, point, sliderBtnsAndPoints } =
     styles;
@@ -38,14 +34,12 @@ const Slider = ({
 
   return (
     <div className={sliderContainer}>
-        <Image
-          layout='fixed'
-          width={imageWidth || 100}
-          height={ imageHeight || 130}
-          alt="slider image"
-          src={images.find((_, idx) => idx === currentSlide)?.url!}
-          priority
-        />
+      <img
+        width="100%"
+        height="100%"
+        alt="slider image"
+        src={images.find((_, idx) => idx === currentSlide)?.url!}
+      />
       {isPointsRendered && (
         <div className={sliderBtnsAndPoints}>
           <button onClick={prevSlide}>{'<'}</button>

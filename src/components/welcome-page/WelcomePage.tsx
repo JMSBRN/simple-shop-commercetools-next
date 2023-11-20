@@ -21,7 +21,7 @@ function WelcomePage() {
     <div className={welcomePageContainer}>
       <div className={slidersContainer}>
         {sliderData['slider-images'].map((slider, index) => (
-          <div key={index} style={{ textAlign: 'center', margin: '70px' }}>
+          <div key={index}>
             <div className={sliderTitle}>
               {filterObjectAndReturnValue(slider.name, locale!)}
             </div>
@@ -29,8 +29,6 @@ function WelcomePage() {
               <Slider
                 images={slider.images}
                 intervalSeconds={9000 + index * 3000}
-                imageWidth={350}
-                imageHeight={500}
               />
             </div>
           </div>

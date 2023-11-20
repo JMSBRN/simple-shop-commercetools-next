@@ -30,6 +30,7 @@ function Header() {
   const {
     headerStyles,
     headerContainer,
+    countrySelectWrapper,
     shoppingBasketContainer,
     countShoppingLists,
     authContainer,
@@ -95,7 +96,9 @@ function Header() {
   return (
     <header className={headerStyles}>
       <div className={headerContainer}>
+        <div className={countrySelectWrapper}>
         <CountrySelect selectCountryText={t('selectCountryMessage')} />
+        </div>
         <Link href={'/'}>
           <MainLogo />
         </Link>

@@ -5,13 +5,14 @@ import {
   setErrorMessage,
 } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import CustomSelect from '../custom-select/CustomSelect';
 import { getCountries } from '@/commercetools/utils/utilsCommercTools';
 import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import styles from './CountrySelect.module.scss';
 
 function CountrySelect({ selectCountryText }: { selectCountryText: string }) {
   const dispatch = useAppDispatch();
-  const { carts } = useAppSelector(selectCommerceTools);
+  const { carts, country } = useAppSelector(selectCommerceTools);
   const [countries, setCountries] = useState<string[]>([]);
   const [currentCountry, setCurrentCountry] = useState<string>('');
   const isCartsCreated = !!carts.length;
@@ -47,11 +48,9 @@ function CountrySelect({ selectCountryText }: { selectCountryText: string }) {
     fetchFunction();
   }, [fetchFunction]);
 
-  const handleChangeCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target;
+  const handleChangeCountry = (e: React.MouseEvent<HTMLOptionElement>) => {
+    const { value } = e.currentTarget;
 
-    console.log(value);
-    
     setCurrentCountry(value);
     dispatch(setCountry(value));
     window.localStorage.setItem('country', JSON.stringify(value));
@@ -60,19 +59,16 @@ function CountrySelect({ selectCountryText }: { selectCountryText: string }) {
   return (
     <div className={styles.countrySelectContainer}>
       {!!countries.length && (
-        <select
-          onChange={(e) => handleChangeCountry(e)}
-          defaultValue={currentCountry}
-          disabled={isCartsCreated}
-        >
-          {countries.map((el, idx) => (
-            <option key={idx} value={el}>
-              {el}
-            </option>
-          ))}
-        </select>
+        <div className={styles.selectWrapper}>
+          <CustomSelect
+           options={countries}
+           selectedOption={country}
+           onSelectOptionValue={handleChangeCountry}
+
+          />
+        </div>
       )}
-      {!isCartsCreated && <div>{selectCountryText}</div>}
+      {!isCartsCreated && <div className={styles.selectMessage}>{selectCountryText}</div>}
     </div>
   );
 }

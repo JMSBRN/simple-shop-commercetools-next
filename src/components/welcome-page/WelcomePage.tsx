@@ -26,10 +26,18 @@ function WelcomePage() {
               {filterObjectAndReturnValue(slider.name, locale!)}
             </div>
             <div className={sliderWrapperStyle}>
-              <Slider
-                images={slider.images}
-                intervalSeconds={9000 + index * 3000}
-              />
+              <Slider intervalSeconds={9000 + index * 3000}>
+                {slider.images.map((el, idx) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={idx}
+                    src={el.url}
+                    alt="image for slider"
+                    width="100%"
+                    height="100%"
+                  />
+                ))}
+              </Slider>
             </div>
           </div>
         ))}

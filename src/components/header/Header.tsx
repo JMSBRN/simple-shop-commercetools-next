@@ -11,9 +11,9 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import { Cart } from '@commercetools/platform-sdk';
 import Categories from '../categories/Categories';
-import CountrySelect from '../country-select/CountrySelect';
+import CountrySelect from '../selects/country-select/CountrySelect';
 import Image from 'next/legacy/image';
-import LanguageSelect from '../language-select/LanguageSelect';
+import LanguageSelect from '../selects/language-select/LanguageSelect';
 import Link from 'next/link';
 import MainLogo from '../main-logo/MainLogo';
 import MiniCartModal from '../mini-cart-modal/MiniCartModal';

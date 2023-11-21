@@ -1,27 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useEffect, useState } from 'react';
-import { SliderImage } from '../../../../public/data/dataInterfaces';
 import styles from './Slider.module.scss';
 
 const Slider = ({
-  images,
+  children,
   isPointsRendered,
   intervalSeconds,
 }: {
-  images: SliderImage[];
+  children: React.ReactNode[];
   isPointsRendered?: boolean;
   intervalSeconds?: number;
 }) => {
   const { sliderContainer, active, sliderPoints, point, sliderBtnsAndPoints } =
     styles;
+    const childrenContent = Array.from(children);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((currentSlide + 1) % images.length);
-  }, [currentSlide, images.length]);
+    setCurrentSlide((currentSlide + 1) % childrenContent.length);
+  }, [currentSlide, childrenContent.length]);
 
   const prevSlide = () => {
-    setCurrentSlide((currentSlide - 1 + images.length) % images.length);
+    setCurrentSlide((currentSlide - 1 + childrenContent.length) % childrenContent.length);
   };
 
   useEffect(() => {
@@ -34,17 +34,12 @@ const Slider = ({
 
   return (
     <div className={sliderContainer}>
-      <img
-        width="100%"
-        height="100%"
-        alt="slider image"
-        src={images.find((_, idx) => idx === currentSlide)?.url!}
-      />
+      {childrenContent.find((_, idx) => idx === currentSlide)}
       {isPointsRendered && (
         <div className={sliderBtnsAndPoints}>
           <button onClick={prevSlide}>{'<'}</button>
           <div className={sliderPoints}>
-            {images.map((_, index) => (
+            {childrenContent.map((_, index) => (
               <div
                 key={index}
                 className={`${point} ${index === currentSlide ? active : ''}`}

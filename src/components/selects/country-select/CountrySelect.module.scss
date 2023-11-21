@@ -1,0 +1,21 @@
+@import 'variables';
+@import 'mixins';
+
+.countrySelectContainer {
+    width: auto;
+    height: 100%;
+    display: flex;
+    div {
+        font-size: 1em;
+    }
+    .selectWrapper {
+        width: 40px;
+        height: auto;
+    }
+    .selectMessage {
+        width: 100%;
+        height: 80px;
+        color: gray;
+        @include flex;
+    }
+}

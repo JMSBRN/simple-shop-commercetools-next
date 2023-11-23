@@ -47,6 +47,7 @@ function Header() {
   const cart = carts?.find((el) => el.id === currentCartId!) as Cart;
   const { push } = useRouter();
   const { t } = useTranslation('common');
+  const isActiveCartExisted = cart?.cartState === 'Active';
 
   useEffect(() => {
     dispatch(fetchCarts());
@@ -105,8 +106,10 @@ function Header() {
           <Categories />
         <LanguageSelect />
         <div className={shoppingBasketContainer}>
-          <div className={countShoppingLists}>
-            {cart?.cartState === 'Active' ? cart.totalLineItemQuantity : ''}
+          <div style={{
+            visibility: `${isActiveCartExisted ? 'visible': 'hidden'}`
+          }} className={countShoppingLists}>
+            {isActiveCartExisted ? cart.totalLineItemQuantity || '0' : '0'}
           </div>
           <Image
             onClick={() => setIsModalRendered(true)}

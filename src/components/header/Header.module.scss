@@ -6,14 +6,14 @@
   height: 100px;
   background-color: $neutral-color;
   text-align: center;
+  @include flex;
 }
 .headerContainer {
   margin:  0 auto;
-  display: inline-block;
-  padding: 20px;
-  @include flex;
-  gap: 50px;
-
+  max-width: 80%;
+  min-width: 80%;
+  height: 100%;
+  @include flex(center, space-around);
 
   a {
 
@@ -62,20 +62,21 @@
 }
 
 .shoppingBasketContainer {
-  width: 40px;
+  width: 60px;
   height: auto;
-  @include flex(center, center, column);
   color: grey;
   font-size: 1.4em;
-
   img {
+    margin: 0 auto;
     cursor: pointer;
     filter: invert(63%) sepia(0%) saturate(48%) hue-rotate(190deg) brightness(96%) contrast(88%);
   }
 }
 
 .countShoppingLists {
-  width: 30px;
-  height: 25px;
+  position: relative;
+  left: 10px;
+  width: 40px;
+  height: 30px;
   font-size: 0.8em;
 }

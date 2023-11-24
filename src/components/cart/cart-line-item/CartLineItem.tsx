@@ -14,6 +14,7 @@ import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice
 import styles from './CartLineItem.module.scss';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import Counter from '@/components/buttons/counter/Counter';
 
 function CartLineItem({
   cartId,
@@ -36,6 +37,7 @@ function CartLineItem({
     description,
     priceStyle,
     saleBage,
+    counterWrapperStyle,
     quantityStyle,
     currentQuantityStyle,
     total,
@@ -112,7 +114,7 @@ function CartLineItem({
       <Image
         priority
         objectFit='fill'
-        src={images?.find((el) => el.url)?.url!  || {
+        src={images?.find((el) => el.url)?.url! || {
           src: '/images/No-Image-Placeholder.svg',
           width: 10,
           height: 10,
@@ -131,20 +133,17 @@ function CartLineItem({
       <div className={currentQuantityStyle}>
       </div>
       {isQuantityButtonsExisted ? (
-        <div className={quantityStyle}>
-          <button type="button" onClick={handlePlusQuantity}>
-            +
-          </button>
-          <div>{currentQuantity}</div>
-          <button type="button" onClick={handleMinusQuantity}>
-            -
-          </button>
+        <div className={counterWrapperStyle}>
+          <Counter
+            flexMode={true}
+            quantity={currentQuantity}
+            handleIncrement={handlePlusQuantity}
+            handleDecrement={handleMinusQuantity}
+          />
+
         </div>
-      ) :  (
-        <>
-          <div>*</div>
-          <div>{t('quantity')}</div>
-        </>
+      ) : (
+        <div className={quantityStyle}><span>{'*'}</span><span>{quantity}</span></div>
       )}
       {isTotlaSummExisted && (
         <div className={total}>

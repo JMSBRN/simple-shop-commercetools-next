@@ -8,20 +8,20 @@ test('Counter component renders with the correct quantity and buttons', () => {
     const handleIncrement = jest.fn();
     const handleDecrement = jest.fn();
 
-    const { getByText } = render(
+    const { getByText, getByTestId } = render(
         <Counter quantity={quantity} handleIncrement={handleIncrement} handleDecrement={handleDecrement} />
     );
 
     expect(getByText(quantity.toString())).toBeInTheDocument();
 
     // Check if the increment button is present and functional
-    const incrementButton = getByText('+');
+    const incrementButton = getByTestId('btn-plus');
     expect(incrementButton).toBeInTheDocument();
     fireEvent.click(incrementButton);
     expect(handleIncrement).toHaveBeenCalledTimes(1);
 
     // Check if the decrement button is present and functional
-    const decrementButton = getByText('-');
+    const decrementButton =  getByTestId('btn-minus');
     expect(decrementButton).toBeInTheDocument();
     fireEvent.click(decrementButton);
     expect(handleDecrement).toHaveBeenCalledTimes(1);

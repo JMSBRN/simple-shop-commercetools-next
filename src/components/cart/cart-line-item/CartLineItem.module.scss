@@ -11,6 +11,7 @@ $base-width: 100%;
     font-size: calc($base-width * 0.85);
     background-color: white;
     border: 1px solid rgb(125, 125, 125, 0.4);
+
     div {
         color: grey;
         font-size: 0.9em;
@@ -20,6 +21,7 @@ $base-width: 100%;
 .deleteLineItem {
     cursor: pointer;
     margin-right: 1em;
+
     &:hover {
         color: red;
     }
@@ -34,65 +36,54 @@ $base-width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
     text-align: center;
+
     /* width */
-&::-webkit-scrollbar {
-    width: 0.2em;
-  }
-  
-  /* Track */
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  
-  /* Handle */
-  &::-webkit-scrollbar-thumb {
-    background: #c7c7c7;
-  }
-  
-  /* Handle on hover */
-  &::-webkit-scrollbar-thumb:hover {
-      background: #555;
+    &::-webkit-scrollbar {
+        width: 0.2em;
     }
-    
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: #c7c7c7;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
 }
 
 .priceStyle {
     width: auto;
-    min-width:45px;
+    min-width: 45px;
     padding: 0.3em;
     text-align: start;
     text-transform: uppercase;
 }
-.saleBage{
+
+.saleBage {
     @include flex ();
     border-radius: 10px;
     background-color: rgb(255, 255, 46, 0.9);
 }
-.quantityStyle {
-    width: auto;
-    height: auto;
-    @include flex(center, space-between);
-    div {
-        width: auto;
-        min-width: 20px;
-        text-align: center;
-        font-size: 1em;
-    }
-    button {
-        width: 1.5em;
-        height: auto;
-        border: none;
-        cursor: pointer;
-        &:hover {
-            background-color: gray;
-            color: white;
-        }
-    }
+
+.counterWrapperStyle {
+    width: 150px;
+    height: 100%;
+    @include flex;
 }
-.currentQuantityStyle {
-    margin-right: 20px;
-    width: auto;
+
+.quantityStyle {
+    width: 40px;
+    height: 100%;
     @include flex (center, space-around);
+
 }
 
 .total {

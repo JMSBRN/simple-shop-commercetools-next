@@ -1,6 +1,10 @@
 {
-  "extends": "next/core-web-vitals",
-  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:testing-library/react",
+    "plugin:jest-dom/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "testing-library"],
   "rules": {
     "no-multiple-empty-lines":["error", { "max": 1}],
       "quotes": ["error", "single"],

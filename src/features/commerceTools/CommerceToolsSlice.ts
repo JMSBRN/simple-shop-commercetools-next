@@ -87,6 +87,9 @@ const commerceToolseSlice = createSlice({
         state.status = 'succeeded';
         state.shoppingLists = action.payload;
       })
+      .addCase(fetchCarts.pending, (state) => {
+        state.status = 'loading';     
+      })
       .addCase(fetchCarts.fulfilled, (state, action) => {
         state.status = 'succeeded';     
         state.carts = action.payload;

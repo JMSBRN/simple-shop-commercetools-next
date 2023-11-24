@@ -1,0 +1,15 @@
+@import 'mixins';
+
+.addToCardContainer{
+   width: 220px;
+   height: auto;
+   padding-right: 5px;
+   @include flex ();
+   background-color: rgb(233, 233, 233);
+}
+
+.quantityContainer{
+    width: 140px;
+    height: 100%;
+    padding: 3px;
+}

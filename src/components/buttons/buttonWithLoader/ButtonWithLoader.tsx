@@ -14,6 +14,7 @@ function ButtonWithLoader({
 
   return (
     <button
+      data-testid="button-with-loader"
       className={isLoading ? buttonStyleWithLoader : buttonStyle}
       onClick={onClick}
     >

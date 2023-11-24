@@ -1,0 +1,27 @@
+@import 'mixins';
+@import 'variables';
+
+.counter {
+    width: 100%;
+    height: 100%;
+    @include flex(center, center, column);
+    background-color: transparent;
+    color: $text-color;
+    font-size: 1.4em;
+
+    button {
+        width: 90%;
+        height: auto;
+        padding: 3px 0;
+        border: 1px solid transparent;
+        color: $text-color;
+        background-color: transparent;
+        cursor: pointer;
+        font-size: 1.4em;
+
+        &:active {
+            background-color: rgb(151, 151, 151);
+            color: white;
+        }
+    }
+}

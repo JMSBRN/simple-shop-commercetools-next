@@ -4,69 +4,49 @@ import '@testing-library/jest-dom';
 import ButtonWithCounter from './ButtonWithCounter';
 
 describe('ButtonWithCounter', () => {
-    test('renders properly', () => {
-        const { getByText } = render(
-            <ButtonWithCounter
-                isLoading={false}
-                quantity={0}
-                setQuantity={() => { }}
-                text="Test Button"
-                onClick={() => { }}
-            />
-        );
+    const renderButtonWithLoader = (props={}) => {
+       const defaultProps = {
+        isLoading: false,
+        quantity: 0,
+        setQuantity: () => { },
+        text: 'Test Button',
+        onClick: () => { }
+       }
+       const { getByTestId, getByText } = render(<ButtonWithCounter {...defaultProps} {...props}  />);
+       const btnPlus = getByTestId('btn-plus');
+       const btnMinus = getByTestId('btn-minus');
+       return {
+         text: defaultProps.text,
+         btnPlus,
+         btnMinus,
+         getByText
+       };
+    };
 
-        expect(getByText('Test Button')).toBeInTheDocument();
+    test('renders properly', () => {
+        const { text, getByText } = renderButtonWithLoader();
+        expect(getByText(text)).toBeInTheDocument();
         expect(getByText('0')).toBeInTheDocument();
     });
 
     test('handles quantity increment correctly', () => {
         const setQuantityMock = jest.fn();
-        const { getByTestId } = render(
-            <ButtonWithCounter
-                isLoading={false}
-                quantity={2}
-                setQuantity={setQuantityMock}
-                text="Test Button"
-                onClick={() => { }}
-            />
-        );
-
-        fireEvent.click(getByTestId('btn-plus'));
-
+        const { btnPlus } = renderButtonWithLoader({ quantity: 2,  setQuantity: setQuantityMock });
+        fireEvent.click(btnPlus);
         expect(setQuantityMock).toHaveBeenCalledWith(3);
     });
 
     test('handles quantity decrement correctly', () => {
         const setQuantityMock = jest.fn();
-        const { getByTestId } = render(
-            <ButtonWithCounter
-                isLoading={false}
-                quantity={2}
-                setQuantity={setQuantityMock}
-                text="Test Button"
-                onClick={() => { }}
-            />
-        );
-
-        fireEvent.click(getByTestId('btn-minus'));
-
+        const { btnMinus } = renderButtonWithLoader({ quantity: 2,  setQuantity: setQuantityMock });
+        fireEvent.click(btnMinus);
         expect(setQuantityMock).toHaveBeenCalledWith(1);
     });
 
     test('handles quantity not going below 0', () => {
         const setQuantityMock = jest.fn();
-        const { getByTestId } = render(
-            <ButtonWithCounter
-                isLoading={false}
-                quantity={0}
-                setQuantity={setQuantityMock}
-                text="Test Button"
-                onClick={() => { }}
-            />
-        );
-
-        fireEvent.click(getByTestId('btn-minus'));
-
+        const { btnMinus } = renderButtonWithLoader({ quantity: 0 });
+        fireEvent.click(btnMinus);
         expect(setQuantityMock).not.toHaveBeenCalled();
     });
 });

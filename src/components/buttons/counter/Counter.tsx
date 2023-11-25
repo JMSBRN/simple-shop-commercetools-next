@@ -12,7 +12,7 @@ function Counter({ quantity, handleIncrement, handleDecrement, flexMode }: {
 }) {
   const { counter, counterFlexMode } = styles;
 
-  return <div className={flexMode ? counterFlexMode : counter}>
+  return <div data-testid="counter" className={flexMode ? counterFlexMode : counter}>
     <button data-testid="btn-plus" onClick={handleIncrement}>
       <Image
         src={plusImage}

@@ -12,6 +12,7 @@ export interface CredentialsForMyApiCall {
   email: string;
   password: string;
 }
+export type ThunkStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
 export interface CustomerInfo {
   salutation?: string;

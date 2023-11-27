@@ -14,14 +14,15 @@ import { fetchOrders } from '../thunks/FetchOrders';
 import { fetchPayments } from '../thunks/FetchPayments';
 import { fetchProducts } from '../thunks/FetchProducts';
 import { fetchShoppingLists } from '../thunks/FetchShoppingLists';
+import { ThunkStatus } from '@/interfaces';
 
-interface InitialState {
+export interface CommerceToolsSliceInitialState {
   language: string;
   country: string;
   categories: Category[];
   products: Product[];
   orders: Order[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: ThunkStatus;
   errorMessage: string;
   shoppingLists: ShoppingList[];
   cart: Cart;
@@ -29,7 +30,7 @@ interface InitialState {
   payments: Payment[];
   userName: string;
 }
-const initialState: InitialState = {
+const initialState: CommerceToolsSliceInitialState = {
   language: '',
   country: '',
   categories: [],

@@ -1,8 +1,5 @@
 import Categories from '../categories/Categories';
-import Image from 'next/image';
-import Link from 'next/link';
 import MainLogo from '../main-logo/MainLogo';
-import React from 'react';
 import styles from './Footer.module.scss';
 import { useTranslation } from 'next-i18next';
 import SocialLinks from '../social-links/SocialLinks';

@@ -1,4 +1,10 @@
-import { Cart, CentPrecisionMoney, CreatedBy, CustomFields, LastModifiedBy, Payment, PaymentReference, ShippingRate, TypedMoney } from "@commercetools/platform-sdk";
+import {
+  Cart,
+  CreatedBy,
+  CustomFields,
+  LastModifiedBy,
+  PaymentReference,
+} from '@commercetools/platform-sdk';
 
 export const mockCarts: Cart[] = [
   {
@@ -30,7 +36,7 @@ export const mockCarts: Cart[] = [
       fractionDigits: 2,
     },
     taxedPrice: {
-        taxPortions: [],
+      taxPortions: [],
       totalNet: {
         type: 'centPrecision',
         currencyCode: 'USD',
@@ -45,7 +51,7 @@ export const mockCarts: Cart[] = [
       },
     },
     taxedShippingPrice: {
-        taxPortions: [],
+      taxPortions: [],
       totalNet: {
         type: 'centPrecision',
         currencyCode: 'USD',
@@ -85,7 +91,7 @@ export const mockCarts: Cart[] = [
     directDiscounts: [],
     refusedGifts: [],
     paymentInfo: {
-        payments: [] as PaymentReference[],
+      payments: [] as PaymentReference[],
     },
     country: 'US',
     locale: 'en',
@@ -126,7 +132,7 @@ export const mockCarts: Cart[] = [
       fractionDigits: 2,
     },
     taxedPrice: {
-        taxPortions: [],
+      taxPortions: [],
       totalNet: {
         type: 'centPrecision',
         currencyCode: 'USD',
@@ -141,7 +147,7 @@ export const mockCarts: Cart[] = [
       },
     },
     taxedShippingPrice: {
-        taxPortions: [],
+      taxPortions: [],
       totalNet: {
         type: 'centPrecision',
         currencyCode: 'USD',
@@ -181,7 +187,7 @@ export const mockCarts: Cart[] = [
     directDiscounts: [],
     refusedGifts: [],
     paymentInfo: {
-        payments: [] as PaymentReference[],
+      payments: [] as PaymentReference[],
     },
     country: 'US',
     locale: 'en',
@@ -192,6 +198,5 @@ export const mockCarts: Cart[] = [
     lastModifiedAt: '2023-01-01T00:00:00Z',
     lastModifiedBy: {} as LastModifiedBy,
     createdBy: {} as CreatedBy,
-  }
-
+  },
 ];

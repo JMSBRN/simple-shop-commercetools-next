@@ -7,6 +7,7 @@ import {
   updateCartLineitemQuantity,
 } from '@/commercetools/utils/utilsCarts';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import Counter from '@/components/buttons/counter/Counter';
 import Image from 'next/legacy/image';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
@@ -14,7 +15,6 @@ import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice
 import styles from './CartLineItem.module.scss';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import Counter from '@/components/buttons/counter/Counter';
 
 function CartLineItem({
   cartId,

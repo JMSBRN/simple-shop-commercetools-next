@@ -1,6 +1,6 @@
+import { act, fireEvent, screen } from '@testing-library/react';
 import { mockUseRouter, renderWithPreloadState } from '@/tests/utilsForTests';
 import Categories from './Categories';
-import { act, fireEvent } from '@testing-library/react';
 import { CommonType } from 'types';
 import { PartialCommerceToolsState } from '@/interfaces';
 
@@ -16,10 +16,10 @@ const renderCategories = (customState: PartialCommerceToolsState = {}) => {
 
 describe('render <Categories />', () => {
   test('should render correctly', async () => {
-    const { getByText, getByTestId } = renderCategories();
-    const category_1 = getByText('Mock Category 1');
-    const category_2 = getByText('Mock Category 2');
-    const dashboard = getByTestId('dashboard');
+    renderCategories();
+    const category_1 = screen.getByText('Mock Category 1');
+    const category_2 = screen.getByText('Mock Category 2');
+    const dashboard = screen.getByTestId('dashboard');
 
     await act(async () => {
       expect(category_1).toBeInTheDocument();
@@ -34,8 +34,8 @@ describe('render <Categories />', () => {
   });
 
   test('dashboard should not render with empty userName', async () => {
-    const { queryByTestId } = renderCategories({ userName: '' });
-    const dashboard = queryByTestId('dashboard');
+    renderCategories({ userName: '' });
+    const dashboard = screen.queryByTestId('dashboard');
 
     await act(async () => {
       expect(dashboard).not.toBeInTheDocument();

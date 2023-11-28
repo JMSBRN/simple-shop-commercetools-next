@@ -1,6 +1,7 @@
 import { mockUseRouter, renderWithProviders } from '@/tests/utilsForTests';
-import Footer from './Footer';
 import { CommonType } from 'types';
+import Footer from './Footer';
+import { screen } from '@testing-library/react';
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({ t: (key: CommonType) => key }),
@@ -8,36 +9,41 @@ jest.mock('react-i18next', () => ({
 
 mockUseRouter();
 const renderFooter = () => {
-    const { getByTestId, asFragment } = renderWithProviders(<Footer />);
+    const { asFragment } = renderWithProviders(<Footer />);
+
     return {
-        getByTestId,
         asFragment
-    }
+    };
 };
 
 describe('Footer Component', () => {
     test('renders Footer component', () => {
-        const { getByTestId } = renderFooter();
-        expect(getByTestId('footer')).toBeInTheDocument();
+        renderFooter();
+
+        expect(screen.getByTestId('footer')).toBeInTheDocument();
     });
 
     test('renders MainLogo component inside Footer', () => {
-        const { getByTestId } = renderFooter();
-        expect(getByTestId('main-logo')).toBeInTheDocument();
+        renderFooter();
+
+        expect(screen.getByTestId('main-logo')).toBeInTheDocument();
     });
 
     test('renders Categories component inside Footer', () => {
-        const { getByTestId } = renderFooter();
-        expect(getByTestId('categories')).toBeInTheDocument();
+        renderFooter();
+
+        expect(screen.getByTestId('categories')).toBeInTheDocument();
     });
 
     test('renders SocialLinks component inside Footer', () => {
-        const { getByTestId } = renderFooter();
-        expect(getByTestId('social-links')).toBeInTheDocument();
+        renderFooter();
+
+        expect(screen.getByTestId('social-links')).toBeInTheDocument();
     });
 
     test('matches snapshot', () => {
         const { asFragment } = renderFooter();
+
         expect(asFragment()).toMatchSnapshot();
     });
 });

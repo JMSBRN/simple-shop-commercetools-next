@@ -1,20 +1,19 @@
-import { CommonType } from 'types';
-import React, { PropsWithChildren } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
 import { AppStore, RootState, setupStore } from '@/store/store';
+import React, { PropsWithChildren } from 'react';
+import { RenderOptions, render } from '@testing-library/react';
+import { Cart } from '@commercetools/platform-sdk';
+import { CommerceToolsSliceInitialState } from '@/features/commerceTools/CommerceToolsSlice';
+import { CommonType } from 'types';
+import { PartialCommerceToolsState } from '@/interfaces';
 import type { PreloadedState } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import { CommerceToolsSliceInitialState } from '@/features/commerceTools/CommerceToolsSlice';
 import { mockCategories } from './mocks/mockCategories';
-import { PartialCommerceToolsState } from '@/interfaces';
-import { Cart } from '@commercetools/platform-sdk';
 
 export const mockUseTranslation = () => {
   jest.mock('react-i18next', () => ({
     useTranslation: () => ({ t: (key: CommonType) => key }),
   }));
 };
-
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   preloadedState?: PreloadedState<RootState>;
@@ -24,7 +23,7 @@ export const renderWithProviders = (
   ui: React.ReactElement,
   {
     preloadedState = {
-      commercetools: {} as CommerceToolsSliceInitialState
+      commercetools: {} as CommerceToolsSliceInitialState,
     },
     store = setupStore(preloadedState),
     ...renderOptions
@@ -34,14 +33,16 @@ export const renderWithProviders = (
     useTranslation: () => ({ t: (key: CommonType) => key }),
   }));
 
-  const Wrapper = ({ children }: PropsWithChildren<Record<string, unknown>>): JSX.Element => {
+  const Wrapper = ({
+    children,
+  }: PropsWithChildren<Record<string, unknown>>): JSX.Element => {
     return <Provider store={store}>{children}</Provider>;
   };
+
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
 };
 
 export const mockUseRouter = () => {
-
   const useRouterMock = {
     route: '/',
     pathname: '',
@@ -53,16 +54,24 @@ export const mockUseRouter = () => {
     prefetch: jest.fn(() => null),
   };
 
-  const useRouterWithMockEmplement = jest.spyOn(require('next/router'), 'useRouter');
+  const useRouterWithMockEmplement = jest.spyOn(
+    require('next/router'),
+    'useRouter'
+  );
+
   useRouterWithMockEmplement.mockImplementation(() => useRouterMock);
-  return {useRouterWithMockEmplement};
+  return { useRouterWithMockEmplement };
 };
 
-export const renderWithPreloadState = (ui: React.ReactElement, customState?: PartialCommerceToolsState) => {
+export const renderWithPreloadState = (
+  ui: React.ReactElement,
+  customState?: PartialCommerceToolsState
+) => {
   const defaultState: RootState = {
     commercetools: {
       language: 'en',
       country: 'en',
+      countries: [],
       categories: mockCategories,
       products: [],
       orders: [],
@@ -73,7 +82,7 @@ export const renderWithPreloadState = (ui: React.ReactElement, customState?: Par
       carts: [],
       payments: [],
       userName: 'MockUser',
-      ...customState || {} as PartialCommerceToolsState,
+      ...(customState || ({} as PartialCommerceToolsState)),
     },
   };
 

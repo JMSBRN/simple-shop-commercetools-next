@@ -1,4 +1,4 @@
-import { RootState } from "./store/store";
+import { RootState } from './store/store';
 
 export interface UserData {
   customerId?: string;
@@ -9,7 +9,7 @@ export interface UserData {
 export type CookiesKeys = 'userData'| 'currentCartId';
 export type PaymentMethods = 'CREDIT_CARD' | 'PAY_PAL';
 export type ThunkStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
-export type PartialCommerceToolsState = Partial<RootState["commercetools"]>;
+export type PartialCommerceToolsState = Partial<RootState['commercetools']>;
 
 export interface CredentialsForMyApiCall {
   email: string;

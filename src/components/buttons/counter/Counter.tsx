@@ -1,8 +1,8 @@
-import React from 'react';
-import styles from './Counter.module.scss';
 import Image from 'next/legacy/image';
-import plusImage from '../../../../public/svgs/plus.svg';
+import React from 'react';
 import minusImage from '../../../../public/svgs/minus.svg';
+import plusImage from '../../../../public/svgs/plus.svg';
+import styles from './Counter.module.scss';
 
 function Counter({ quantity, handleIncrement, handleDecrement, flexMode }: {
   flexMode?: boolean;

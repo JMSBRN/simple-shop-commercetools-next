@@ -11,21 +11,22 @@ import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import styles from './CountrySelect.module.scss';
 
 function CountrySelect({ selectCountryText }: { selectCountryText: string }) {
+  const { countrySelectContainer, selectedCountry, hidden } = styles;
   const dispatch = useAppDispatch();
   const { carts, country } = useAppSelector(selectCommerceTools);
   const [countries, setCountries] = useState<string[]>([]);
   const [currentCountry, setCurrentCountry] = useState<string>('');
-  const isCartsCreated = !!carts.length;
+  const isCartsCreated = !!carts?.length;
 
   const fetchFunction = useCallback(
     async function () {
       const res = await getCountries();
-    
-      if(!Array.isArray(res)) {
-        if(res.message === 'Failed to fetch')
-        dispatch(setErrorMessage('Please check internet connection'));
+
+      if (!Array.isArray(res)) {
+        if (res.message === 'Failed to fetch')
+          dispatch(setErrorMessage('Please check internet connection'));
       }
-   
+
       const currentCountryFromLocal = JSON.parse(
         window.localStorage.getItem('country') || '"GB"'
       );
@@ -34,7 +35,7 @@ function CountrySelect({ selectCountryText }: { selectCountryText: string }) {
 
       dispatch(setCountry(currentCountry));
       if (!isErrorResponse(res) && Array.isArray(res)) {
-       const resWithoutStartPrefix=  res.map(c => {
+        const resWithoutStartPrefix = res.map((c) => {
           return c.substring(3);
         });
 
@@ -57,18 +58,26 @@ function CountrySelect({ selectCountryText }: { selectCountryText: string }) {
   };
 
   return (
-    <div data-testid="select-country" className={styles.countrySelectContainer}>
-      {!!countries.length && (
+    <div data-testid="select-country" className={countrySelectContainer}>
+        {!isCartsCreated && (
+        <div className={styles.selectMessage}>{selectCountryText}</div>
+      )}
+      <div
+        data-testid="selected-country"
+        className={!!isCartsCreated ? selectedCountry : hidden}
+      >
+        {country}
+      </div>
+
+      {!isCartsCreated && (
         <div className={styles.selectWrapper}>
           <CustomSelect
-           options={countries}
-           selectedOption={country}
-           onSelectOptionValue={handleChangeCountry}
-
+            options={countries}
+            selectedOption={country}
+            onSelectOptionValue={handleChangeCountry}
           />
         </div>
       )}
-      {!isCartsCreated && <div className={styles.selectMessage}>{selectCountryText}</div>}
     </div>
   );
 }

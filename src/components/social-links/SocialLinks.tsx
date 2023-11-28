@@ -1,8 +1,8 @@
-import React from 'react';
-import styles from './SocialLinks.module.scss';
-import socialMediaImages from '../../../public/data/social-media-images.json';
 import Image from 'next/legacy/image';
 import Link from 'next/link';
+import React from 'react';
+import socialMediaImages from '../../../public/data/social-media-images.json';
+import styles from './SocialLinks.module.scss';
 
 function SocialLinks() {
 

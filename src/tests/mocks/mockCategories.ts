@@ -1,4 +1,4 @@
-import { Category } from "@commercetools/platform-sdk";
+import { Category } from '@commercetools/platform-sdk';
 
 export const mockCategories: Category[] = [
     {

@@ -1,8 +1,8 @@
 import Categories from '../categories/Categories';
 import MainLogo from '../main-logo/MainLogo';
+import SocialLinks from '../social-links/SocialLinks';
 import styles from './Footer.module.scss';
 import { useTranslation } from 'next-i18next';
-import SocialLinks from '../social-links/SocialLinks';
 
 const Footer = () => {
   const { footer, container, section } = styles;

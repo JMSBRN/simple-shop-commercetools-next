@@ -1,5 +1,5 @@
-import commercetoolseReducer from '../features/commerceTools/CommerceToolsSlice';
 import { Action, PreloadedState, ThunkAction, configureStore } from '@reduxjs/toolkit';
+import commercetoolseReducer from '../features/commerceTools/CommerceToolsSlice';
 
 export const store = configureStore({
   reducer: {

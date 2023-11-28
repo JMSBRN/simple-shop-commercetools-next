@@ -14,6 +14,9 @@ const config = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverageFrom: ["src/components/**/*.{js,jsx,ts,tsx}", "!**/*.test.{js,jsx,ts,tsx}"],
   coveragePathIgnorePatterns: ["/node_modules/", "/tests/"],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
 };
 
 export default createJestConfig(config);

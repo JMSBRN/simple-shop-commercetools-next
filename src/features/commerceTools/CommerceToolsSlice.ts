@@ -8,17 +8,19 @@ import {
 } from '@commercetools/platform-sdk';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/store/store';
+import { ThunkStatus } from '@/interfaces';
 import { fetchCarts } from '../thunks/FetchCarts';
 import { fetchCategories } from '../thunks/FetchCategories';
+import { fetchCountries } from '../thunks/FetchCountries';
 import { fetchOrders } from '../thunks/FetchOrders';
 import { fetchPayments } from '../thunks/FetchPayments';
 import { fetchProducts } from '../thunks/FetchProducts';
 import { fetchShoppingLists } from '../thunks/FetchShoppingLists';
-import { ThunkStatus } from '@/interfaces';
 
 export interface CommerceToolsSliceInitialState {
   language: string;
   country: string;
+  countries: string[];
   categories: Category[];
   products: Product[];
   orders: Order[];
@@ -33,6 +35,7 @@ export interface CommerceToolsSliceInitialState {
 const initialState: CommerceToolsSliceInitialState = {
   language: '',
   country: '',
+  countries: [],
   categories: [],
   products: [],
   orders: [] as Order[],
@@ -60,6 +63,9 @@ const commerceToolseSlice = createSlice({
     setCountry: (state, action: PayloadAction<string>) => {
       state.country = action.payload;
     },
+    setCountries: (state, action: PayloadAction<string[]>) => {
+      state.countries = action.payload;
+    },
     setShoppingLists: (state, action: PayloadAction<ShoppingList[]>) => {
       state.shoppingLists = action.payload;
     },
@@ -81,6 +87,9 @@ const commerceToolseSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchCountries.fulfilled, (state, action) => {
+        state.countries = action.payload;
+      })
       .addCase(fetchCategories.pending, (state) => {
         state.status = 'loading';
       })
@@ -118,6 +127,7 @@ const commerceToolseSlice = createSlice({
 });
 
 export const {
+  setCountries,
   setCategories,
   setProducts,
   setOrders,

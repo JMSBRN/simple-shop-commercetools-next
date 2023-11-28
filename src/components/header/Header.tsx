@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {
   deleteAllCookiesFromLocal,
   getDecryptedDataFromCookie,
@@ -9,6 +8,7 @@ import {
   setUserName,
 } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import { useEffect, useState } from 'react';
 import { Cart } from '@commercetools/platform-sdk';
 import Categories from '../categories/Categories';
 import CountrySelect from '../selects/country-select/CountrySelect';
@@ -20,12 +20,12 @@ import MiniCartModal from '../mini-cart-modal/MiniCartModal';
 import { UserData } from '@/interfaces';
 import { deleteCart } from '@/commercetools/utils/utilsCarts';
 import { fetchCarts } from '@/features/thunks/FetchCarts';
+import { fetchCategories } from '@/features/thunks/FetchCategories';
 import logoutIcon from '../../../public/svgs/logout.svg';
 import shoppingBasketIcon from '../../../public/icons/shopping_busket.png';
 import styles from './Header.module.scss';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { fetchCategories } from '@/features/thunks/FetchCategories';
 
 function Header() {
   const {
@@ -41,7 +41,7 @@ function Header() {
 
   const [isModalRendered, setIsModalRendered] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const { categories, carts, userName } = useAppSelector(selectCommerceTools);
+  const { carts, userName } = useAppSelector(selectCommerceTools);
   const currentCartId = JSON.parse(
     getDecryptedDataFromCookie('currentCartId')!
   ) as string | undefined;
@@ -100,17 +100,20 @@ function Header() {
     <header data-testid="header" className={headerStyles}>
       <div className={headerContainer}>
         <div className={countrySelectWrapper}>
-        <CountrySelect selectCountryText={t('selectCountryMessage')} />
+          <CountrySelect selectCountryText={t('selectCountryMessage')} />
         </div>
         <Link href={'/'}>
           <MainLogo />
         </Link>
-          <Categories />
+        <Categories />
         <LanguageSelect />
         <div className={shoppingBasketContainer}>
-          <div style={{
-            visibility: `${isActiveCartExisted ? 'visible': 'hidden'}`
-          }} className={countShoppingLists}>
+          <div
+            style={{
+              visibility: `${isActiveCartExisted ? 'visible' : 'hidden'}`,
+            }}
+            className={countShoppingLists}
+          >
             {isActiveCartExisted ? cart.totalLineItemQuantity || '0' : '0'}
           </div>
           <Image

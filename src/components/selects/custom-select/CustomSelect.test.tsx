@@ -1,5 +1,5 @@
-import { render, fireEvent } from "@testing-library/react";
-import CustomSelect, { CustomSelectProps } from "./CustomSelect";
+import CustomSelect, { CustomSelectProps } from './CustomSelect';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 const renderCustomSelect = (customProperties: Partial<CustomSelectProps> = {}) => {
   const defaultProperties: CustomSelectProps = {
@@ -10,30 +10,31 @@ const renderCustomSelect = (customProperties: Partial<CustomSelectProps> = {}) =
   };
   const mergedProps = { ...defaultProperties, ...customProperties };
 
-  const { getByTestId, getAllByTestId } = render(<CustomSelect {...mergedProps} />);
+  render(<CustomSelect {...mergedProps} />);
 
   return {
-    getByTestId,
-    getAllByTestId,
     onSelectOptionValue: mergedProps.onSelectOptionValue,
   };
 };
 
 describe('CustomSelect component', () => {
   test('renders CustomSelect component', () => {
-    const { getByTestId } = renderCustomSelect();
-    expect(getByTestId('custom-select')).toBeInTheDocument();
+  renderCustomSelect();
+
+    expect(screen.getByTestId('custom-select')).toBeInTheDocument();
   });
 
   test('displays selected option', () => {
     const selectedOption = 'Option 1';
-    const { getByTestId } = renderCustomSelect({ selectedOption });
-    expect(getByTestId('selected-option')).toHaveTextContent(selectedOption);
+
+    renderCustomSelect({ selectedOption });
+
+    expect(screen.getByTestId('selected-option')).toHaveTextContent(selectedOption);
   });
 
   test('clicking on selected option toggles options list visibility', () => {
-    const { getByTestId } = renderCustomSelect();
-    const selectedOptionContainer = getByTestId('selected-option');
+    renderCustomSelect();
+    const selectedOptionContainer = screen.getByTestId('selected-option');
 
     fireEvent.click(selectedOptionContainer);
     expect(selectedOptionContainer).toHaveStyle('visibility: hidden');
@@ -43,19 +44,20 @@ describe('CustomSelect component', () => {
   });
 
   test('renders options list when selected option is clicked', () => {
-    const { getByTestId, getAllByTestId } = renderCustomSelect();
-    const selectedOptionContainer = getByTestId('selected-option');
+    renderCustomSelect();
+    const selectedOptionContainer = screen.getByTestId('selected-option');
 
     fireEvent.click(selectedOptionContainer);
-    expect(getAllByTestId('option')).toHaveLength(3);
+    expect(screen.getAllByTestId('option')).toHaveLength(3);
   });
 
   test('calls onSelectOptionValue when an option is clicked', () => {
-    const { getByTestId, getAllByTestId, onSelectOptionValue } = renderCustomSelect();
-    const selectedOptionContainer = getByTestId('selected-option');
+    const { onSelectOptionValue } = renderCustomSelect();
+    const selectedOptionContainer = screen.getByTestId('selected-option');
 
     fireEvent.click(selectedOptionContainer);
-    const optionElement = getAllByTestId('option')[0];
+    const optionElement = screen.getAllByTestId('option')[0];
+
     fireEvent.click(optionElement);
 
     expect(onSelectOptionValue).toHaveBeenCalledTimes(1);

@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 function SocialLinks() {
 
-    return <div className={styles.socialLinks}>
+    return <div data-testid="social-links" className={styles.socialLinks}>
         {socialMediaImages['social-media-links'].map((el) => (
             <div key={el.name}>
                 <Link href="/" target="blank">

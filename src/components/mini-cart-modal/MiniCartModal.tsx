@@ -50,7 +50,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
   };
 
   return (
-    <div className={miniModalConTainer}>
+    <div data-testid="mini-cart" className={miniModalConTainer}>
       <div className={miniModalClose} onClick={onClick}>
         {t('close')}
       </div>

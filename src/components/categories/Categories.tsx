@@ -18,7 +18,7 @@ function Categories() {
   };
 
   return (
-    <div className={categoriesContainer}>
+    <div data-testid="categories" className={categoriesContainer}>
       {status === 'succeeded' && categories
         .filter((el) => el.parent === undefined)
         .map((el) => (

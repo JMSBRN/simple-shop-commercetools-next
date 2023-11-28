@@ -9,7 +9,7 @@ const Footer = () => {
   const { t } = useTranslation('common');
 
   return (
-    <footer className={footer}>
+    <footer data-testid="footer" className={footer}>
       <div className={container}>
         <div className={section}>
           <MainLogo />

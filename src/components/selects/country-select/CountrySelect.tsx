@@ -57,7 +57,7 @@ function CountrySelect({ selectCountryText }: { selectCountryText: string }) {
   };
 
   return (
-    <div className={styles.countrySelectContainer}>
+    <div data-testid="select-country" className={styles.countrySelectContainer}>
       {!!countries.length && (
         <div className={styles.selectWrapper}>
           <CustomSelect

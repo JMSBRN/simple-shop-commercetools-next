@@ -3,7 +3,7 @@ import styles from './MainLogo.module.scss';
 
 function MainLogo() {
   return (
-    <div className={styles.logoStyle}>
+    <div data-testid="main-logo" className={styles.logoStyle}>
     Store
     <div>international</div>
   </div>

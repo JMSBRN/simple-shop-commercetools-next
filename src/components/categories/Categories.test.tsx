@@ -1,52 +1,17 @@
-import { renderWithProviders } from '@/tests/utilsForTests';
+import { mockUseRouter, renderWithPreloadState } from '@/tests/utilsForTests';
 import Categories from './Categories';
 import { act, fireEvent } from '@testing-library/react';
-import { mockCategories } from '@/tests/mocks/mockCategories';
 import { CommonType } from 'types';
-import { RootState } from '@/store/store';
-import { Cart } from '@commercetools/platform-sdk';
 import { PartialCommerceToolsState } from '@/interfaces';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: CommonType) => key }),
 }));
 
-const useRouterMock = {
-  route: '/',
-  pathname: '',
-  query: '',
-  asPath: '',
-  push: jest.fn(),
-  events: { on: jest.fn(), off: jest.fn() },
-  beforePopState: jest.fn(() => null),
-  prefetch: jest.fn(() => null),
-};
-
-const useRouter = jest.spyOn(require('next/router'), 'useRouter');
-useRouter.mockImplementation(() => useRouterMock);
+const { useRouterWithMockEmplement } = mockUseRouter();
 
 const renderCategories = (customState: PartialCommerceToolsState = {}) => {
-  const defaultState: RootState = {
-    commercetools: {
-      language: 'en',
-      country: 'en',
-      categories: mockCategories,
-      products: [],
-      orders: [],
-      status: 'succeeded',
-      errorMessage: '',
-      shoppingLists: [],
-      cart: {} as Cart,
-      carts: [],
-      payments: [],
-      userName: 'MockUser',
-      ...customState,
-    },
-  };
-
-  return renderWithProviders(<Categories />, {
-    preloadedState: defaultState,
-  });
+  return renderWithPreloadState(<Categories />, customState);
 };
 
 describe('render <Categories />', () => {
@@ -63,9 +28,9 @@ describe('render <Categories />', () => {
     });
 
     fireEvent.click(category_1);
-    expect(useRouter).toHaveBeenCalledTimes(1);
+    expect(useRouterWithMockEmplement).toHaveBeenCalledTimes(1);
     fireEvent.click(dashboard);
-    expect(useRouter).toHaveBeenCalledTimes(1);
+    expect(useRouterWithMockEmplement).toHaveBeenCalledTimes(1);
   });
 
   test('dashboard should not render with empty userName', async () => {

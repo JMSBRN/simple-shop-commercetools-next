@@ -95,7 +95,7 @@ function Header() {
   };
 
   return (
-    <header className={headerStyles}>
+    <header data-testid="header" className={headerStyles}>
       <div className={headerContainer}>
         <div className={countrySelectWrapper}>
         <CountrySelect selectCountryText={t('selectCountryMessage')} />

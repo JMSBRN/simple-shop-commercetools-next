@@ -8,25 +8,25 @@ import { useTranslation } from 'next-i18next';
 
 function Categories() {
   const { categoriesContainer, dashBoardLInk } = styles;
-  const { categories, language, userName } =
+  const { categories, language, userName, status } =
     useAppSelector(selectCommerceTools);
   const { push, locale } = useRouter();
   const { t } = useTranslation('common');
 
-  const handleClickOnCategories = async (category: Category) => {
-    push(`/categories/${category.id}`, undefined, { locale });
+  const handleClickOnCategories = async (categoryId: string) => {
+    push(`/categories/${categoryId}`, undefined, { locale });
   };
 
   return (
     <div className={categoriesContainer}>
-      {categories
+      {status === 'succeeded' && categories
         .filter((el) => el.parent === undefined)
         .map((el) => (
-          <div key={el.id} onClick={() => handleClickOnCategories(el)}>
+          <div key={el.id} onClick={() => handleClickOnCategories(el.id)}>
             <p>{filterObjectAndReturnValue(el.name, language)}</p>
           </div>
         ))}
-      {userName && (
+      {(status === 'succeeded' && userName) && (
         <div data-testid="dashboard" className={dashBoardLInk} onClick={() => push('/user/dashboard')}>
           {t('dashBoard')}
         </div>

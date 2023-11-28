@@ -1,3 +1,5 @@
+import { RootState } from "./store/store";
+
 export interface UserData {
   customerId?: string;
   firstName?: string;
@@ -5,14 +7,14 @@ export interface UserData {
   password: string;
 }
 export type CookiesKeys = 'userData'| 'currentCartId';
-
 export type PaymentMethods = 'CREDIT_CARD' | 'PAY_PAL';
+export type ThunkStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
+export type PartialCommerceToolsState = Partial<RootState["commercetools"]>;
 
 export interface CredentialsForMyApiCall {
   email: string;
   password: string;
 }
-export type ThunkStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
 export interface CustomerInfo {
   salutation?: string;

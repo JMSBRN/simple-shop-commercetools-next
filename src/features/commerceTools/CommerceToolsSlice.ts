@@ -84,6 +84,10 @@ const commerceToolseSlice = createSlice({
       .addCase(fetchCategories.pending, (state) => {
         state.status = 'loading';
       })
+      .addCase(fetchCategories.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.categories = action.payload;
+      })
       .addCase(fetchShoppingLists.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.shoppingLists = action.payload;
@@ -98,10 +102,6 @@ const commerceToolseSlice = createSlice({
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.orders = action.payload;
-      })
-      .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.categories = action.payload;
       })
       .addCase(fetchPayments.fulfilled, (state, action) => {
         state.status = 'succeeded';

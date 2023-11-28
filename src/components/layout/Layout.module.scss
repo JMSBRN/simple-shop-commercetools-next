@@ -1,6 +1,8 @@
 @import 'mixins';
+@import 'variables';
 
 .layoutContainer {
     width: 100%;
-    min-height: 100vh;
+    min-height: 130vh;
+    @include flex (center, space-between, column)
 }

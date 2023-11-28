@@ -25,6 +25,7 @@ import shoppingBasketIcon from '../../../public/icons/shopping_busket.png';
 import styles from './Header.module.scss';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { fetchCategories } from '@/features/thunks/FetchCategories';
 
 function Header() {
   const {
@@ -40,7 +41,7 @@ function Header() {
 
   const [isModalRendered, setIsModalRendered] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const { carts, userName } = useAppSelector(selectCommerceTools);
+  const { categories, carts, userName } = useAppSelector(selectCommerceTools);
   const currentCartId = JSON.parse(
     getDecryptedDataFromCookie('currentCartId')!
   ) as string | undefined;
@@ -51,6 +52,7 @@ function Header() {
 
   useEffect(() => {
     dispatch(fetchCarts());
+    dispatch(fetchCategories());
     const userdataFromLocal = JSON.parse(
       getDecryptedDataFromCookie('userData')!
     ) as UserData;

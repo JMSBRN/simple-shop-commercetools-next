@@ -9,10 +9,13 @@ import { useAppDispatch } from '../storeHooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-function useUpdateProductQuantity(
-  cartId: string,
-  lineItem: LineItem,
-) {
+function useUpdateProductQuantity({
+  cartId,
+  lineItem,
+}: {
+  cartId: string;
+  lineItem: LineItem;
+}) {
   const dispatch = useAppDispatch();
   const { push } = useRouter();
   const { id, quantity } = lineItem;
@@ -57,20 +60,18 @@ function useUpdateProductQuantity(
     }
   };
 
-  const handleDeleteLineItem = async (
-
-  ) => {
+  const handleDeleteLineItem = async () => {
     const cart = (await getCarts(cartId)) as Cart;
 
-    if(cart.id) {
-        const res = await removeLineItemfromCart(cartId, cart.version, id);
-    
-        if (res.statusCode === 200) {
-          dispatch(fetchCarts());
-        }
-        if (quantity === 1) {
-          push('/');
-        }
+    if (cart.id) {
+      const res = await removeLineItemfromCart(cartId, cart.version, id);
+
+      if (res.statusCode === 200) {
+        dispatch(fetchCarts());
+      }
+      if (quantity === 1) {
+        push('/');
+      }
     }
   };
 
@@ -78,7 +79,7 @@ function useUpdateProductQuantity(
     handlePlusQuantity,
     handleMinusQuantity,
     handleDeleteLineItem,
-    currentQuantity
+    currentQuantity,
   };
 }
 

@@ -1,21 +1,11 @@
-import { Cart, Product, ProductVariant } from '@commercetools/platform-sdk';
-import {
-  addLineItemToCart,
-  createCartWithProductId,
-  getCurrentDataFromCart,
-} from '@/commercetools/utils/utilsCarts';
-import {
-  getDecryptedDataFromCookie,
-  setEncryptedDataToCookie,
-} from '@/commercetools/utils/secureCookiesUtils';
-import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import { Product, ProductVariant } from '@commercetools/platform-sdk';
 import ButtonWithCounter from '../buttons/button-with-counter/ButtonWithCounter';
 import ProductCardVariant from '../product-card/prduct-variant/ProductCardVariant';
-import { UserData } from '@/interfaces';
-import { fetchCarts } from '@/features/thunks/FetchCarts';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './ProductInfo.module.scss';
+import { useAppSelector } from '@/hooks/storeHooks';
+import useCreateCart from '@/hooks/commercetools-hooks/useCreateCart';
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
@@ -35,16 +25,15 @@ function ProductInfo({ product }: { product: Product }) {
   const productName = filterObjectAndReturnValue(name, language);
   const [currentVariants, setCurrentVariants] =
     useState<ProductVariant[]>(variants);
-  const dispatch = useAppDispatch();
-  const { country } = useAppSelector(selectCommerceTools);
   const [quantity, setQuantity] = useState<number>(0);
-  const anonimouseId = process.env.ANONIMOUS_ID;
   const { t } = useTranslation('common');
-  const productId = product.id;
-
-  const userData = JSON.parse(getDecryptedDataFromCookie('userData')) as
-    | UserData
-    | undefined;
+  const {
+    handleCreateCard
+  } = useCreateCart({
+    productId: product.id,
+    quantity,
+    selectedIdVariant
+  });
 
   const handleSelectVariant = (id: number) => {
     setSelectedIdVariant(id);
@@ -52,43 +41,6 @@ function ProductInfo({ product }: { product: Product }) {
       setCurrentVariants([...variants, masterVariant]);
     } else {
       setCurrentVariants(variants);
-    }
-  };
-
-  const handleCreateCard = async () => {
-    const currentCartId = JSON.parse(
-      getDecryptedDataFromCookie('currentCartId')
-    ) as string | undefined;
-
-    if (quantity && !currentCartId) {
-      const resNewCart = await createCartWithProductId(
-        country,
-        productId,
-        selectedIdVariant,
-        quantity,
-        userData?.customerId ? undefined : anonimouseId,
-        userData?.customerId
-      );
-      const newCart = resNewCart?.body as Cart;
-
-      if (newCart?.id) {
-        setEncryptedDataToCookie('currentCartId', newCart.id, 3600);
-        dispatch(fetchCarts());
-      }
-    }
-
-    if (quantity && currentCartId) {
-      const cart = await getCurrentDataFromCart(currentCartId);
-      const { version } = cart!;
-
-      await addLineItemToCart(
-        currentCartId,
-        version,
-        productId,
-        quantity,
-        selectedIdVariant
-      );
-      dispatch(fetchCarts());
     }
   };
 

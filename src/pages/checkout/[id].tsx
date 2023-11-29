@@ -37,7 +37,7 @@ function Checkout({ paymentMethod }: { paymentMethod: string | undefined }) {
   const [cart, setCart] = useState<Cart>();
   const { query, push } = useRouter();
   const cartId = query.id as string;
-  const { t } = useTranslation('form');
+  const { t: tCommon } = useTranslation('common');
 
   useEffect(() => {
     carts.forEach((c) => {
@@ -101,11 +101,11 @@ const addressFieldsOrderSummary: (keyof BaseAddress)[][] = [
   return (
     <div className={checkoutMainContainer}>
       <div className={mainTitle}>
-        <h3>{t('checkout', { ns: 'common' })}</h3>
+        <h3>{tCommon('checkout')}</h3>
       </div>
       <div className={checkoutContainer}>
         <div className={billingDetailsContainer}>
-          <div className={formTitle}>{t('billingDetails', { ns: 'common' })}</div>
+          <div className={formTitle}>{tCommon('billingDetails')}</div>
           <AddressForm
             formRef={formRef}
             addressFields={addressFields}
@@ -114,7 +114,7 @@ const addressFieldsOrderSummary: (keyof BaseAddress)[][] = [
           />
         </div>
         <div className={orderSummaryContainer}>
-          <div className={formTitle}>{t('orderSummary', { ns: 'common' })}</div>
+          <div className={formTitle}>{tCommon('orderSummary')}</div>
           {cart?.id && (
             <OrderSummary
               cart={cart}

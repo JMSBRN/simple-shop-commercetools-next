@@ -33,7 +33,7 @@ function CartLineItem({
     handlePlusQuantity,
     handleDeleteLineItem,
     currentQuantity,
-  } = useUpdateProductQuantity(cartId, lineItem);
+  } = useUpdateProductQuantity({ cartId, lineItem });
 
   return (
     <div className={lineItemStyle}>

@@ -81,16 +81,16 @@ export const deleteCart = async (ID: string) => {
 };
 
 export const removeLineItemfromCart = async (
-  ID: string,
-  version: number,
+  cartId: string,
+  cartVersion: number,
   lineItemId: string
 ) => {
   const res = await apiRoot
     .carts()
-    .withId({ ID })
+    .withId({ ID: cartId })
     .post({
       body: {
-        version,
+        version: cartVersion,
         actions: [
           {
             action: 'removeLineItem',

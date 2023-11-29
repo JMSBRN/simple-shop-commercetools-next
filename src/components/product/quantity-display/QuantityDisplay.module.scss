@@ -1,0 +1,14 @@
+@import 'mixins';
+
+.counterWrapperStyle {
+    width: 150px;
+    height: 100%;
+    @include flex;
+}
+
+.quantityStyle {
+    width: 40px;
+    height: 100%;
+    @include flex (center, space-around);
+
+}

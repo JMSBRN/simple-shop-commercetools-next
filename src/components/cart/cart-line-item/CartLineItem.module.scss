@@ -27,38 +27,6 @@ $base-width: 100%;
     }
 }
 
-.description {
-    margin: 0 1em;
-    min-width: 120px;
-    max-width: 120px;
-    height: auto;
-    max-height: 50px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    text-align: center;
-
-    /* width */
-    &::-webkit-scrollbar {
-        width: 0.2em;
-    }
-
-    /* Track */
-    &::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-
-    /* Handle */
-    &::-webkit-scrollbar-thumb {
-        background: #c7c7c7;
-    }
-
-    /* Handle on hover */
-    &::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-
-}
-
 .priceStyle {
     width: auto;
     min-width: 45px;
@@ -71,22 +39,4 @@ $base-width: 100%;
     @include flex ();
     border-radius: 10px;
     background-color: rgb(255, 255, 46, 0.9);
-}
-
-.counterWrapperStyle {
-    width: 150px;
-    height: 100%;
-    @include flex;
-}
-
-.quantityStyle {
-    width: 40px;
-    height: 100%;
-    @include flex (center, space-around);
-
-}
-
-.total {
-    text-align: center;
-    min-width: 80px;
 }

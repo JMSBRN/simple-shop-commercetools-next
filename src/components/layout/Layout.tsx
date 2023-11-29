@@ -3,7 +3,7 @@ import Header from '../header/Header';
 import React  from 'react';
 import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
 import styles from './Layout.module.scss';
-import useLeavePageConfirmation from '@/hooks/useLeavePageConfirmation';
+import useLeavePageConfirmation from '@/hooks/commercetools-hooks/useLeavePageConfirmation';
 
 function Layout({
   children,

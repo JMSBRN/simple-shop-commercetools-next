@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
+import ButtonWithLoader from '../buttons/buttonWithLoader/ButtonWithLoader';
 import { Cart } from '@commercetools/platform-sdk';
-import CartLineItem from '../cart/cart-line-item/CartLineItem';
+import CartLineItems from '../cart/cart-lineItems/CartLineItems';
 import { OriginalTotal } from '../cart/original-sub-total/OriginalSubTotal';
+import TotalAmount from '../product/total-amount/TotalAmount';
 import { getDecryptedDataFromCookie } from '@/commercetools/utils/secureCookiesUtils';
-import { getMoneyValueFromCartField } from '@/commercetools/utils/utilsCarts';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './MiniCartModal.module.scss';
 import { useAppSelector } from '@/hooks/storeHooks';
@@ -15,9 +16,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     miniModalConTainer,
     miniModalClose,
     titleStyle,
-    cartLineItemsStyle,
     buttonsContainer,
-    total,
     subTotal,
   } = styles;
   const { carts } = useAppSelector(selectCommerceTools);
@@ -48,6 +47,15 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
       push(`/checkout/${cart.id}`);
     }
   };
+  const totalInlineStyle: React.CSSProperties = {
+    marginTop: '20px',
+    marginRight: '10px',
+    width: '100%',
+    height: '30px',
+    padding: '2px 8px',
+    textAlign: 'end',
+    color: 'lightgray',
+  };
 
   return (
     <div data-testid="mini-cart" className={miniModalConTainer}>
@@ -57,32 +65,21 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
       <div className={titleStyle}>{t('miniCart')}</div>
       {cart?.lineItems.length && cart?.cartState === 'Active' ? (
         <>
-          <div className={cartLineItemsStyle}>
-            {cart?.id &&
-              cart?.lineItems.map((item) => (
-                <CartLineItem
-                  key={cart?.id}
-                  cartId={cart?.id}
-                  lineItem={item}
-                  version={cart?.version}
-                />
-              ))}
-          </div>
+          <CartLineItems withTotalSumm={false} cart={cart} />
           <div className={subTotal}>
             {t('subTotal')}: <OriginalTotal cart={cart} />
           </div>
-          <div className={total}>
-          {t('total')}:
-            {cart?.taxedPrice &&
-              getMoneyValueFromCartField(cart?.taxedPrice.totalGross)}
-          </div>
+          <TotalAmount
+            taxedPrice={cart?.taxedPrice!}
+            text={t('total')}
+            style={totalInlineStyle}
+          />
           <div className={buttonsContainer}>
-            <button onClick={handleRedirectToCartPage} type="button">
-            {t('viewbag')}
-            </button>
-            <button type="button" onClick={handleCheckout}>
-            {t('checkout')}
-            </button>
+            <ButtonWithLoader
+              onClick={handleRedirectToCartPage}
+              text={t('viewbag')}
+            />
+            <ButtonWithLoader onClick={handleCheckout} text={t('checkout')} />
           </div>
         </>
       ) : (

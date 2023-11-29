@@ -10,7 +10,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
 import CartLineItem from '@/components/cart/cart-line-item/CartLineItem';
 import { GetServerSideProps } from 'next';
-import MyCustomer from '@/components/my-customer/MyCustomer';
+import MyCustomer from '@/components/customer/my-customer/MyCustomer';
 import { Order } from '@commercetools/platform-sdk';
 import { OriginalTotal } from '@/components/cart/original-sub-total/OriginalSubTotal';
 import PaymentInfo from '@/components/payment-info/PaymentInfo';
@@ -117,7 +117,6 @@ function DashBoard() {
                   <CartLineItem
                     cartId={c.id}
                     lineItem={l}
-                    version={c.version}
                     key={l.id}
                     isQuantityButtonsExisted={true}
                     isTotlaSummExisted={true}
@@ -173,7 +172,6 @@ function DashBoard() {
                 <div key={l.id}>
                   <CartLineItem
                     cartId={o.id}
-                    version={o.version}
                     lineItem={l}
                     isDeleteBtnNotExisted={true}
                   />

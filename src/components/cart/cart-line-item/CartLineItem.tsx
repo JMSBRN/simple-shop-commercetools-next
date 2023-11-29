@@ -67,10 +67,7 @@ function CartLineItem({
         handleIncrement={handleMinusQuantity}
         isFlexModeExisted={true}
       />
-      <TotalAmount
-        isTotlaSummExisted={isTotlaSummExisted!}
-        taxedPrice={lineItem.taxedPrice!}
-      />
+      {isTotlaSummExisted! && <TotalAmount taxedPrice={lineItem.taxedPrice!} />}
     </div>
   );
 }

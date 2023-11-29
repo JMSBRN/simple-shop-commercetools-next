@@ -32,22 +32,6 @@
         margin-bottom: 10px;
         color: rgb(91, 91, 91);
     }       
-    .cartLineItemsStyle{
-        margin: 0 auto;
-        width: 96%;
-        height: 200px;
-        padding: 5px;
-        align-items: center;
-        overflow-y: auto;
-        overflow-x: hidden;
-        &::-webkit-scrollbar {
-            width: 8px;
-          }
-        &::-webkit-scrollbar-thumb {
-            background: rgb(234, 234, 234); 
-            border-radius: 3px;
-          }
-    }
     .shoppingList{
         margin: 3px auto;
         width: 100%;   
@@ -91,31 +75,11 @@
         text-align: end;
         color: lightgray;
     }
-    .total {
-        margin-top: 20px;
-        margin-right: 10px;
-        width: 100%;
-        height: 30px;
-        padding: 2px 8px;
-        text-align: end;
-        color: lightgray;
-    }
+    
     .buttonsContainer{
         position: absolute;
         bottom: 0;
         width: 100%;
         height: 100px;
         @include flex(center, space-around);
-        button {
-            width: 130px;
-            height: 40px;
-            border: none;
-            text-transform: uppercase;
-            font-weight: 500;
-            cursor: pointer;
-            &:hover {
-                background-color: rgb(59, 59, 59);
-                color: white;
-            }
-        }
     }

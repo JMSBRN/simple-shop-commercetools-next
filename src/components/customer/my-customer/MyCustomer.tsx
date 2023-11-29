@@ -1,38 +1,22 @@
 import { CustomerInfo, UserData } from '@/interfaces';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  areAllObjectValuesEqual,
-  isErrorResponse,
-} from '@/commercetools/utils/utilsApp';
-import {
-  deleteAllCookiesFromLocal,
-  setEncryptedDataToCookie,
-} from '@/commercetools/utils/secureCookiesUtils';
-import {
-  deleteAllMyCarts,
-  deleteAllMyOrders,
-  getMyDetails,
-  updateMyDetails,
-} from '@/commercetools/utils/utilsMe';
-import {
-  deleteCustomer,
-  getCustomers,
-} from '@/commercetools/utils/utilsCustomers';
+import { getMyDetails, updateMyDetails } from '@/commercetools/utils/utilsMe';
 import {
   selectCommerceTools,
-  setErrorMessage,
   setUserName,
 } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
-import { Address } from 'cluster';
-import ButtonWithLoader from '../buttons/buttonWithLoader/ButtonWithLoader';
+import ButtonWithLoader from '../../buttons/buttonWithLoader/ButtonWithLoader';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
-import ConfirmForm from '../forms/confirm-form/ConfirmForm';
+import ConfirmForm from '../../forms/confirm-form/ConfirmForm';
 import { Customer } from '@commercetools/platform-sdk';
-import { FormType } from '../../../@types/resources';
-import InputField from '../forms/input-field/InputField';
+import CustomerInfoDisplay from '../customer-info-display/CustomerInfoDisplay';
+import UpdateUserDataForm from '../../forms/update-user-data-form/UpdateUserDataForm';
+import { getCustomers } from '@/commercetools/utils/utilsCustomers';
+import { isErrorResponse } from '@/commercetools/utils/utilsApp';
+import { setEncryptedDataToCookie } from '@/commercetools/utils/secureCookiesUtils';
 import styles from './MyCustomer.module.scss';
-import { useRouter } from 'next/router';
+import useSubmitConfirmForm from '@/hooks/commercetools-hooks/useSubmitConfirmForm';
 import { useTranslation } from 'next-i18next';
 
 function MyCustomer({ email, password }: { email: string; password: string }) {
@@ -52,14 +36,22 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
   const [isWarningDelModalRendered, setIsWarningDelModalRendered] =
     useState<boolean>(false);
   const [formData, setFormData] = useState<CustomerInfo>({} as CustomerInfo);
-  const [confirmFormData, setConfirmFormData] = useState<any>({} as any);
   const formRef = useRef<HTMLFormElement>(null);
   const confirmFormRef = useRef<HTMLFormElement>(null);
   const refSubmitInput = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
   const { errorMessage } = useAppSelector(selectCommerceTools);
-  const { push } = useRouter();
-  const { t } = useTranslation('form');
+  const { t: tForm } = useTranslation('form');
+  const { t: tCommon } = useTranslation('common');
+  const { confirmFormData, setConfirmFormData, handleSubmitConfirmFormData } =
+    useSubmitConfirmForm({
+      confirmFormRef,
+      customerId: customer.id,
+      email,
+      password,
+      setIsAddresFormRendered,
+      setIsLoading,
+    });
 
   const fetchMyDetails = useCallback(async () => {
     if (email && password) {
@@ -151,32 +143,11 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
       }));
     };
 
-    const renderInputField = (
-      fieldName: keyof CustomerInfo | string,
-      fieldType?: string,
-      defaultValue?: string | number | readonly string[],
-      isrRequired?: boolean
-    ) => {
-      return (
-        <InputField
-          fieldName={fieldName}
-          fieldType={fieldType}
-          formData={formData}
-          handleChange={handleChange}
-          defaultValue={defaultValue}
-          isRequired={isrRequired || false}
-        />
-      );
-    };
     const handleUpdateAccount = async () => {
       setIsAddresFormRendered(true);
     };
     const handleDeleteAccount = async () => {
       setIsWarningDelModalRendered(true);
-    };
-
-    const handleSubmitForm = async () => {
-      refSubmitInput.current?.onsubmit;
     };
 
     const handleChangeConfirmForm = (
@@ -189,134 +160,56 @@ function MyCustomer({ email, password }: { email: string; password: string }) {
         [name]: value,
       }));
     };
-    const handleSubmitCurrentFormData = async (
-      e: React.ChangeEvent<HTMLFormElement>
-    ) => {
-      e.preventDefault();
-      setIsLoading(true);
-      if (confirmFormRef.current) {
-        const formDataObject: Record<string, any> = {};
-
-        const formElements = Array.from(
-          confirmFormRef.current.elements
-        ) as HTMLInputElement[];
-
-        formElements.forEach((element) => {
-          if (element.name) {
-            formDataObject[element.name] = element.value;
-          }
-        });
-        setConfirmFormData(formDataObject);
-      }
-      const isAllPasswordFieldsEquall = areAllObjectValuesEqual({
-        ...confirmFormData,
-        existedPassword: password,
-      });
-
-      if (isAllPasswordFieldsEquall) {
-        dispatch(setErrorMessage(''));
-        if (customer.id) {
-          const isAllCartsRemoved = await deleteAllMyCarts(
-            email,
-            password,
-            customer.id
-          );
-          const isAllOrdersRemoved = await deleteAllMyOrders(
-            email,
-            password,
-            customer.id
-          );
-
-          if (isAllCartsRemoved && isAllOrdersRemoved) {
-            const res = await deleteCustomer(customer.id);
-
-            if (res?.id) {
-              dispatch(setUserName(''));
-              deleteAllCookiesFromLocal(['currentCartId', 'userData']);
-              setIsAddresFormRendered(true);
-              setIsLoading(false);
-              push('/');
-            }
-          }
-        }
-      } else {
-        dispatch(setErrorMessage('The password confirmation does not match'));
-        setIsLoading(false);
-      }
-    };
 
     return (
       <div className={customerContainer}>
         {isAddresFormRendered && (
           <div className={updateUserInfoModal}>
-            <form ref={formRef} onSubmit={handleSubmit}>
-              {Object.entries(customerInfo).map(([key, value]) => (
-                <label key={key}>
-                  {key === 'dateOfBirth'
-                    ? renderInputField(key, 'date', value, true)
-                    : ['firstName', 'companyName'].includes(key)
-                    ? renderInputField(key, undefined, value, true)
-                    : renderInputField(key, undefined, value)}
-                </label>
-              ))}
-              <ButtonWithLoader
-                onClick={handleSubmitForm}
-                text={t('submit')}
-                isLoading={isLoading}
-              />
-              <input
-                ref={refSubmitInput}
-                type={t('submit')}
-                style={{ display: 'none' }}
-              />
-            </form>
+            <UpdateUserDataForm
+              customerInfo={customerInfo}
+              formData={formData}
+              formRef={formRef}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              isLoading={isLoading}
+              refSubmitInput={refSubmitInput}
+            />
           </div>
         )}
         <div className={customerInfoContainer}>
           <div className={customerInfoStyle}>
-            <h4>{t('customerInformation', { ns: 'common' })}</h4>
-            {Object.entries(customerInfo).map(([key, value]) => (
-              <div key={key}>
-                <div>
-                  {t(key as keyof FormType)} : <span>{value || 'no data'}</span>
-                </div>
-              </div>
-            ))}
+            <h4>{tCommon('customerInformation')}</h4>
+            <CustomerInfoDisplay customerInfo={customerInfo} t={tForm} />
           </div>
           <div className={customerAddressStyle}>
-            <h4>{t('addressData', { ns: 'common' })}</h4>
+            <h4>{tCommon('addressData')}</h4>
             {addresses.length ? (
-              Object.entries(
-                addresses.find((a) => a.id) || ({} as Address)
-              ).map(([key, value]) => (
-                <div key={key}>
-                  <div>
-                    {key.toUpperCase()} : <span>{value || 'no data'}</span>
-                  </div>
-                </div>
-              ))
+              <CustomerInfoDisplay
+               customerInfo={addresses.find((a) => a.id)!}
+               t={tForm}
+              />
             ) : (
-              <div>{t('noAddressData', { ns: 'common' })}</div>
+              <div>{tCommon('noAddressData')}</div>
             )}
           </div>
         </div>
         <div className={customerBtnsContainer}>
           <ButtonWithLoader
             onClick={handleUpdateAccount}
-            text={t('updateAccountData', { ns: 'common' })}
+            text={tCommon('updateAccountData')}
           />
           <ButtonWithLoader
             onClick={handleDeleteAccount}
-            text={t('deleteAccount', { ns: 'common' })}
+            text={tCommon('deleteAccount')}
           />
         </div>
         {isWarningDelModalRendered && (
           <div className={deleteWarningModalStyle}>
-            <h4>{t('confirmDeleteProcess', { ns: 'common' })}</h4>
+            <h4>{tCommon('confirmDeleteProcess')}</h4>
             <ConfirmForm
               formRef={confirmFormRef}
               formData={confirmFormData}
-              onSubmit={handleSubmitCurrentFormData}
+              onSubmit={handleSubmitConfirmFormData}
               handleChange={handleChangeConfirmForm}
               errorMessage={errorMessage}
               isLoading={isLoading}

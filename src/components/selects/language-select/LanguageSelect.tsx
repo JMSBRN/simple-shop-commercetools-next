@@ -18,11 +18,12 @@ import styles from './LanguagesSelect.module.scss';
 import { useRouter } from 'next/router';
 
 function LanguageSelect({ label }:{ label?: string }) {
-  const { languagesSelectContainer, labelStyle } = styles;
+  const { languagesSelectContainer, labelStyle, hidden } = styles;
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { language } = useAppSelector(selectCommerceTools);
   const [languages, setLanguages] = useState<string[]>([]);
+  const isLanguagesFetched = !!languages.length;
 
   const fetchFunction = useCallback(
     async function () {
@@ -53,7 +54,7 @@ function LanguageSelect({ label }:{ label?: string }) {
 
   return (
     <div className={languagesSelectContainer}>
-      {!!languages.length && (
+      {isLanguagesFetched && (
       <CustomSelect 
         options={languages}
         selectedOption={language.substring(3)}
@@ -61,7 +62,7 @@ function LanguageSelect({ label }:{ label?: string }) {
         withSubstringMethod={true}
       />
       )}
-      <div className={labelStyle}>{label || ''}</div>
+      <div className={isLanguagesFetched ? labelStyle: hidden}>{label || ''}</div>
     </div>
   );
 }

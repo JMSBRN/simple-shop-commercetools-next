@@ -12,7 +12,7 @@ jest.mock('@/commercetools/utils/utilsCommercTools', () => ({
 
 const renderCountrySelect = (customState?: PartialCommerceToolsState) => {
   const { getByTestId, queryByTestId, getByText } = renderWithPreloadState(
-    <CountrySelect selectCountryText="Mock text for CountrySelect" />,
+    <CountrySelect textMessage="Mock text for CountrySelect" label="Mock label" />,
     customState
   );
 
@@ -35,6 +35,7 @@ describe('ContrySelect component', () => {
       expect(screen.getByTestId('select-country')).toBeInTheDocument();
       expect(screen.queryByTestId('custom-select')).not.toBeInTheDocument();
       expect(screen.getByTestId('selected-country')).toBeInTheDocument();
+      expect(screen.getByText('Mock label')).toBeInTheDocument();
     });
   });
   test('render CountrySelect without carts', async () => {

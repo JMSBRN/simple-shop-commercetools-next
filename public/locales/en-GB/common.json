@@ -54,6 +54,8 @@
     "orderStatus": "order status",
     "confirmTodelete":"confirm to delete",
     "dashBoard":"dashboard",
-    "view":"view"
+    "view":"view",
+    "country":"country",
+    "language":"language"
 
 }

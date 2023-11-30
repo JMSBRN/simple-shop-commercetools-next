@@ -17,8 +17,8 @@ import { fetchCategories } from '@/features/thunks/FetchCategories';
 import styles from './LanguagesSelect.module.scss';
 import { useRouter } from 'next/router';
 
-function LanguageSelect() {
-  const { languagesSelectContainer } = styles;
+function LanguageSelect({ label }:{ label?: string }) {
+  const { languagesSelectContainer, labelStyle } = styles;
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { language } = useAppSelector(selectCommerceTools);
@@ -61,6 +61,7 @@ function LanguageSelect() {
         withSubstringMethod={true}
       />
       )}
+      <div className={labelStyle}>{label || ''}</div>
     </div>
   );
 }

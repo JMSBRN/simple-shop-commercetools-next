@@ -100,13 +100,13 @@ function Header() {
     <header data-testid="header" className={headerStyles}>
       <div className={headerContainer}>
         <div className={countrySelectWrapper}>
-          <CountrySelect selectCountryText={t('selectCountryMessage')} />
+          <CountrySelect textMessage={t('selectCountryMessage')} label={t('country')} />
         </div>
         <Link href={'/'}>
           <MainLogo />
         </Link>
         <Categories />
-        <LanguageSelect />
+        <LanguageSelect label={t('language')} />
         <div className={shoppingBasketContainer}>
           <div
             style={{

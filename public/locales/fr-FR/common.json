@@ -54,6 +54,8 @@
     "orderStatus": "état de la commande",
     "confirmTodelete": "confirmer la suppression",
     "dashBoard":"tableau de bord",
-    "view":"voir"
+    "view":"voir",
+    "country":"pays",
+    "language":"langue"
 
 }

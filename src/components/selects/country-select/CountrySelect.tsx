@@ -10,8 +10,8 @@ import { getCountries } from '@/commercetools/utils/utilsCommercTools';
 import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import styles from './CountrySelect.module.scss';
 
-function CountrySelect({ selectCountryText }: { selectCountryText: string }) {
-  const { countrySelectContainer, selectedCountry, hidden } = styles;
+function CountrySelect({ textMessage, label }: { textMessage: string; label: string; }) {
+  const { countrySelectContainer, selectedCountry, hidden, labelStyle } = styles;
   const dispatch = useAppDispatch();
   const { carts, country } = useAppSelector(selectCommerceTools);
   const [countries, setCountries] = useState<string[]>([]);
@@ -59,14 +59,17 @@ function CountrySelect({ selectCountryText }: { selectCountryText: string }) {
 
   return (
     <div data-testid="select-country" className={countrySelectContainer}>
-        {!isCartsCreated && (
-        <div className={styles.selectMessage}>{selectCountryText}</div>
+      {!isCartsCreated && (
+        <div className={styles.selectMessage}>{textMessage}</div>
       )}
       <div
         data-testid="selected-country"
         className={!!isCartsCreated ? selectedCountry : hidden}
       >
-        {country}
+        <>
+          {country}
+          <div className={labelStyle}>{label}</div>
+        </>
       </div>
 
       {!isCartsCreated && (

@@ -27,6 +27,10 @@
     left: 23px;
     visibility: visible;
     color: grey;
+    .labelStyle {
+        font-size: 10px;
+        letter-spacing: 2px;
+    }
 }
 
 .hidden {

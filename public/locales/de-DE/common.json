@@ -54,5 +54,7 @@
     "orderStatus": "bestellstatus",
     "confirmTodelete": "bestätigen, um zu löschen",
     "dashBoard":"armaturenbrett",
-    "view":"sicht"
+    "view":"sicht",
+    "country":"land",
+    "language":"sprache"
 }

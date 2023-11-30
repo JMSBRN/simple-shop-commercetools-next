@@ -54,5 +54,7 @@
     "orderStatus": "סטטוס הזמנה",
     "confirmTodelete": "אשר למחוק",
     "dashBoard":"לוּחַ מַחווָנִים",
-    "view":"נוף"
+    "view":"נוף",
+    "country":"מדינה",
+    "language":"לאחג"
 }

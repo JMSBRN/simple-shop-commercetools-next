@@ -35,7 +35,7 @@ function QuantityDisplay({
       ) : (
         <div className={quantityStyle}>
           <span>{'*'}</span>
-          <span>{quantity}</span>
+          <div>{quantity}</div>
         </div>
       )}
     </div>

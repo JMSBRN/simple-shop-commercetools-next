@@ -21,7 +21,7 @@ function CustomerCart({ cart }: { cart: Cart }) {
   return (
     <div className={cartContainer}>
       <div className={cartTitle}>
-        <h3>{t('customerCart')}t</h3>
+        <h3>{t('customerCart')}</h3>
       </div>
       <div className={mainContainer}>
         <div className={leftSideContainer}>

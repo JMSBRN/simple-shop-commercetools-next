@@ -4,7 +4,7 @@ $base-width: 100%;
 .lineItemStyle {
     margin: 1em auto;
     width: $base-width;
-    min-width: 400px;
+    min-width: 100px;
     height: auto;
     padding: 0.5em;
     @include flex (center, space-around);
@@ -14,29 +14,27 @@ $base-width: 100%;
 
     div {
         color: grey;
-        font-size: 0.9em;
+        font-size: 1em;
     }
 }
 
 .deleteLineItem {
     cursor: pointer;
     margin-right: 1em;
+    opacity: 0.5;
+
+    img {
+        width: 20px;
+        height: 20px;
+    }
 
     &:hover {
-        color: red;
+        opacity: 1;
     }
 }
 
 .priceStyle {
     width: auto;
-    min-width: 45px;
-    padding: 0.3em;
     text-align: start;
     text-transform: uppercase;
-}
-
-.saleBage {
-    @include flex ();
-    border-radius: 10px;
-    background-color: rgb(255, 255, 46, 0.9);
 }

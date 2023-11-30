@@ -16,6 +16,7 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
     miniModalConTainer,
     miniModalClose,
     titleStyle,
+    lineItemsWrapper,
     buttonsContainer,
     subTotal,
   } = styles;
@@ -65,7 +66,9 @@ function MiniCartModal({ onClick }: { onClick: () => void }) {
       <div className={titleStyle}>{t('miniCart')}</div>
       {cart?.lineItems.length && cart?.cartState === 'Active' ? (
         <>
+        <div className={lineItemsWrapper}>
           <CartLineItems withTotalSumm={false} cart={cart} />
+        </div>
           <div className={subTotal}>
             {t('subTotal')}: <OriginalTotal cart={cart} />
           </div>

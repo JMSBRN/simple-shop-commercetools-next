@@ -1,4 +1,4 @@
-import Image from 'next/legacy/image';
+import Image from 'next/image';
 import { LineItem } from '@commercetools/platform-sdk';
 import ProductDescription from '@/components/product/product-description/ProductDescription';
 import ProductPrice from '@/components/product/product-price/ProductPrice';
@@ -6,8 +6,8 @@ import QuantityDisplay from '@/components/product/quantity-display/QuantityDispl
 import TotalAmount from '@/components/product/total-amount/TotalAmount';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import styles from './CartLineItem.module.scss';
+import trashImage  from '../../../../public/icons/trash.png';
 import { useAppSelector } from '@/hooks/storeHooks';
-import { useTranslation } from 'next-i18next';
 import useUpdateProductQuantity from '@/hooks/commercetools-hooks/useUpdateProductQuantity';
 
 function CartLineItem({
@@ -16,18 +16,19 @@ function CartLineItem({
   isDeleteBtnNotExisted,
   isQuantityButtonsExisted,
   isTotlaSummExisted,
+  isImageNotExisted,
 }: {
   cartId: string;
   lineItem: LineItem;
   isDeleteBtnNotExisted?: boolean;
   isQuantityButtonsExisted?: boolean;
   isTotlaSummExisted?: boolean;
+  isImageNotExisted?: boolean;
 }) {
-  const { lineItemStyle, deleteLineItem, currentQuantityStyle } = styles;
+  const { lineItemStyle, deleteLineItem } = styles;
   const { language } = useAppSelector(selectCommerceTools);
   const { variant, name, quantity, price } = lineItem;
   const { images } = variant;
-  const { t } = useTranslation('common');
   const {
     handleMinusQuantity,
     handlePlusQuantity,
@@ -39,32 +40,37 @@ function CartLineItem({
     <div className={lineItemStyle}>
       {!isDeleteBtnNotExisted && (
         <div className={deleteLineItem} onClick={() => handleDeleteLineItem()}>
-          {t('delete')}
+          <Image
+           priority
+           alt="trash icon for delete btn"
+           src={trashImage}
+           />
         </div>
       )}
-      <Image
-        priority
-        objectFit="fill"
-        src={
-          images?.find((el) => el.url)?.url! || {
-            src: '/images/No-Image-Placeholder.svg',
-            width: 10,
-            height: 10,
+      {!isImageNotExisted && (
+        <Image
+          priority
+          src={
+            images?.find((el) => el.url)?.url! || {
+              src: '/images/No-Image-Placeholder.svg',
+              width: 10,
+              height: 10,
+            }
           }
-        }
-        width={40}
-        height={50}
-        alt="product image"
-      />
+          width={40}
+          height={50}
+          alt="product image"
+        />
+
+      )}
       <ProductDescription language={language} name={name} />
       <ProductPrice price={price} />
-      <div className={currentQuantityStyle}></div>
       <QuantityDisplay
         isQuantityButtonsExisted={isQuantityButtonsExisted}
         quantity={quantity}
         currentQuantity={currentQuantity}
-        handleDecrement={handlePlusQuantity}
-        handleIncrement={handleMinusQuantity}
+        handleIncrement={handlePlusQuantity}
+        handleDecrement={handleMinusQuantity}
         isFlexModeExisted={true}
       />
       {isTotlaSummExisted! && <TotalAmount taxedPrice={lineItem.taxedPrice!} />}

@@ -8,41 +8,10 @@
     width: 100%;
     height: auto;
 }
-.lineItemsStyle {
-    width: 100%;
+.lineItemsWrapperStyle {
     height: 200px;
-;
-    padding: 10px 5px;
-    overflow-y: auto;
-    &::-webkit-scrollbar {
-        width: 8px;
-      }
-    &::-webkit-scrollbar-thumb {
-        background: rgb(234, 234, 234); 
-        border-radius: 3px;
-      }
 }
-.listItem{
-    margin: 4px auto;
-    width: 90%;
-    height: 60px;
-    @include flex(center, space-around);
-    border: 0.5px solid rgb(142, 142, 142, 0.4);
-}
-.itemDelete{
-    cursor: pointer;
-    &:hover {
-        color: rgb(205, 70, 70);
-    }
-}
-.itemName{
-    width: 100px;
-    font-size: 14px;
-    text-transform: uppercase;
-}
-.itemPrice{
-    font-weight: 500;
-}
+
 
 .subTotal {
     height: 50px;
@@ -129,15 +98,16 @@
 
 .modalShippingAdrStyle {
     position: absolute;
-    top: 120px;
-    right: 0;
+    top: 150px;
+    right: 30px;
     width: 300px;
-    height: 750px;
+    height: 770px;
     padding-bottom: 20px;
     border: 0.2px solid rgb(120, 92, 92, 0.3);
     background-color: rgb(255, 255, 255);
     z-index: 10;
     button {
+        margin-top: 30px;
         width: 150px;
         height: 50px;
         font-size: 19px;

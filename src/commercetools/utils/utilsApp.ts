@@ -61,3 +61,7 @@ export const toggleServerSideLaguage = (router: NextRouter, newLocale: string) =
   
     return true;
   };
+
+  export const  getNameAtIndex = (idx: number, array: { name: string }[]) => {
+    return array[idx % array.length].name;
+  };

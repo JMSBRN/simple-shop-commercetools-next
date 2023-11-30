@@ -2,6 +2,7 @@ import LogosSlider from '../sliders/logos-slider/LogosSlider';
 import React from 'react';
 import Slider from '../sliders/slider/Slider';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
+import { getNameAtIndex } from '@/commercetools/utils/utilsApp';
 import logoBrandsData from '../../../public/data/brands-logo.json';
 import sliderData from '../../../public/data/data.json';
 import styles from './WelcomePage.module.scss';
@@ -42,13 +43,10 @@ function WelcomePage() {
           </div>
         ))}
       </div>
-      <LogosSlider>
-        {[
-          ...logoBrandsData['brands-logo'],
-          ...logoBrandsData['brands-logo'],
-        ].map((el, idx) => (
+      <LogosSlider duration={55000000}>
+        {Array.from({ length: 10000 }).map((el, idx) => (
           <div className={logoContainer} key={idx}>
-            {el.name}
+            {getNameAtIndex(idx, logoBrandsData['brands-logo'])}
           </div>
         ))}
       </LogosSlider>

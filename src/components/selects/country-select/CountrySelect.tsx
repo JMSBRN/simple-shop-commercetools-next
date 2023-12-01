@@ -10,13 +10,21 @@ import { getCountries } from '@/commercetools/utils/utilsCommercTools';
 import { isErrorResponse } from '@/commercetools/utils/utilsApp';
 import styles from './CountrySelect.module.scss';
 
-function CountrySelect({ textMessage, label }: { textMessage: string; label: string; }) {
-  const { countrySelectContainer, selectedCountry, hidden, labelStyle } = styles;
+function CountrySelect({
+  textMessage,
+  label,
+}: {
+  textMessage: string;
+  label: string;
+}) {
+  const { countrySelectContainer, selectedCountry, labelStyle } =
+    styles;
   const dispatch = useAppDispatch();
   const { carts, country } = useAppSelector(selectCommerceTools);
   const [countries, setCountries] = useState<string[]>([]);
   const [currentCountry, setCurrentCountry] = useState<string>('');
   const isCartsCreated = !!carts?.length;
+  const isCountriesFetched = !!countries.length;
 
   const fetchFunction = useCallback(
     async function () {
@@ -59,26 +67,27 @@ function CountrySelect({ textMessage, label }: { textMessage: string; label: str
 
   return (
     <div data-testid="select-country" className={countrySelectContainer}>
-      {!isCartsCreated && (
-        <div className={styles.selectMessage}>{textMessage}</div>
-      )}
-      <div
-        data-testid="selected-country"
-        className={!!isCartsCreated ? selectedCountry : hidden}
-      >
-        <>
-          {country}
-          <div className={labelStyle}>{label}</div>
-        </>
-      </div>
-
-      {!isCartsCreated && (
-        <div className={styles.selectWrapper}>
-          <CustomSelect
-            options={countries}
-            selectedOption={country}
-            onSelectOptionValue={handleChangeCountry}
-          />
+      {isCountriesFetched && (
+        <div className="">
+          {!isCartsCreated && (
+            <div className={styles.selectWrapper}>
+              <CustomSelect
+                options={countries}
+                selectedOption={country}
+                onSelectOptionValue={handleChangeCountry}
+              />
+            </div>
+          )}
+          <div data-testid="selected-country" className={selectedCountry}>
+            {isCartsCreated ? (
+              <>
+                {country && <>{country}</>}
+                <div className={labelStyle}>{label}</div>
+              </>
+            ) : (
+              <div className={labelStyle}>{country && textMessage}</div>
+            )}
+          </div>
         </div>
       )}
     </div>

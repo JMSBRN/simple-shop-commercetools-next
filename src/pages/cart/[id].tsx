@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Cart } from '@commercetools/platform-sdk';
-import CustomerCart from '@/components/cart/CustomerCart';
+import CustomerCart from '@/components/cart/customer-cart/CustomerCart';
 import { GetServerSideProps } from 'next';
 import { selectCommerceTools } from '@/features/commerceTools/CommerceToolsSlice';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';

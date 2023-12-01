@@ -23,17 +23,9 @@
 }
 
 .selectedCountry {
-    position: relative;
-    left: 23px;
-    visibility: visible;
     color: grey;
     .labelStyle {
         font-size: 10px;
-        letter-spacing: 2px;
+        letter-spacing: 1px;
     }
-}
-
-.hidden {
-    @extend .selectedCountry;
-    visibility: hidden;
 }

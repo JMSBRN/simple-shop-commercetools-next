@@ -1,7 +1,8 @@
-import ButtonWithLoader from '../buttons/buttonWithLoader/ButtonWithLoader';
+import ButtonWithLoader from '../../buttons/buttonWithLoader/ButtonWithLoader';
 import { Cart } from '@commercetools/platform-sdk';
-import CartLineItem from './cart-line-item/CartLineItem';
-import CartTotalsContainer from './cart-totals-container/CartTotalsContainer';
+import CartLineItems from '../cart-lineItems/CartLineItems';
+import CartTotalsContainer from '../cart-totals-container/CartTotalsContainer';
+import Headlines from '../headlines/Headlines';
 import styles from './CustomerCart.module.scss';
 import { useTranslation } from 'next-i18next';
 
@@ -11,12 +12,17 @@ function CustomerCart({ cart }: { cart: Cart }) {
     cartTitle,
     mainContainer,
     leftSideContainer,
-    lineItemsStyle,
+    lineItemsWrapperStyle,
     promoCodeContainer,
-    lineItemHeadlines,
   } = styles;
   const { t } = useTranslation('common');
-  const headlines = ['', t('description'), t('price'), t('quantity'), t('total')];
+  const headlines = [
+    '',
+    t('description'),
+    t('price'),
+    t('quantity'),
+    t('total'),
+  ];
 
   return (
     <div className={cartContainer}>
@@ -25,21 +31,9 @@ function CustomerCart({ cart }: { cart: Cart }) {
       </div>
       <div className={mainContainer}>
         <div className={leftSideContainer}>
-          <div className={lineItemHeadlines}>
-          {headlines.map((el, idx) => (
-        <div key={idx}>{el}</div>
-      ))}
-          </div>
-          <div className={lineItemsStyle}>
-            {cart.lineItems.map((el) => (
-              <CartLineItem
-                cartId={cart?.id}
-                key={el.id}
-                lineItem={el}
-                isQuantityButtonsExisted={true}
-                isTotlaSummExisted={true}
-              />
-            ))}
+          <Headlines headlines={headlines} />
+          <div className={lineItemsWrapperStyle}>
+            <CartLineItems cart={cart} withTotalSumm={true} />
           </div>
           <div className={promoCodeContainer}>
             <input type="text" placeholder={t('promoCode')} />

@@ -1,4 +1,5 @@
 import { Attribute, ErrorResponse } from '@commercetools/platform-sdk';
+import { Countries, Languages } from '@/interfaces';
 import { apiRoot } from '../BuildClient';
 import colorIcon from '../../../public/svgs/colors.svg';
 import { isErrorResponse } from './utilsApp';
@@ -50,7 +51,7 @@ export async function getCategories(id?: string) {
   }
 }
 
-export  async function getCategoryNameWithId (id: string, language: string) {
+export  async function getCategoryNameWithId (id: string, language: Languages) {
   const res = await getCategories(id as string);
 
   if(!isErrorResponse(res) && !Array.isArray(res)) {
@@ -70,7 +71,7 @@ export async function getMainParentId(id: string) {
 
 export async function getLanguages() {
  return (await apiRoot.get().execute().then((d) => {
-    return d.body.languages;
+    return d.body.languages as Languages[];
   })
   .catch((e: ErrorResponse) => {
     return e;
@@ -78,7 +79,7 @@ export async function getLanguages() {
 }
 export async function getCountries() {
   return ( await apiRoot.get().execute().then((d) => {
-    return d.body.languages;
+    return d.body.languages as Countries[];
   })
   .catch((e: ErrorResponse) => {    
     return e;
@@ -97,8 +98,8 @@ export function filterObjectAndReturnValue(
 }
 
 export function moveLanguageToFirstPosition(
-  languages: string[],
-  currentLanguage?: string
+  languages: Languages[],
+  currentLanguage?: Languages
 ): string[] {
   if (currentLanguage) {
     const indexOfCurrentLanguage = languages.indexOf(currentLanguage);
@@ -112,7 +113,7 @@ export function moveLanguageToFirstPosition(
       ];
     }
   } else {
-    const indexOfEn = languages.indexOf('en');
+    const indexOfEn = languages.indexOf('en-GB');
 
     if (indexOfEn !== -1) {
       // Create a new array with 'en' in the first position

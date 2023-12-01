@@ -25,6 +25,9 @@ export interface CustomerInfo {
   companyName?: string;
 } 
 
+export type Countries = 'en-GB' | 'fr-FR' | 'he-IL' | 'de-DE'; 
+export type Languages = 'en-GB' | 'fr-FR' | 'he-IL' | 'de-DE'; 
+
 export type AutocompleteValue = 
   | 'on'
   | 'off'

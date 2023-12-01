@@ -21,7 +21,7 @@ function ProductInfo({ product }: { product: Product }) {
   const { current, staged } = product.masterData;
   const { masterVariant, variants } = current;
   const { name } = staged;
-  const { language, status } = useAppSelector(selectCommerceTools);
+  const { language } = useAppSelector(selectCommerceTools);
   const productName = filterObjectAndReturnValue(name, language);
   const [currentVariants, setCurrentVariants] =
     useState<ProductVariant[]>(variants);
@@ -70,7 +70,6 @@ function ProductInfo({ product }: { product: Product }) {
       </div>
       <div className={addToCardContainerStyle}>
         <ButtonWithCounter
-          isLoading={status === 'loading'}
           text={t('addToCart')}
           quantity={quantity}
           setQuantity={setQuantity}

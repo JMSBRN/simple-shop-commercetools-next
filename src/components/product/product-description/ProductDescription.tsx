@@ -1,3 +1,4 @@
+import { Languages } from '@/interfaces';
 import { LocalizedString } from '@commercetools/platform-sdk';
 import React from 'react';
 import { filterObjectAndReturnValue } from '@/commercetools/utils/utilsCommercTools';
@@ -8,7 +9,7 @@ function ProductDescription({
   language,
 }: {
   name: LocalizedString;
-  language: string;
+  language: Languages;
 }) {
   const { description } = styles;
 

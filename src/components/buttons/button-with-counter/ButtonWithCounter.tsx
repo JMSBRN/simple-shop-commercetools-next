@@ -10,7 +10,7 @@ function ButtonWithCounter({
   text,
   onClick,
 }: {
-  isLoading: boolean;
+  isLoading?: boolean;
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
   quantity: number;
   text: string;

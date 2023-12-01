@@ -6,9 +6,9 @@ import {
   Product,
   ShoppingList,
 } from '@commercetools/platform-sdk';
+import { Countries, Languages, ThunkStatus } from '@/interfaces';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/store/store';
-import { ThunkStatus } from '@/interfaces';
 import { fetchCarts } from '../thunks/FetchCarts';
 import { fetchCategories } from '../thunks/FetchCategories';
 import { fetchCountries } from '../thunks/FetchCountries';
@@ -18,9 +18,9 @@ import { fetchProducts } from '../thunks/FetchProducts';
 import { fetchShoppingLists } from '../thunks/FetchShoppingLists';
 
 export interface CommerceToolsSliceInitialState {
-  language: string;
-  country: string;
-  countries: string[];
+  language: Languages;
+  country: Countries;
+  countries: Countries[];
   categories: Category[];
   products: Product[];
   orders: Order[];
@@ -33,9 +33,9 @@ export interface CommerceToolsSliceInitialState {
   userName: string;
 }
 const initialState: CommerceToolsSliceInitialState = {
-  language: '',
-  country: '',
-  countries: [],
+  language: 'en-GB',
+  country: 'en-GB',
+  countries: [] as Countries[],
   categories: [],
   products: [],
   orders: [] as Order[],
@@ -57,13 +57,13 @@ const commerceToolseSlice = createSlice({
     setProducts: (state, action: PayloadAction<Product[]>) => {
       state.products = action.payload;
     },
-    setLanguage: (state, action: PayloadAction<string>) => {
+    setLanguage: (state, action: PayloadAction<Languages>) => {
       state.language = action.payload;
     },
-    setCountry: (state, action: PayloadAction<string>) => {
+    setCountry: (state, action: PayloadAction<Countries>) => {
       state.country = action.payload;
     },
-    setCountries: (state, action: PayloadAction<string[]>) => {
+    setCountries: (state, action: PayloadAction<Countries[]>) => {
       state.countries = action.payload;
     },
     setShoppingLists: (state, action: PayloadAction<ShoppingList[]>) => {

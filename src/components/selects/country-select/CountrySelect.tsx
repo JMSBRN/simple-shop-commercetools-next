@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   selectCommerceTools,
   setCountry,
-  setErrorMessage,
 } from '@/features/commerceTools/CommerceToolsSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/storeHooks';
+import { Countries } from '@/interfaces';
 import CustomSelect from '../custom-select/CustomSelect';
-import { getCountries } from '@/commercetools/utils/utilsCommercTools';
-import { isErrorResponse } from '@/commercetools/utils/utilsApp';
+import { fetchCountries } from '@/features/thunks/FetchCountries';
 import styles from './CountrySelect.module.scss';
 
 function CountrySelect({
@@ -17,40 +16,22 @@ function CountrySelect({
   textMessage: string;
   label: string;
 }) {
-  const { countrySelectContainer, selectedCountry, labelStyle } =
-    styles;
+  const { countrySelectContainer, selectedCountry, labelStyle } = styles;
   const dispatch = useAppDispatch();
-  const { carts, country } = useAppSelector(selectCommerceTools);
-  const [countries, setCountries] = useState<string[]>([]);
-  const [currentCountry, setCurrentCountry] = useState<string>('');
+  const { carts, country, countries } = useAppSelector(selectCommerceTools);
   const isCartsCreated = !!carts?.length;
   const isCountriesFetched = !!countries.length;
 
   const fetchFunction = useCallback(
     async function () {
-      const res = await getCountries();
-
-      if (!Array.isArray(res)) {
-        if (res.message === 'Failed to fetch')
-          dispatch(setErrorMessage('Please check internet connection'));
-      }
-
-      const currentCountryFromLocal = JSON.parse(
+      dispatch(fetchCountries());
+      const currentCountryFromLocal: Countries = JSON.parse(
         window.localStorage.getItem('country') || '"GB"'
       );
 
-      setCurrentCountry(currentCountryFromLocal);
-
-      dispatch(setCountry(currentCountry));
-      if (!isErrorResponse(res) && Array.isArray(res)) {
-        const resWithoutStartPrefix = res.map((c) => {
-          return c.substring(3);
-        });
-
-        setCountries(resWithoutStartPrefix);
-      }
+      dispatch(setCountry(currentCountryFromLocal));
     },
-    [currentCountry, dispatch]
+    [dispatch]
   );
 
   useEffect(() => {
@@ -59,20 +40,22 @@ function CountrySelect({
 
   const handleChangeCountry = (e: React.MouseEvent<HTMLOptionElement>) => {
     const { value } = e.currentTarget;
+    const stringValue: Countries = value as Countries;
 
-    setCurrentCountry(value);
-    dispatch(setCountry(value));
-    window.localStorage.setItem('country', JSON.stringify(value));
+    dispatch(setCountry(stringValue));
+    window.localStorage.setItem('country', JSON.stringify(stringValue));
   };
 
   return (
     <div data-testid="select-country" className={countrySelectContainer}>
       {isCountriesFetched && (
-        <div className="">
+        <div>
           {!isCartsCreated && (
             <div className={styles.selectWrapper}>
               <CustomSelect
-                options={countries}
+                options={countries.map((c) => {
+                  return c.substring(3);
+                })}
                 selectedOption={country}
                 onSelectOptionValue={handleChangeCountry}
               />

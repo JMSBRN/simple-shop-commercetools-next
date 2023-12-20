@@ -1,0 +1,24 @@
+@import 'mixins';
+
+.variantContainerStyle {
+  width: 100%;
+  height: 100%;
+  margin-top: 20px;
+  text-align: center;
+  @include flex(center, center, column);
+}
+.productTitle {
+  margin: 15px auto;
+  font-size: 30px;
+}
+
+.pricesStyle {
+  position: relative;
+  margin-top: 20px;
+  width: 100%;
+  height: 25px;
+}
+
+.noPriceMessage {
+  font-size: 10px;
+}

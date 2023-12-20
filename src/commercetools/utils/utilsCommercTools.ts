@@ -1,0 +1,159 @@
+import { Attribute, ErrorResponse } from '@commercetools/platform-sdk';
+import { Countries, Languages } from '@/interfaces';
+import { apiRoot } from '../BuildClient';
+import colorIcon from '../../../public/svgs/colors.svg';
+import { isErrorResponse } from './utilsApp';
+import sizeIcon from '../../../public/svgs/size.svg';
+import weightIcon from '../../../public/svgs/weight.svg';
+
+export async function getProducts(id?: string) {
+  if (id) {
+    const res = await apiRoot.products().withId({ ID: id }).get().execute();
+
+    return res.body;
+  } else {
+    const res = await apiRoot.products().get().execute();
+    const { results } = res.body;
+
+    return results;
+  }
+}
+
+export async function getProductsByCategoryId(id: string) {
+  const res = await apiRoot
+    .products()
+    .get({
+      queryArgs: {
+        where: `masterData(current(categories(id="${id}")))`,
+      },
+    })
+    .execute();
+
+  return res.body.results;
+}
+
+export async function getCategories(id?: string) {
+  if (id) {
+    return (await apiRoot.categories().withId({ ID: id }).get().execute().then(d => {
+      return d.body;
+    }).catch((e: ErrorResponse) => {
+      return e;
+    }));
+
+  } else {
+    return (await apiRoot.categories().get().execute().then( d => {
+      const { results } = d.body;
+
+      return results;
+    }).catch((e: ErrorResponse) => {
+      return e;
+    }));
+  }
+}
+
+export  async function getCategoryNameWithId (id: string, language: Languages) {
+  const res = await getCategories(id as string);
+
+  if(!isErrorResponse(res) && !Array.isArray(res)) {
+
+    return (filterObjectAndReturnValue(res.name, language)) as string;
+  }
+  
+};
+
+export async function getMainParentId(id: string) {
+  const res = await getCategories(id);
+
+  if(!isErrorResponse(res) && !Array.isArray(res)) { 
+    return res.ancestors[0]?.id;
+  }
+}
+
+export async function getLanguages() {
+ return (await apiRoot.get().execute().then((d) => {
+    return d.body.languages as Languages[];
+  })
+  .catch((e: ErrorResponse) => {
+    return e;
+  }));
+}
+export async function getCountries() {
+  return ( await apiRoot.get().execute().then((d) => {
+    return d.body.languages as Countries[];
+  })
+  .catch((e: ErrorResponse) => {    
+    return e;
+  }));
+}
+
+export function filterObjectAndReturnValue(
+  obj: { [key: string]: string },
+  fieldName: string
+) {
+  if (obj.hasOwnProperty(fieldName)) {
+    return obj[fieldName];
+  } else {
+    return null;
+  }
+}
+
+export function moveLanguageToFirstPosition(
+  languages: Languages[],
+  currentLanguage?: Languages
+): string[] {
+  if (currentLanguage) {
+    const indexOfCurrentLanguage = languages.indexOf(currentLanguage);
+
+    if (indexOfCurrentLanguage !== -1) {
+      // Create a new array with the current language in the first position
+      return [
+        currentLanguage,
+        ...languages.slice(0, indexOfCurrentLanguage),
+        ...languages.slice(indexOfCurrentLanguage + 1),
+      ];
+    }
+  } else {
+    const indexOfEn = languages.indexOf('en-GB');
+
+    if (indexOfEn !== -1) {
+      // Create a new array with 'en' in the first position
+      return [
+        'en',
+        ...languages.slice(0, indexOfEn),
+        ...languages.slice(indexOfEn + 1),
+      ];
+    }
+  }
+
+  // If the current language is not found and no current language is provided,
+  // or if the 'en' language is not found, return the original array as-is.
+  return languages;
+}
+
+ export const getCurrencySymbol = (locale: string, currency: string) => {
+   if(currency) {
+     return (0).toLocaleString(
+       locale,
+       {
+         style: 'currency',
+         currency,
+         minimumFractionDigits: 0,
+         maximumFractionDigits: 0
+       }
+     ).replace(/\d/g, '').trim();
+   }
+   return '';
+  };
+
+  export   function setIconSrcForAtribute(atribute: Attribute) {
+    const { name } = atribute;
+
+     if(name.includes('color')) {
+      return colorIcon;
+     } else if (name.includes('weight')){
+      return weightIcon;
+     } else if (name.includes('size')) {
+      return sizeIcon;
+     }
+     return null;
+  } 

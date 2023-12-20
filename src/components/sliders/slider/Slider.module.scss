@@ -1,0 +1,48 @@
+@import 'mixins';
+@import 'variables';
+
+$base-width: 100%;
+
+.sliderContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.sliderBtnsAndPoints {
+  width: 60%;
+  min-width: 180px;
+  min-height: 40px;
+  @include flex(center, space-between);
+
+  button {
+    width: auto;
+    padding: 0 0.7em;
+    background-color: transparent;
+    color: #c3c3c3;
+    border: none;
+    cursor: pointer;
+    font-size: calc(#{$base-width} * 1.5);
+    &:hover {
+      color: $primary-color;
+    }
+  }
+}
+
+.sliderPoints {
+  width: calc(#{$base-width} * 0.25);
+  @include flex();
+}
+
+.point {
+  width: 10px;
+  height: 10px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin: 0 3px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &.active {
+    background-color: #b3b3b3;
+  }
+}

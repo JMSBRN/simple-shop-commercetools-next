@@ -1,0 +1,38 @@
+@import 'mixins';
+
+.formContainer {
+  form {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  div {
+    margin-bottom: 10px;
+
+    &.inputRow {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .inputContainerWithCalcWidth {
+        width: calc(50% - 5px);
+        margin-bottom: 5px;
+
+        textarea {
+          width: 200%;
+        }
+      }
+
+      .inputContainer {
+        width: 100%;
+        margin-bottom: 5px;
+
+        textarea {
+          width: 200%;
+        }
+      }
+    }
+  }
+
+}

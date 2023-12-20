@@ -1,0 +1,24 @@
+{
+    "social-media-links": [
+        {
+            "name": "facebook",
+            "url": "/social_media_icons/facebook.png"
+        },
+        {
+            "name": "twitter",
+            "url": "/social_media_icons/twitter.png"
+        },
+        {
+            "name": "instagram",
+            "url": "/social_media_icons/instagram.png"
+        },
+        {
+            "name": "linkedin",
+            "url": "/social_media_icons/linkedin.png"
+        },
+        {
+            "name": "telegram",
+            "url": "/social_media_icons/telegram.png"
+        }
+    ]
+}

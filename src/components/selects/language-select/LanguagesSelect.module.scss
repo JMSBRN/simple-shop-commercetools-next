@@ -1,0 +1,17 @@
+
+.languagesSelectContainer {
+    width: auto;
+    height: auto;
+    text-align: center;
+    border: 1px solid transparent;
+}
+.labelStyle {
+    visibility: visible;
+    color: gray;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+.hidden {
+    @extend .labelStyle;
+    visibility: hidden;
+}

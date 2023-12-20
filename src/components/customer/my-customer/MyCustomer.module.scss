@@ -1,0 +1,60 @@
+@import 'mixins';
+@import 'variables';
+
+.customerContainer {
+    width: 100%;
+    height: auto;
+}
+
+.customerInfoContainer {
+    width: 100%;
+    height: auto;
+    min-height: 300px;
+    @include flex(flex-start, space-around);
+    color: grey;
+}
+.customerInfoStyle,
+.customerAddressStyle
+{
+    position: relative;
+    height: auto;
+    min-height: 200px;
+    @include flex(flex-start, flex-start, column);
+    h4 {
+        margin-bottom: 20px;
+    }
+    div {
+        margin-bottom: 5px;
+    }
+}
+
+.customerBtnsContainer  {
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+    @include flex(center, space-around);
+}
+
+.updateUserInfoModal {
+    position: absolute;
+    width: 530px;
+    height: auto;
+    padding: 10px 20px;
+    z-index: 10;
+    background-color: white;
+}
+
+.deleteWarningModalStyle {
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+    text-align: center;
+    h4 {
+        margin: 0 auto;
+        color: $primary-color;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+
+
+    }
+}

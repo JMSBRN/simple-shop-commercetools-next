@@ -1,0 +1,45 @@
+
+$input-padding: 5px;
+$input-font-size: 17px;
+$button-font-size: 19px;
+$border: 1px solid rgb(128, 128, 128, 0.4);
+
+// Colors
+$primary-color: #8b3b3b;
+$secondary-color: #FF6F61;
+$neutral-color: #d4d4d4;
+$hover-color: rgb(172, 172, 172);
+$text-color: rgb(152, 152, 152);
+
+// Font sizes
+$base-font-size: 16px;
+$logo-font-size: 30px;
+$category-font-size: 20px;
+$auth-font-size: 18px;
+$basket-font-size: 14px;
+
+//box-shadow
+$box-shadow: 0px 0px 10px rgb(228, 228, 228);
+
+// Breakpoints
+$mobile-breakpoint: 600px;
+$tablet-breakpoint: 900px;
+$desktop-breakpoint: 1200px;
+$large-desktop-breakpoint: 1600px;
+
+
+$heading-1: $base-font-size * 2;
+$heading-2: $base-font-size * 1.5;
+$heading-3: $base-font-size * 1.2;
+
+// Container width
+$container-width: 1400px;
+
+// Spacing
+$spacing-unit: 8px;
+$margin-unit: $spacing-unit / 2;
+$padding-unit: $spacing-unit / 2;
+
+// Z-index
+$z-index-header: 100;
+$z-index-modal: 200;

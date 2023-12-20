@@ -1,0 +1,25 @@
+@import 'mixins';
+
+.productInfoContainer {
+    margin: 0 auto;
+    width: 90%;
+    max-width: 1200px;
+    min-height: 100vh;
+    @include flex(flex-start, space-between);
+    padding: 10px 30px;
+}
+.masterVarianStyle {
+    width: 50%;
+    min-height: 100vh;
+}
+.variantsStyle {
+    width: 300px;
+    height: auto;
+    cursor: pointer;
+}
+
+.addToCardContainerStyle {
+    position: relative;
+    top: 400px;
+    right: 100px;
+}

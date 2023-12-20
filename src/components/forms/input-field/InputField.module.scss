@@ -1,0 +1,102 @@
+@import 'variables';
+
+.inputContainer {
+
+    input {
+        width: 100%;
+        margin-top: 3px;
+        padding: $input-padding;
+        font-size: $input-font-size;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        background-color: white;
+        transition: border-color 0.3s;
+        color: gray;
+
+        &:focus {
+            border-color: $primary-color;
+            outline: none;
+        }
+
+        &::placeholder {
+            color: #888;
+        }
+    }
+
+    [type="date"]::-webkit-inner-spin-button {
+        display: none;
+    }
+
+    [type="date"]::-webkit-calendar-picker-indicator {
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        filter: brightness(0) saturate(100%) invert(79%) sepia(0%) saturate(905%) hue-rotate(325deg) brightness(97%) contrast(99%);
+
+        &:hover {
+            filter: brightness(0) saturate(100%) invert(12%) sepia(58%) saturate(5241%) hue-rotate(351deg) brightness(95%) contrast(105%);
+        }
+    }
+
+    [type="date"]::-webkit-datetime-edit {
+        font-size: $input-font-size;
+    }
+
+    label {
+        display: block;
+        text-transform: uppercase;
+        text-align: start;
+        color: gray;
+        font-size: $input-font-size;
+
+        span {
+            color: rgb(255, 0, 0, 0.6);
+            ;
+        }
+
+        div {
+            span {
+                background-color: red;
+            }
+        }
+    }
+
+    @keyframes ripple {
+        to {
+            transform: scale(1.2);
+            opacity: 0;
+        }
+    }
+
+}
+
+.errorMessageStyle {
+    width: 300px;
+    height: 25px;
+    color: red;
+    text-transform: lowercase;
+}
+
+.visibleModeButtonStyle {
+    position: relative;
+    width: 80px;
+    height: auto;
+    text-align: center;
+    padding: 4px 2px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(132, 132, 132);
+    cursor: pointer;
+}
+
+.visibleModeButtonStyleActive {
+    position: relative;
+    width: 80px;
+    height: auto;
+    text-align: center;
+    padding: 4px 2px;
+    background-color: rgb(187, 187, 187);
+    color: white;
+    cursor: pointer;
+
+}

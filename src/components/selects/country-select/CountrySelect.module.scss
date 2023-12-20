@@ -1,0 +1,31 @@
+@import 'variables';
+@import 'mixins';
+
+.countrySelectContainer {
+    width: 100%;
+    min-width: 180px;
+    display: inline-block;
+
+    div {
+        font-size: 1em;
+    }
+
+    .selectWrapper {
+        margin: 0 auto;
+        width: 20%;
+        min-width: 30px;
+    }
+
+    .selectMessage {
+        color: gray;
+        @include flex;
+    }
+}
+
+.selectedCountry {
+    color: grey;
+    .labelStyle {
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+}

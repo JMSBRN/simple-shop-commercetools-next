@@ -1,0 +1,33 @@
+@import 'mixins';
+@import 'variables';
+
+.categoriesContainer {
+  width: 100%;
+  max-width: 500px;
+  @include flex;
+  gap: 30px;
+
+  div {
+    font-size: 1.3em;
+    color: rgb(152, 152, 152);
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 0 10px;
+    cursor: pointer;
+
+    &:hover {
+      color: red;
+    }
+  }
+}
+
+.dashBoardLInk {
+  margin: 0 10px;
+  cursor: pointer;
+
+  &:hover {
+    color: red;
+  }
+}

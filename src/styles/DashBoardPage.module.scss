@@ -1,0 +1,118 @@
+@import 'mixins';
+@import 'variables';
+
+.dashboardContainer {
+    margin: 100px auto;
+    width: 100%;
+    max-width: 1300px;
+    height: 100vh;
+    @include flex(flex-start, space-around);
+
+}
+
+.myInfoStyle,
+.myCartsStyle,
+.myOrdersStyle {
+    margin: 0 10px;
+    width: 100%;
+    max-width: 600px;
+    min-width: 550px;
+    height: auto;
+    min-height: 600px;
+    max-height: 600px;
+    padding: 10px;
+    @include flex(center, flex-start, column);
+    border: $border;
+    overflow-y: auto;
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgb(188, 188, 188);
+        border-radius: 3px;
+    }
+
+    h3 {
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        color: rgb(128, 128, 128, 0.5);
+    }
+}
+
+.myCartStyle {
+    width: 90%;
+    min-width: 400px;
+    height: auto;
+    padding: 10px;
+    border: $border;
+    color: rgb(128, 128, 128, 0.5);
+}
+
+.cartLineItems {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    padding: 3px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgb(188, 188, 188);
+        border-radius: 3px;
+    }
+}
+
+.topButtonsStyle {
+    width: 100%;
+    height: 40px;
+    @include flex;
+
+    div {
+        margin: 0 10px;
+        cursor: pointer;
+
+        &:hover {
+            color: rgb(254, 45, 45);
+        }
+    }
+}
+
+.cartSubTota {}
+
+.cartTotal {}
+
+
+.orderContainer {
+    position: relative;
+    width: 95%;
+    padding: 10px;
+    height: auto;
+    border:$border;
+    color: grey;
+    margin-bottom: 15px;
+}
+.deleteOrderStyle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 3px;
+    color: rgb(255, 73, 73);
+    cursor: pointer;
+    &:hover {
+        border:$border;
+    }
+}
+
+.orderUserDataStyle {
+    margin: 10px auto;
+    width: 100%;
+    height: auto;
+    @include flex(flex-start, center);
+    gap: 100px;
+}
